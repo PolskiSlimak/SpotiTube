@@ -1,0 +1,27 @@
+@import 'node_modules/@angular/material/theming';
+
+.container {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  height: 100vh;
+  width: 100vw;
+  background: #212121;
+
+  .button-wrapper {
+    margin: auto;
+
+    .connect-spotify {
+      @include mat-elevation(8);
+      background: #1DB954;
+      border-radius: 3rem;
+      font-size: 2rem;
+      padding: 1rem;
+      border: 0;
+      font-family: Proxima Proxima Nova, sans-serif;
+
+    }
+
+  }
+
+}
