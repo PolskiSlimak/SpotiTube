@@ -96,18 +96,18 @@ export class SpotifyService {
     return this.http.post<TokenResponse>(url, payload.toString(), options);
   }
 
-  play(): Observable<any> {
-    const url = 'https://api.spotify.com/v1/me/player/play';
-    const options = this.getOptions();
+  getPlaylists(): Observable<any> {
+    const url = 'https://api.spotify.com/v1/me/playlists';
+    const options = this.getHeader();
 
-    return this.http.put(url, null, options);
+    return this.http.get(url, options);
   }
 
-  pause(): Observable<any> {
-    const url = 'https://api.spotify.com/v1/me/player/pause';
-    const options = this.getOptions();
+  getTracks(playlistId: string): Observable<any> {
+    const url = "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
+    const options = this.getHeader();
 
-    return this.http.put(url, null, options);
+    return this.http.get(url, options);
   }
 
   logout(): void {
@@ -125,7 +125,7 @@ export class SpotifyService {
     }, 1000 * 3000);
   }
 
-  private getOptions(): any {
+  private getHeader(): any {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.accessToken}`

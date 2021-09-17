@@ -1,3 +1,16 @@
-<button (click)="onPlay()">play</button>
-<button (click)="onPause()">pause</button>
-<button (click)="logout()">wyloguj</button>
+<div id = 'container'>
+  <div id = 'sidenav'>
+    <ul>
+      <li *ngFor="let item of playlistInfo">
+        <div (click) = "showMusic(item)">{{item.name}}</div>
+      </li>
+    </ul>
+    <button (click)="logout()">wyloguj</button>
+  </div>
+  <ul>
+    <li *ngFor="let item of trackInfo">
+      <div>{{item.track.artists[0].name}} {{item.track.name}}</div>
+    </li>
+  </ul>
+</div>
+

@@ -9,23 +9,44 @@ import {Router} from '@angular/router';
 })
 export class MainPageComponent implements OnInit {
 
+  playlistInfo = [];
+  trackInfo = [];
+
   constructor(private router: Router,
               private spotifyService: SpotifyService) {
   }
 
   ngOnInit(): void {
     this.checkRefreshToken();
+    this.onPlaylistLoad();
   }
 
-  onPlay(): void {
-    this.spotifyService.play().subscribe((data: any) => {
+  onPlaylistLoad(): void {
+    this.spotifyService.getPlaylists().subscribe((data: any) => {
+      let items = data.items;
+      if (items) {
+        this.playlistInfo = items;
+      }
+      console.log(data);
     });
   }
 
-  onPause(): void {
-    this.spotifyService.pause().subscribe((data: any) => {
+  showMusic(item: any): any {
+    let playlistId = item.id;
+    this.spotifyService.getTracks(playlistId).subscribe((data: any) => {
+      this.trackInfo = data.items;
+      console.log(this.trackInfo)
     });
   }
+
+  // getPlaylistNames(items: Object[]): string[] {
+  //   let names: string[] = [];
+  //   items.forEach(function (item: any) {
+  //     let name = item.name;
+  //     names.push(name);
+  //   });
+  //   return names;
+  // }
 
   logout(): void {
     this.spotifyService.logout();
