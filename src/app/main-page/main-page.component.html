@@ -7,10 +7,15 @@
     </ul>
     <button (click)="logout()">wyloguj</button>
   </div>
-  <ul>
-    <li *ngFor="let item of trackInfo">
-      <div>{{item.track.artists[0].name}} {{item.track.name}}</div>
-    </li>
-  </ul>
+  <div id = 'tracksArtists'>
+    <ul>
+      <li *ngFor="let item of trackList">
+        {{item.track.artists[0].name}} {{item.track.name}}
+      </li>
+    </ul>
+  </div>
+  <div id = 'playlistCheckboxes'>
+
+  </div>
 </div>
 
