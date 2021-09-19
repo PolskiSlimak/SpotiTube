@@ -120,6 +120,15 @@ export class SpotifyService {
     return this.http.post(url, body, options);
   }
 
+  deleteTrackFromPlaylist(playlistId: string, trackUris: any): Observable<any> {
+    const url = "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
+    let options = this.getHeader();
+    options.body = {
+      tracks: [trackUris]
+    }
+    return this.http.delete(url, options);
+  }
+
   logout(): void {
     this.accessToken = '';
     this.refreshToken = '';
