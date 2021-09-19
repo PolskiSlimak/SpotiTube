@@ -100,19 +100,31 @@ export class MainPageComponent implements OnInit {
     let trackUri = item.track.uri;
     if (exists) {
       this.spotifyService.deleteTrackFromPlaylist(trackInfo.playlistId, {uri:trackUri}).subscribe(() => {
-        if (this.tracksInfo.length == 1) {
+        this.refreshTracks(trackInfo);
+        if (!this.checkIfExistInMorePlaylists(item)) {
           let index = this.trackList.findIndex((alreadyAddedTrack: any) => {
             return alreadyAddedTrack.track.id === item.track.id;
           });
           this.trackList.splice(index, 1);
         }
-        this.refreshTracks(trackInfo);
       });
     } else {
       this.spotifyService.addTrackToPlaylist(trackInfo.playlistId, trackUri).subscribe(() => {
         this.refreshTracks(trackInfo);
       });
     }
+  }
+
+  checkIfExistInMorePlaylists(track: any): boolean {
+    let records = [];
+    let elements = 0;
+    this.tracksInfo.forEach((info: any) => {
+      records = info.items.filter((alreadyAddedTrack: any) => {
+        return alreadyAddedTrack.track.id === track.track.id;
+      });
+      elements = elements + records.length;
+    });
+    return elements > 1;
   }
 
   refreshTracks(trackInfo: TrackInfo): void {
