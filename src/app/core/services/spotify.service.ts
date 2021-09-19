@@ -110,6 +110,16 @@ export class SpotifyService {
     return this.http.get(url, options);
   }
 
+  addTrackToPlaylist(playlistId: string, trackUris: any): Observable<any> {
+    const url = "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
+    const options = this.getHeader();
+    let body = {
+      uris: [trackUris]
+    };
+
+    return this.http.post(url, body, options);
+  }
+
   logout(): void {
     this.accessToken = '';
     this.refreshToken = '';

@@ -8,9 +8,19 @@
     <button (click)="logout()">wyloguj</button>
   </div>
   <div id = 'tracksArtists'>
+    Artists || Track name ||
+    <div *ngFor="let trackInfo of tracksInfo">
+      {{trackInfo.playlistName}}
+    </div>
     <ul>
       <li *ngFor="let item of trackList">
         {{item.track.artists[0].name}} {{item.track.name}}
+        <i *ngFor="let trackInfo of tracksInfo" (click)="manageSongOnPlaylist(item, trackInfo)">
+          <div *ngIf="checkIfExistInPlaylist(item, trackInfo) === true; else elseBlock">
+          {{trackInfo.playlistName}} istnieje
+          </div>
+          <ng-template #elseBlock>{{trackInfo.playlistName}} nieistnieje.</ng-template>
+        </i>
       </li>
     </ul>
   </div>

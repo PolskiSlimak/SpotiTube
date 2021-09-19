@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {SpotifyService} from '../core/services/spotify.service';
-import {Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { SpotifyService } from '../core/services/spotify.service';
+import { Router } from '@angular/router';
+import { TrackInfo } from '../core/models/track-info.interface';
 
 @Component({
   selector: 'app-main',
@@ -32,14 +33,16 @@ export class MainPageComponent implements OnInit {
   }
 
   showMusic(item: any): void {
-    let playlistId = item.id;
-    this.spotifyService.getTracks(playlistId).subscribe((data: any) => {
-      this.addTracks(data.items, playlistId);
+    let trackInfo = new TrackInfo();
+    trackInfo.playlistId = item.id;
+    trackInfo.playlistName = item.name;
+    this.spotifyService.getTracks(trackInfo.playlistId).subscribe((data: any) => {
+      trackInfo.items = data.items;
+      this.addTracks(trackInfo);
     });
   }
 
-  addTracks(items: any, playlistId: number): void {
-    let trackInfo = {items: items, playlistId: playlistId};
+  addTracks(trackInfo: TrackInfo): void {
     let index = this.tracksInfo.findIndex((element: any) => {
       return element.playlistId === trackInfo.playlistId;
     });
@@ -68,15 +71,15 @@ export class MainPageComponent implements OnInit {
       let index = this.trackList.findIndex((alreadyAddedTrack: any) => {
         return alreadyAddedTrack.track.id === newTrack.track.id;
       });
-      if (index > -1 && !this.checkIfContainsInDiffrentPlaylist(newTrack)) {
+      if (index > -1 && !this.checkIfExistInDiffrentPlaylist(newTrack)) {
         this.trackList.splice(index, 1);
       }
     });
   }
 
-  checkIfContainsInDiffrentPlaylist(track: any): boolean {
+  checkIfExistInDiffrentPlaylist(track: any): boolean {
     let exists = false;
-    let isAlreadyExist = this.tracksInfo.forEach((info: any) => {
+    this.tracksInfo.forEach((info: any) => {
       exists = info.items.some((alreadyAddedTrack: any) => {
         return alreadyAddedTrack.track.id === track.track.id;
       });
@@ -84,19 +87,35 @@ export class MainPageComponent implements OnInit {
     return exists;
   }
 
-  // getPlaylistNames(items: Object[]): string[] {
-  //   let names: string[] = [];
-  //   items.forEach(function (item: any) {
-  //     let name = item.name;
-  //     names.push(name);
-  //   });
-  //   return names;
-  // }
+  checkIfExistInPlaylist(item: any, trackInfo: TrackInfo): boolean {
+    let exists = false;
+    exists = trackInfo.items.some((song: any) => {
+      return song.track.id === item.track.id;
+    });
+    return exists;
+  }
+
+  manageSongOnPlaylist(item: any, trackInfo: TrackInfo): void {
+    let exists = this.checkIfExistInPlaylist(item, trackInfo);
+    if (exists) {
+
+    } else {
+      let trackUri = item.track.uri;
+      this.spotifyService.addTrackToPlaylist(trackInfo.playlistId, trackUri).subscribe(() => {
+        this.spotifyService.getTracks(trackInfo.playlistId).subscribe((data: any) => {
+          trackInfo.items = data.items;
+          let indexOfTrackInfo = this.tracksInfo.findIndex((trackInfoAdded: TrackInfo) => {
+            return trackInfoAdded.playlistId === trackInfo.playlistId;
+          });
+          this.tracksInfo[indexOfTrackInfo] = trackInfo;
+        });;
+      });
+    }
+  }
 
   logout(): void {
     this.spotifyService.logout();
   }
-
 
   private checkRefreshToken(): void {
     if (this.spotifyService.refreshToken == null) {
