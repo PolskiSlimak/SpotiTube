@@ -13,6 +13,14 @@ export class MainPageComponent implements OnInit {
   playlistInfo: any = [];
   tracksInfo: any = [];
   trackList: any = [];
+  phraseValue: any;
+  optionsForFrom = [
+    { name: 'track' },
+    { name: 'artist' },
+    { name: 'album' }
+  ];
+  selectedOption: string = this.optionsForFrom[0].name;
+  itemsFound: any = [];
 
   constructor(private router: Router,
               private spotifyService: SpotifyService) {
@@ -134,6 +142,15 @@ export class MainPageComponent implements OnInit {
         return trackInfoAdded.playlistId === trackInfo.playlistId;
       });
       this.tracksInfo[indexOfTrackInfo] = trackInfo;
+    });
+  }
+
+  searchForPhrase() {
+    let formattedPhrase = this.phraseValue.replace(" ", "+");
+    this.spotifyService.searchForPhrase(formattedPhrase, this.selectedOption).subscribe((data: any) => {
+      let searchedType = this.selectedOption + "s";
+      this.itemsFound = data[searchedType].items;
+      this.phraseValue = "";
     });
   }
 

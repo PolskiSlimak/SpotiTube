@@ -40,7 +40,6 @@ export class SpotifyService {
     if (this._accessToken != null) {
       return this._accessToken;
     } else {
-
       return localStorage.getItem('accessToken') as string;
     }
   }
@@ -89,35 +88,27 @@ export class SpotifyService {
         isRefreshTokenPresent ? 'refresh_token' : 'authorization_code')
       .append(isRefreshTokenPresent ? 'refresh_token' : 'code',
         isRefreshTokenPresent ? this.refreshToken : this.accessToken);
-
     const options = {headers};
     const url = 'https://accounts.spotify.com/api/token';
-
     return this.http.post<TokenResponse>(url, payload.toString(), options);
   }
 
   getPlaylists(): Observable<any> {
     const url = 'https://api.spotify.com/v1/me/playlists';
-    const options = this.getHeader();
-
-    return this.http.get(url, options);
+    return this.http.get(url, this.getHeader());
   }
 
   getTracks(playlistId: string): Observable<any> {
     const url = "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
-    const options = this.getHeader();
-
-    return this.http.get(url, options);
+    return this.http.get(url, this.getHeader());
   }
 
   addTrackToPlaylist(playlistId: string, trackUris: any): Observable<any> {
     const url = "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
-    const options = this.getHeader();
     let body = {
       uris: [trackUris]
     };
-
-    return this.http.post(url, body, options);
+    return this.http.post(url, body, this.getHeader());
   }
 
   deleteTrackFromPlaylist(playlistId: string, trackUris: any): Observable<any> {
@@ -127,6 +118,11 @@ export class SpotifyService {
       tracks: [trackUris]
     }
     return this.http.delete(url, options);
+  }
+
+  searchForPhrase(phrase: string, type: string): Observable<any> {
+    const url = "https://api.spotify.com/v1/search?q=" + phrase + "&type=" + type;
+    return this.http.get(url, this.getHeader());
   }
 
   logout(): void {

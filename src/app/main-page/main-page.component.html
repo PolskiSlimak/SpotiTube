@@ -5,7 +5,7 @@
         <div (click) = "showMusic(item)">{{item.name}}</div>
       </li>
     </ul>
-    <button (click)="logout()">wyloguj</button>
+    <button (click)="logout()">Logout</button>
   </div>
   <div id = 'tracksArtists'>
     Artists || Track name ||
@@ -17,15 +17,30 @@
         {{item.track.artists[0].name}} {{item.track.name}}
         <i *ngFor="let trackInfo of tracksInfo" (click)="manageSongOnPlaylist(item, trackInfo)">
           <div *ngIf="checkIfExistInPlaylist(item, trackInfo) === true; else elseBlock">
-          {{trackInfo.playlistName}} istnieje
+          {{trackInfo.playlistName}} exist
           </div>
-          <ng-template #elseBlock>{{trackInfo.playlistName}} nieistnieje.</ng-template>
+          <ng-template #elseBlock>{{trackInfo.playlistName}} notexist.</ng-template>
         </i>
       </li>
     </ul>
   </div>
-  <div id = 'playlistCheckboxes'>
-
+  <div id = 'search'>
+    <form>
+      <input type="text" placeholder="Search for anything" (keyup.enter)="searchForPhrase()" [(ngModel)]="phraseValue" name="phraseValue">
+      <label for="cars">Choose what type you are looking for: </label>
+      <select [(ngModel)]="selectedOption" name="track">
+        <option *ngFor="let option of optionsForFrom">
+           {{option.name}}
+        </option>
+     </select>
+    </form>
+  </div>
+  <div id = 'itemsFound'>
+    <ul>
+      <li *ngFor="let item of itemsFound">
+        {{item.name}}
+      </li>
+    </ul>
   </div>
 </div>
 
