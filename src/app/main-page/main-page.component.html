@@ -1,4 +1,4 @@
-<div id = 'container'>
+<!-- <div id = 'container'>
   <div id = 'sidenav'>
     <ul>
       <li *ngFor="let item of playlistInfo">
@@ -42,5 +42,70 @@
       </li>
     </ul>
   </div>
+</div> -->
+<div class="flex h-screen bg-gray-200">
+  <app-nav-bar></app-nav-bar>
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <app-search-bar></app-search-bar>
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+            <div class="container mx-auto px-6 py-8">
+                <h3 class="text-gray-700 text-3xl font-medium">Results</h3>
+                <div class="flex flex-col mt-8">
+                    <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+                        <div
+                            class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+                            <table class="min-w-full">
+                                <thead>
+                                    <tr>
+                                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Artists</th>
+                                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Song title</th>
+                                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Playlists
+                                          <!-- <div *ngFor="let trackInfo of tracksInfo">
+                                            {{trackInfo.playlistName}}
+                                          </div> -->
+                                        </th>
+                                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"> Role</th>
+                                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white">
+                                    <tr *ngFor="let item of trackList">
+                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full" src="" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm leading-5 font-medium text-gray-900">{{item.track.artists[0].name}}</div>
+                                                    <div class="text-sm leading-5 text-gray-500">john@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                            <div class="text-sm leading-5 text-gray-900">{{item.track.name}}</div>
+                                            <div class="text-sm leading-5 text-gray-500">Web dev</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                          <div *ngFor="let trackInfo of tracksInfo" (click)="manageSongOnPlaylist(item, trackInfo)">
+                                            <div *ngIf="checkIfExistInPlaylist(item, trackInfo) === true; else elseBlock2">
+                                              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{trackInfo.playlistName}}</span>
+                                            </div>
+                                            <ng-template #elseBlock2>
+                                              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-green-800">{{trackInfo.playlistName}}</span>
+                                            </ng-template>
+                                          </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">Owner</td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
+                                          <a class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 </div>
-

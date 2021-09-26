@@ -12,6 +12,8 @@ import { SpotifyService } from './core/services/spotify.service';
 import { GlobalHttpInterceptor } from './core/security/global-http-interceptor';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { SearchBarComponent } from './search-bar/search-bar.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,8 @@ import { FormsModule } from '@angular/forms';
     CallbackComponent,
     ErrorPageComponent,
     MainPageComponent,
+    NavBarComponent,
+    SearchBarComponent,
   ],
   imports: [
     BrowserModule,

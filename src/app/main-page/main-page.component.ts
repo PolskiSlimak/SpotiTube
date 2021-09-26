@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SpotifyService } from '../core/services/spotify.service';
+import { DetailsService } from '../core/services/details.service';
 import { Router } from '@angular/router';
 import { TrackInfo } from '../core/models/track-info.interface';
 
@@ -9,90 +10,16 @@ import { TrackInfo } from '../core/models/track-info.interface';
   styleUrls: ['./main-page.component.scss']
 })
 export class MainPageComponent implements OnInit {
-
-  playlistInfo: any = [];
-  tracksInfo: any = [];
-  trackList: any = [];
-  phraseValue: any;
-  optionsForFrom = [
-    { name: 'track' },
-    { name: 'artist' },
-    { name: 'album' }
-  ];
-  selectedOption: string = this.optionsForFrom[0].name;
-  itemsFound: any = [];
+  tracksInfo: any = this.detailsService.tracksInfo;
+  trackList: any = this.detailsService.trackList;
 
   constructor(private router: Router,
-              private spotifyService: SpotifyService) {
+              private spotifyService: SpotifyService,
+              private detailsService: DetailsService) {
   }
 
   ngOnInit(): void {
     this.checkRefreshToken();
-    this.onPlaylistLoad();
-  }
-
-  onPlaylistLoad(): void {
-    this.spotifyService.getPlaylists().subscribe((data: any) => {
-      let items = data.items;
-      if (items) {
-        this.playlistInfo = items;
-      }
-    });
-  }
-
-  showMusic(item: any): void {
-    let trackInfo = new TrackInfo();
-    trackInfo.playlistId = item.id;
-    trackInfo.playlistName = item.name;
-    this.spotifyService.getTracks(trackInfo.playlistId).subscribe((data: any) => {
-      trackInfo.items = data.items;
-      this.addTracks(trackInfo);
-    });
-  }
-
-  addTracks(trackInfo: TrackInfo): void {
-    let index = this.tracksInfo.findIndex((element: any) => {
-      return element.playlistId === trackInfo.playlistId;
-    });
-    if (index > -1) {
-      this.tracksInfo.splice(index, 1);
-      this.deleteRelatedTracks(trackInfo.items);
-    } else {
-      this.tracksInfo.push(trackInfo);
-      this.updateShownTracks(trackInfo.items);
-    }
-  }
-
-  updateShownTracks(itemTracks: any): void {
-    itemTracks.forEach((newTrack: any) => {
-      let isAlreadyExist = this.trackList.some((alreadyAddedTrack: any) => {
-        return alreadyAddedTrack.track.id === newTrack.track.id;
-      });
-      if (!isAlreadyExist) {
-        this.trackList.push(newTrack);
-      }
-    });
-  }
-
-  deleteRelatedTracks(itemTracks: any): void {
-    itemTracks.forEach((newTrack: any) => {
-      let index = this.trackList.findIndex((alreadyAddedTrack: any) => {
-        return alreadyAddedTrack.track.id === newTrack.track.id;
-      });
-      if (index > -1 && !this.checkIfExistInDiffrentPlaylist(newTrack)) {
-        this.trackList.splice(index, 1);
-      }
-    });
-  }
-
-  checkIfExistInDiffrentPlaylist(track: any): boolean {
-    let exists = false;
-    this.tracksInfo.forEach((info: any) => {
-      exists = info.items.some((alreadyAddedTrack: any) => {
-        return alreadyAddedTrack.track.id === track.track.id;
-      });
-    });
-    return exists;
   }
 
   checkIfExistInPlaylist(item: any, trackInfo: TrackInfo): boolean {
@@ -145,20 +72,7 @@ export class MainPageComponent implements OnInit {
     });
   }
 
-  searchForPhrase() {
-    let formattedPhrase = this.phraseValue.replace(" ", "+");
-    this.spotifyService.searchForPhrase(formattedPhrase, this.selectedOption).subscribe((data: any) => {
-      let searchedType = this.selectedOption + "s";
-      this.itemsFound = data[searchedType].items;
-      this.phraseValue = "";
-    });
-  }
-
-  logout(): void {
-    this.spotifyService.logout();
-  }
-
-  private checkRefreshToken(): void {
+  checkRefreshToken(): void {
     if (this.spotifyService.refreshToken == null) {
       this.router.navigate(['./']);
     }
