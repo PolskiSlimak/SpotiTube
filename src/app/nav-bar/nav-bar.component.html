@@ -14,7 +14,7 @@
   </div> -->
   <div class="mt-10 mb-4">
     <ul>
-      <li class="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black hover:bg-gray-300  hover:font-bold rounded rounded-lg" *ngFor="let item of playlistInfo" (click) = "onShowMusic(item)">
+      <li class="mb-2 px-4 py-4 rounded rounded-lg hover-btn" *ngFor="let item of playlistInfo" (click) = "onShowMusic($event, item)">
         <span>{{item.name}}</span>
       </li>
     </ul>

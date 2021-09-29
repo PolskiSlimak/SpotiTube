@@ -27,7 +27,15 @@ export class NavBarComponent implements OnInit {
     });
   }
 
-  onShowMusic(item: any): void {
+  onShowMusic(event: any, item: any): void {
+    let className = event.currentTarget.className;
+    let hoverBtn = "hover-btn";
+    let clickedBtn = "clicked-btn";
+    if (className.includes(hoverBtn)) {
+      event.currentTarget.className = className.replace(hoverBtn, clickedBtn);
+    } else if (className.includes(clickedBtn)) {
+      event.currentTarget.className = className.replace(clickedBtn, hoverBtn);
+    }
     this.detailsService.showMusic(item);
   }
 

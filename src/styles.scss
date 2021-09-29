@@ -2,3 +2,16 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+  .hover-btn {
+    @apply flex flex-row text-gray-100
+  }
+  .hover-btn:hover {
+    @apply text-black bg-gray-300 font-bold
+  }
+  .clicked-btn {
+    @apply text-black bg-gray-300 font-bold
+  }
+@import "tailwindcss/utilities";
+
