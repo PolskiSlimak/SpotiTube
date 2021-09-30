@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { MatSelectModule } from '@angular/material/select';
+import { ResultPageComponent } from './result-page/result-page.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
     MainPageComponent,
     NavBarComponent,
     SearchBarComponent,
+    ResultPageComponent,
   ],
   imports: [
     BrowserModule,
