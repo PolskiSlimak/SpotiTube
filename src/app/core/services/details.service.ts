@@ -10,10 +10,20 @@ import { TrackInfo } from '../models/track-info.interface';
 export class DetailsService {
   tracksInfo: any = [];
   trackList: any = [];
-  itemsFound: any = [];
+  playlistInfo: any = [];
 
   constructor(private router: Router,
     private spotifyService: SpotifyService) { }
+
+  setTracksInfo(item: any): void {
+    let trackInfo = new TrackInfo();
+    trackInfo.playlistId = item.id;
+    trackInfo.playlistName = item.name;
+    this.spotifyService.getTracks(trackInfo.playlistId).subscribe((data: any) => {
+      trackInfo.items = data.items;
+      this.tracksInfo.push(trackInfo);
+    });
+  }
 
   showMusic(item: any): void {
     let trackInfo = new TrackInfo();

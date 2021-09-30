@@ -9,12 +9,11 @@ import { SpotifyService } from '../core/services/spotify.service';
 })
 export class SearchBarComponent implements OnInit {
   phraseValue: any;
-  optionsForFrom = [
-    { name: 'track' },
-    { name: 'artist' },
-    { name: 'album' }
-  ];
-  selectedOption: string = this.optionsForFrom[0].name;
+  // optionsForFrom = [
+  //   { name: 'track' },
+  //   { name: 'album' }
+  // ];
+  // selectedOption: string = this.optionsForFrom[0].name;
   showProfile = false;
   pictureUrl = "https://i1.wp.com/similarpng.com/wp-content/plugins/userswp/assets/images/no_profile.png?ssl=1";
 
@@ -27,10 +26,11 @@ export class SearchBarComponent implements OnInit {
 
   onSearchForPhrase(): void {
     let formattedPhrase = this.phraseValue.replace(" ", "+");
-    this.spotifyService.searchForPhrase(formattedPhrase, this.selectedOption).subscribe((data: any) => {
-      let searchedType = this.selectedOption + "s";
-      this.detailsService.itemsFound = data[searchedType].items;
+    this.spotifyService.searchForPhrase(formattedPhrase, "track").subscribe((data: any) => {
+      // let searchedType = "track" + "s";
       this.phraseValue = "";
+      this.putTracks(data["tracks"].items);
+      this.processTracks();
     });
   }
 
@@ -53,5 +53,24 @@ export class SearchBarComponent implements OnInit {
 
   onLogout(): void {
     this.spotifyService.logout();
+  }
+
+  putTracks(items: any): any {
+    this.detailsService.trackList.length = 0;
+    items.forEach((item: any) => {
+      this.detailsService.trackList.push({track: item})
+    });
+  }
+
+  processTracks(): void {
+    this.setAllPlaylistsActive();
+  }
+
+  setAllPlaylistsActive(): void {
+    this.detailsService.tracksInfo.length = 0;
+    let playlists = this.detailsService.playlistInfo;
+    playlists.forEach((element: any) => {
+      this.detailsService.setTracksInfo(element);
+    });
   }
 }

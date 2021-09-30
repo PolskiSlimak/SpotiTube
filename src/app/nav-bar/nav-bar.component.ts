@@ -15,13 +15,13 @@ export class NavBarComponent implements OnInit {
 
   ngOnInit(): void {
     this.onPlaylistLoad();
-
   }
 
   onPlaylistLoad(): void {
     this.spotifyService.getPlaylists().subscribe((data: any) => {
       let items = data.items;
       if (items) {
+        this.detailsService.playlistInfo = items;
         this.playlistInfo = items;
       }
     });
