@@ -131,6 +131,11 @@ export class SpotifyService {
     this.router.navigate(['./']);
   }
 
+  getUserData(): Observable<any> {
+    const url = "https://api.spotify.com/v1/me";
+    return this.http.get(url, this.getHeader());
+  }
+
   private initializeTokenRefresher(): void {
     setInterval(() => {
       this.spotifyRefreshToken().subscribe((data: TokenResponse) => {

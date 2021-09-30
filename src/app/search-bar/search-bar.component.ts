@@ -16,11 +16,13 @@ export class SearchBarComponent implements OnInit {
   ];
   selectedOption: string = this.optionsForFrom[0].name;
   showProfile = false;
+  pictureUrl = "https://i1.wp.com/similarpng.com/wp-content/plugins/userswp/assets/images/no_profile.png?ssl=1";
 
   constructor(private spotifyService: SpotifyService,
               private detailsService: DetailsService) { }
 
   ngOnInit(): void {
+    this.onProfileLoad();
   }
 
   onSearchForPhrase(): void {
@@ -29,6 +31,15 @@ export class SearchBarComponent implements OnInit {
       let searchedType = this.selectedOption + "s";
       this.detailsService.itemsFound = data[searchedType].items;
       this.phraseValue = "";
+    });
+  }
+
+  onProfileLoad(): void {
+    this.spotifyService.getUserData().subscribe((data: any) => {
+      let images = data.images;
+      if (images.length > 0) {
+        this.pictureUrl = images[0].url;
+      }
     });
   }
 
