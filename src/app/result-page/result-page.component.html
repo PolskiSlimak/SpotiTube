@@ -33,18 +33,23 @@
                   <!-- <div class="text-sm leading-5 text-gray-500">Web dev</div> -->
               </td>
               <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                <div *ngFor="let trackInfo of tracksInfo" (click)="onManageSongOnPlaylist(item, trackInfo)">
-                  <div *ngIf="checkIfExistInPlaylist(item, trackInfo) === true; else elseBlock2" class="float-left">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 hover:bg-red-100">{{trackInfo.playlistName}}</span>
-                  </div>
-                  <ng-template #elseBlock2>
-                    <div class="float-left">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-green-800 hover:bg-green-100">{{trackInfo.playlistName}}</span>
+                <button mat-button [matMenuTriggerFor]="menu">...</button>
+                <mat-menu #menu="matMenu">
+                  <div *ngFor="let trackInfo of tracksInfo">
+                    <div *ngIf="checkIfExistInPlaylist(item, trackInfo) === true; else elseBlock2">
+                      <button mat-menu-item class="float-left">
+                        <input type="checkbox" (click)="onManageSongOnPlaylist(item, trackInfo)" checked class="mr-2">{{trackInfo.playlistName}}
+                      </button>
                     </div>
-                  </ng-template>
-                </div>
+                    <ng-template #elseBlock2>
+                      <button mat-menu-item>
+                        <input type="checkbox" (click)="onManageSongOnPlaylist(item, trackInfo)" class="mr-2">{{trackInfo.playlistName}}
+                      </button>
+                    </ng-template>
+                  </div>
+                </mat-menu>
               </td>
-              </tr>
+            </tr>
           </tbody>
       </table>
     </div>

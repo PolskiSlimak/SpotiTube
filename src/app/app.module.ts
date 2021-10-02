@@ -16,6 +16,8 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { MatSelectModule } from '@angular/material/select';
 import { ResultPageComponent } from './result-page/result-page.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,7 @@ import { ResultPageComponent } from './result-page/result-page.component';
     MainPageComponent,
     NavBarComponent,
     SearchBarComponent,
-    ResultPageComponent,
+    ResultPageComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +37,9 @@ import { ResultPageComponent } from './result-page/result-page.component';
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatMenuModule,
+    MatButtonModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

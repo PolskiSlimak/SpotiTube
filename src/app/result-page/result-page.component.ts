@@ -11,7 +11,6 @@ import { TrackInfo } from '../core/models/track-info.interface';
 export class ResultPageComponent implements OnInit {
   tracksInfo: any = this.detailsService.tracksInfo;
   trackList: any = this.detailsService.trackList;
-
   constructor(private spotifyService: SpotifyService,
               private detailsService: DetailsService) { }
 
