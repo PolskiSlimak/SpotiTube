@@ -30,7 +30,8 @@ export class SearchBarComponent implements OnInit {
       // let searchedType = "track" + "s";
       this.phraseValue = "";
       this.putTracks(data["tracks"].items);
-      this.processTracks();
+      this.detailsService.isSearchPhrase = true;
+      this.setAllPlaylistsActive();
     });
   }
 
@@ -62,15 +63,19 @@ export class SearchBarComponent implements OnInit {
     });
   }
 
-  processTracks(): void {
-    this.setAllPlaylistsActive();
-  }
-
   setAllPlaylistsActive(): void {
+    this.clearHtmlSelected();
     this.detailsService.tracksInfo.length = 0;
     let playlists = this.detailsService.playlistInfo;
     playlists.forEach((element: any) => {
       this.detailsService.setTracksInfo(element);
     });
+  }
+
+  clearHtmlSelected(): void {
+    let childrens = document.getElementById("playlistsHtml")!.children;
+    for (let children of childrens) {
+      children.className = children.className.replace("clicked-btn", "hover-btn");
+    }
   }
 }

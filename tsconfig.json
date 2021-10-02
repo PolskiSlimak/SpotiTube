@@ -19,7 +19,8 @@
     "strictPropertyInitialization": false,
     "lib": [
       "es2018",
-      "dom"
+      "dom",
+      "DOM.Iterable"
     ]
   },
   "angularCompilerOptions": {

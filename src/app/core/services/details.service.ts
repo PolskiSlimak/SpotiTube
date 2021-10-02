@@ -11,6 +11,7 @@ export class DetailsService {
   tracksInfo: any = [];
   trackList: any = [];
   playlistInfo: any = [];
+  isSearchPhrase = false;
 
   constructor(private router: Router,
     private spotifyService: SpotifyService) { }

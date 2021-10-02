@@ -28,6 +28,9 @@ export class NavBarComponent implements OnInit {
   }
 
   onShowMusic(event: any, item: any): void {
+    if (this.detailsService.isSearchPhrase === true) {
+      this.clearSearch();
+    }
     let className = event.currentTarget.className;
     let hoverBtn = "hover-btn";
     let clickedBtn = "clicked-btn";
@@ -39,4 +42,9 @@ export class NavBarComponent implements OnInit {
     this.detailsService.showMusic(item);
   }
 
+  clearSearch(): void {
+    this.detailsService.isSearchPhrase = false;
+    this.detailsService.trackList.length = 0;
+    this.detailsService.tracksInfo.length = 0;
+  }
 }
