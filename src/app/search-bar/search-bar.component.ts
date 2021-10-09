@@ -58,8 +58,12 @@ export class SearchBarComponent implements OnInit {
 
   putTracks(items: any): any {
     this.detailsService.trackList.length = 0;
+    this.detailsService.activeTrackList.length = 0;
     items.forEach((item: any) => {
       this.detailsService.trackList.push({track: item})
+      if (this.detailsService.activeTrackList.length < this.detailsService.pageSize) {
+        this.detailsService.activeTrackList.push({track: item})
+      }
     });
   }
 
@@ -73,7 +77,7 @@ export class SearchBarComponent implements OnInit {
   }
 
   clearHtmlSelected(): void {
-    let childrens = document.getElementById("playlistsHtml")!.children;
+    let childrens = this.detailsService.getPlaylistsDOM();
     for (let children of childrens) {
       children.className = children.className.replace("clicked-btn", "hover-btn");
     }

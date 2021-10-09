@@ -4,12 +4,14 @@ import { Router } from '@angular/router';
 import { TrackInfo } from '../models/track-info.interface';
 import { ItemTrack } from '../models/item-track.interface';
 import { MatPaginator } from '@angular/material/paginator';
+import { of } from 'rxjs';
+import { PlaylistStorage } from '../models/playlist-storage.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DetailsService {
-  tracksInfo: any = [];
+  tracksInfo: TrackInfo[] = [];
   trackList: any = [];
   activeTrackList: any = [];
   playlistInfo: any = [];
@@ -52,6 +54,7 @@ export class DetailsService {
       this.tracksInfo.push(trackInfo);
       this.updateShownTracks(trackInfo.items);
     }
+    this.updateLocalStorage();
   }
 
   updateShownTracks(itemTracks: ItemTrack[]): void {
@@ -78,11 +81,7 @@ export class DetailsService {
       }
     });
     this.activeTrackList.length = 0;
-    if (this.trackList.length == 0) {
-      this.paginator.pageIndex = 0;
-    } else {
-      //TODO this.paginator.pageIndex = ;
-    }
+    this.paginator.pageIndex = 0;
     this.trackList.slice(0, this.pageSize).forEach((element: ItemTrack) => {
       this.activeTrackList.push(element);
     });
@@ -98,4 +97,28 @@ export class DetailsService {
     return exists;
   }
 
+  updateLocalStorage(): void {
+    let playlistsStorage: any = [];
+    this.tracksInfo.forEach((trackInfo: TrackInfo) => {
+      let playlistStorage = new PlaylistStorage();
+      playlistStorage.id = trackInfo.playlistId;
+      playlistStorage.name = trackInfo.playlistName;
+      playlistsStorage.push(playlistStorage);
+    });
+    this.setLocalStorageForPlaylist(playlistsStorage);
+  }
+
+  setLocalStorageForPlaylist(list: any) {
+    localStorage.setItem("playlists", JSON.stringify(list));
+  }
+
+  getPlaylistsFromLocalStorage() {
+    let playlists = localStorage.getItem("playlists");
+    let parsedPlaylists = playlists !== null ? JSON.parse(playlists) : [];
+    return of(parsedPlaylists);
+  }
+
+  getPlaylistsDOM(): any {
+    return document.getElementById("playlistsHtml")!.children;
+  }
 }
