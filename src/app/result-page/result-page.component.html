@@ -10,7 +10,7 @@
           </tr>
         </thead>
           <tbody class="bg-white">
-            <tr *ngFor="let item of trackList">
+            <tr *ngFor="let item of activeTrackList">
               <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div class="flex items-center">
                   <div class="flex-shrink-0 h-10 w-10">
@@ -52,6 +52,12 @@
             </tr>
           </tbody>
       </table>
+      <mat-paginator #paginator   [length]="this.trackList.length"
+                                  [pageSize]="pageSize"
+                                  [pageIndex]="pageIndex"
+                                  [pageSizeOptions]="[5, 10, 25, 50]"
+                                  (page)="onPageChange($event)">
+      </mat-paginator>
     </div>
   </div>
 </div>

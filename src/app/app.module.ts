@@ -18,6 +18,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { ResultPageComponent } from './result-page/result-page.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { MatButtonModule } from '@angular/material/button';
     FormsModule,
     MatSelectModule,
     MatMenuModule,
-    MatButtonModule
+    MatButtonModule,
+    MatPaginatorModule,
+    MatTableModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
