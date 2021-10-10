@@ -19,6 +19,7 @@ export class DetailsService {
   pageSize = 5;
   pageIndex = 0;
   paginator: MatPaginator;
+  userIdn: string;
 
   constructor(private router: Router,
               private spotifyService: SpotifyService) { }

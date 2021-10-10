@@ -1,18 +1,17 @@
 <!-- <div :class="sidebarOpen ? 'block' : 'hidden'" @click="sidebarOpen = false" class="fixed z-20 inset-0 bg-black opacity-50 transition-opacity lg:hidden"></div> -->
 <nav class="flex flex-col bg-purple-900 h-screen px-4 tex-gray-900 border-purple-900">
-  <!-- <div class="flex flex-wrap mt-8">
+  <div class="flex flex-wrap mt-8 items-center justify-center">
     <div class="w-1/2">
-      <img
-        src="https://randomuser.me/api/portraits/women/27.jpg"
-        class="mx-auto w-20 h-20 rounded-full"
-      />
+      <img src="https://yt3.ggpht.com/ytc/AKedOLSHlPbMDpOLk7tpBOaS741aboFID7Zp7x53VktHJw=s900-c-k-c0x00ffffff-no-rj" class="mx-auto w-20 h-20 rounded-full"/>
     </div>
     <div class="w-1/2">
-      <span class="font-semibold text-white">SpotifyLogge</span>
-      <button class="bg-green-500 text-white px-4 py-2 rounded-md border border-blue-500 hover:bg-white hover:text-green-500" (click)="logout()">Logout</button>
+      <span class="font-semibold text-white text-xl">SpotiTube</span>
     </div>
-  </div> -->
-  <div class="mt-10 mb-4">
+  </div>
+  <div class="mt-4 mb-4">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-auto" viewBox="0 0 20 20" fill="white" (click) = "onCreatePlaylist()">
+      <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+    </svg>
     <ul id="playlistsHtml">
       <li #playlistHtmlLi class="mb-2 px-4 py-4 rounded rounded-lg hover-btn" *ngFor="let item of playlistInfo" (click) = "onShowMusic($event, item)">
         <div>{{item.name}}</div>

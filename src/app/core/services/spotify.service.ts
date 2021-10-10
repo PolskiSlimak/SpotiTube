@@ -125,6 +125,16 @@ export class SpotifyService {
     return this.http.get(url, this.getHeader());
   }
 
+  createPlaylist(userIdn: string, playlistName: string, description: string, isPublic: boolean): Observable<any> {
+    const url = "https://api.spotify.com/v1/users/" + userIdn + "/playlists";
+    let body = {
+      name: playlistName,
+      description: description,
+      public: isPublic
+    }
+    return this.http.post(url, body, this.getHeader());
+  }
+
   logout(): void {
     this.accessToken = '';
     this.refreshToken = '';

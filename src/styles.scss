@@ -5,13 +5,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 @import "tailwindcss/base";
 @import "tailwindcss/components";
   .hover-btn {
-    @apply flex flex-row text-gray-100
+    @apply text-gray-100 bg-transparent
   }
   .hover-btn:hover {
-    @apply text-black bg-gray-300 font-bold
+    @apply text-black bg-gray-300 text-shadow
   }
   .clicked-btn {
-    @apply text-black bg-gray-50 font-bold
+    @apply text-black bg-gray-50 text-shadow
   }
 @import "tailwindcss/utilities";
+  .text-shadow {
+    text-shadow: 0px 0px 1px black;
+  }
 

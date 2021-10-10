@@ -37,6 +37,7 @@ export class SearchBarComponent implements OnInit {
 
   onProfileLoad(): void {
     this.spotifyService.getUserData().subscribe((data: any) => {
+      this.detailsService.userIdn = data.id;
       let images = data.images;
       if (images.length > 0) {
         this.pictureUrl = images[0].url;

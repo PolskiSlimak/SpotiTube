@@ -20,6 +20,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
+import { DialogCreatePlaylistComponent } from './core/dialogs/dialog-create-playlist/dialog-create-playlist.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -30,7 +35,8 @@ import { MatTableModule } from '@angular/material/table';
     MainPageComponent,
     NavBarComponent,
     SearchBarComponent,
-    ResultPageComponent
+    ResultPageComponent,
+    DialogCreatePlaylistComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +49,11 @@ import { MatTableModule } from '@angular/material/table';
     MatMenuModule,
     MatButtonModule,
     MatPaginatorModule,
-    MatTableModule
+    MatTableModule,
+    MatDialogModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatCheckboxModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

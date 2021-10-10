@@ -1,8 +1,10 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogCreatePlaylistComponent } from '../core/dialogs/dialog-create-playlist/dialog-create-playlist.component';
+import { DialogDataCreatePlaylist } from '../core/models/dialog-data-create-playlist.interface';
 import { PlaylistStorage } from '../core/models/playlist-storage.interface';
 import { DetailsService } from '../core/services/details.service';
 import { SpotifyService } from '../core/services/spotify.service';
-
 @Component({
   selector: 'app-nav-bar',
   templateUrl: './nav-bar.component.html',
@@ -11,9 +13,13 @@ import { SpotifyService } from '../core/services/spotify.service';
 export class NavBarComponent implements OnInit {
   playlistInfo: any = [];
   @ViewChildren('playlistHtmlLi') playlistHtml: QueryList<ElementRef>;
+  playlistName: string;
+  description: string;
+  isPublic: boolean;
 
   constructor(private detailsService: DetailsService,
-              private spotifyService: SpotifyService) { }
+              private spotifyService: SpotifyService,
+              public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.onPlaylistLoad();
@@ -38,6 +44,24 @@ export class NavBarComponent implements OnInit {
   onShowMusic(event: any, item: any): void {
     this.showTracksFromCheckedPlaylist(item);
     this.changeStyleOfPlaylist(event);
+  }
+
+  onCreatePlaylist(): void {
+    const dialogRef = this.dialog.open(DialogCreatePlaylistComponent, {
+      width: '250px',
+      data: {
+        playlistName: this.playlistName,
+        description: this.description,
+        isPublic: this.isPublic
+      }
+    });
+    dialogRef.afterClosed().subscribe((result: DialogDataCreatePlaylist) => {
+      if (result !== undefined) {
+        this.spotifyService.createPlaylist(this.detailsService.userIdn, result.playlistName, result.description, result.isPublic).subscribe((data: any) => {
+          this.onPlaylistLoad();
+        });
+      }
+    });
   }
 
   changeStyleOfPlaylist(event: any): void {
