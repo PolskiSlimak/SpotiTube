@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreatePlaylistComponent } from '../core/dialogs/dialog-create-playlist/dialog-create-playlist.component';
+import { DialogDeletePlaylistComponent } from '../core/dialogs/dialog-delete-playlist/dialog-delete-playlist.component';
 import { DialogDataCreatePlaylist } from '../core/models/dialog-data-create-playlist.interface';
 import { PlaylistStorage } from '../core/models/playlist-storage.interface';
 import { DetailsService } from '../core/services/details.service';
@@ -48,7 +49,7 @@ export class NavBarComponent implements OnInit {
 
   onCreatePlaylist(): void {
     const dialogRef = this.dialog.open(DialogCreatePlaylistComponent, {
-      width: '250px',
+      width: '20rem',
       data: {
         playlistName: this.playlistName,
         description: this.description,
@@ -56,8 +57,19 @@ export class NavBarComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe((result: DialogDataCreatePlaylist) => {
-      if (result !== undefined) {
+      if (result !== undefined && result.playlistName !== undefined) {
         this.spotifyService.createPlaylist(this.detailsService.userIdn, result.playlistName, result.description, result.isPublic).subscribe((data: any) => {
+          this.onPlaylistLoad();
+        });
+      }
+    });
+  }
+
+  onDeletePlaylist(item: any): void {
+    const dialogRef = this.dialog.open(DialogDeletePlaylistComponent, {});
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed === true) {
+        this.spotifyService.deletePlaylist(item.id).subscribe((data: any) => {
           this.onPlaylistLoad();
         });
       }

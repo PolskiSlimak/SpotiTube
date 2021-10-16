@@ -25,6 +25,7 @@ import { DialogCreatePlaylistComponent } from './core/dialogs/dialog-create-play
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { DialogDeletePlaylistComponent } from './core/dialogs/dialog-delete-playlist/dialog-delete-playlist.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     NavBarComponent,
     SearchBarComponent,
     ResultPageComponent,
-    DialogCreatePlaylistComponent
+    DialogCreatePlaylistComponent,
+    DialogDeletePlaylistComponent
   ],
   imports: [
     BrowserModule,

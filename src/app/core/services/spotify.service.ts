@@ -135,6 +135,11 @@ export class SpotifyService {
     return this.http.post(url, body, this.getHeader());
   }
 
+  deletePlaylist(playlistIdn: string): Observable<any> {
+    const url = "https://api.spotify.com/v1/playlists/" + playlistIdn + "/followers";
+    return this.http.delete(url, this.getHeader());
+  }
+
   logout(): void {
     this.accessToken = '';
     this.refreshToken = '';

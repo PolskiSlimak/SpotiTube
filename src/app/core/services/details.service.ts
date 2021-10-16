@@ -90,11 +90,14 @@ export class DetailsService {
 
   checkIfExistInDiffrentPlaylist(track: any): boolean {
     let exists = false;
-    this.tracksInfo.forEach((info: any) => {
+    for (let info of this.tracksInfo) {
       exists = info.items.some((alreadyAddedTrack: any) => {
         return alreadyAddedTrack.track.id === track.track.id;
       });
-    });
+      if (exists) {
+        break;
+      }
+    }
     return exists;
   }
 
