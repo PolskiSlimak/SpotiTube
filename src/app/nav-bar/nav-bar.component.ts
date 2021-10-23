@@ -3,7 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogCreatePlaylistComponent } from '../core/dialogs/dialog-create-playlist/dialog-create-playlist.component';
 import { DialogDeletePlaylistComponent } from '../core/dialogs/dialog-delete-playlist/dialog-delete-playlist.component';
 import { DialogDataCreatePlaylist } from '../core/models/dialog-data-create-playlist.interface';
+import { PlaylistInfo } from '../core/models/playlist-info.interface';
 import { PlaylistStorage } from '../core/models/playlist-storage.interface';
+import { TrackInfo } from '../core/models/track-info.interface';
 import { DetailsService } from '../core/services/details.service';
 import { SpotifyService } from '../core/services/spotify.service';
 @Component({
@@ -12,11 +14,14 @@ import { SpotifyService } from '../core/services/spotify.service';
   styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent implements OnInit {
-  playlistInfo: any = [];
+  playlistInfo: PlaylistInfo[] = [];
   @ViewChildren('playlistHtmlLi') playlistHtml: QueryList<ElementRef>;
   playlistName: string;
   description: string;
   isPublic: boolean;
+  isAddedNewPlaylist: boolean;
+  isDeletedPlaylist: boolean;
+  deletedPlaylists: PlaylistInfo[];
 
   constructor(private detailsService: DetailsService,
               private spotifyService: SpotifyService,
@@ -28,13 +33,26 @@ export class NavBarComponent implements OnInit {
 
   ngAfterViewInit() {
     this.playlistHtml.changes.subscribe(() => {
-      this.checkActivePlaylists();
+      if (this.isAddedNewPlaylist) {
+        this.isAddedNewPlaylist = false;
+      } else if (this.isDeletedPlaylist) {
+        let itemTracks = this.detailsService.tracksInfo;
+        let deletedPlaylist = this.deletedPlaylists[0];
+        let foundItemTrack = itemTracks.find((itemTrack: TrackInfo) => {
+          return itemTrack.playlistId === deletedPlaylist.id;
+        });
+        this.detailsService.manageTracks(foundItemTrack!);
+        this.isDeletedPlaylist = false;
+      } else {
+        // this.detailsService.tracksInfo = [];
+        this.checkActivePlaylists();
+      }
     });
   }
 
   onPlaylistLoad(): void {
     this.spotifyService.getPlaylists().subscribe((data: any) => {
-      let items = data.items;
+      let items: PlaylistInfo[] = data.items;
       if (items) {
         this.detailsService.playlistInfo = items;
         this.playlistInfo = items;
@@ -59,7 +77,7 @@ export class NavBarComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: DialogDataCreatePlaylist) => {
       if (result !== undefined && result.playlistName !== undefined) {
         this.spotifyService.createPlaylist(this.detailsService.userIdn, result.playlistName, result.description, result.isPublic).subscribe((data: any) => {
-          this.onPlaylistLoad();
+          this.updatePlaylistList();
         });
       }
     });
@@ -70,10 +88,45 @@ export class NavBarComponent implements OnInit {
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed === true) {
         this.spotifyService.deletePlaylist(item.id).subscribe((data: any) => {
-          this.onPlaylistLoad();
+          this.updatePlaylistList();
         });
       }
     });
+  }
+
+  updatePlaylistList(): void {
+    this.spotifyService.getPlaylists().subscribe((data: any) => {
+      let items: PlaylistInfo[] = data.items;
+      if (items) {
+        if (items.length > this.playlistInfo.length) {
+          this.addNewPlaylistToList(items);
+        } else {
+          this.deletePlaylistFromList(items);
+        }
+      }
+    });
+  }
+
+  addNewPlaylistToList(items: PlaylistInfo[]): void {
+    let newPlaylists = items.filter((playlistInfo: PlaylistInfo) => {
+      let isExists = this.playlistInfo.some((playlistInfo2: PlaylistInfo) => {
+        return playlistInfo.id === playlistInfo2.id;
+      });
+      return isExists === false;
+    });
+    this.isAddedNewPlaylist = true;
+    this.detailsService.playlistInfo.unshift(newPlaylists[0]);
+  }
+
+  deletePlaylistFromList(items: PlaylistInfo[]): void {
+    let indexOfPlaylist = this.playlistInfo.findIndex((playlistInfo: PlaylistInfo) => {
+      let isExists = items.some((playlistInfo2: PlaylistInfo) => {
+        return playlistInfo.id === playlistInfo2.id;
+      });
+      return isExists === false;
+    });
+    this.isDeletedPlaylist = true;
+    this.deletedPlaylists = this.detailsService.playlistInfo.splice(indexOfPlaylist, 1);
   }
 
   changeStyleOfPlaylist(event: any): void {
@@ -98,7 +151,7 @@ export class NavBarComponent implements OnInit {
     this.detailsService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
       if (playlists.length > 0) {
         this.selectActivePlaylistsInDOM(playlists);
-        playlists.forEach((item: any) => {
+        playlists.forEach((item: PlaylistStorage) => {
           this.showTracksFromCheckedPlaylist(item);
         });
       }
@@ -109,12 +162,13 @@ export class NavBarComponent implements OnInit {
     let childrens = this.playlistHtml;
     for (let children of childrens) {
       let nativeElement = children.nativeElement;
-      let playlistName = nativeElement.innerText;
+      let childNode = nativeElement.childNodes[0];
+      let playlistName = childNode.innerText;
       let isChecked = playlists.some((playlist: PlaylistStorage) => {
         return playlistName === playlist.name;
       });
       if (isChecked) {
-        nativeElement.className = nativeElement.className.replace("hover-btn", "clicked-btn");
+        childNode.className = childNode.className.replace("hover-btn", "clicked-btn");
       }
     }
   }

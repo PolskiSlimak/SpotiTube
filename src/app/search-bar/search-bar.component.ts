@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PlaylistInfo } from '../core/models/playlist-info.interface';
 import { DetailsService } from '../core/services/details.service';
 import { SpotifyService } from '../core/services/spotify.service';
 
@@ -70,9 +71,9 @@ export class SearchBarComponent implements OnInit {
 
   setAllPlaylistsActive(): void {
     this.clearHtmlSelected();
-    this.detailsService.tracksInfo.length = 0;
+    this.clearTracksInfo();
     let playlists = this.detailsService.playlistInfo;
-    playlists.forEach((element: any) => {
+    playlists.forEach((element: PlaylistInfo) => {
       this.detailsService.setTracksInfo(element);
     });
   }
@@ -80,7 +81,12 @@ export class SearchBarComponent implements OnInit {
   clearHtmlSelected(): void {
     let childrens = this.detailsService.getPlaylistsDOM();
     for (let children of childrens) {
-      children.className = children.className.replace("clicked-btn", "hover-btn");
+      children.childNodes[0].className = children.childNodes[0].className.replace("clicked-btn", "hover-btn");
     }
+  }
+
+  clearTracksInfo(): void {
+    this.detailsService.tracksInfo.length = 0;
+    this.detailsService.updateLocalStorage();
   }
 }

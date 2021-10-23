@@ -4,8 +4,9 @@ import { Router } from '@angular/router';
 import { TrackInfo } from '../models/track-info.interface';
 import { ItemTrack } from '../models/item-track.interface';
 import { MatPaginator } from '@angular/material/paginator';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { PlaylistStorage } from '../models/playlist-storage.interface';
+import { PlaylistInfo } from '../models/playlist-info.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class DetailsService {
   tracksInfo: TrackInfo[] = [];
   trackList: any = [];
   activeTrackList: any = [];
-  playlistInfo: any = [];
+  playlistInfo: PlaylistInfo[] = [];
   isSearchPhrase = false;
   pageSize = 5;
   pageIndex = 0;
@@ -24,7 +25,7 @@ export class DetailsService {
   constructor(private router: Router,
               private spotifyService: SpotifyService) { }
 
-  setTracksInfo(item: any): void {
+  setTracksInfo(item: PlaylistInfo): void {
     let trackInfo = new TrackInfo();
     trackInfo.playlistId = item.id;
     trackInfo.playlistName = item.name;
@@ -40,12 +41,12 @@ export class DetailsService {
     trackInfo.playlistName = item.name;
     this.spotifyService.getTracks(trackInfo.playlistId).subscribe((data: any) => {
       trackInfo.items = data.items;
-      this.addTracks(trackInfo);
+      this.manageTracks(trackInfo);
     });
   }
 
-  addTracks(trackInfo: TrackInfo): void {
-    let index = this.tracksInfo.findIndex((element: any) => {
+  manageTracks(trackInfo: TrackInfo): void {
+    let index = this.tracksInfo.findIndex((element: TrackInfo) => {
       return element.playlistId === trackInfo.playlistId;
     });
     if (index > -1) {
@@ -88,7 +89,7 @@ export class DetailsService {
     });
   }
 
-  checkIfExistInDiffrentPlaylist(track: any): boolean {
+  checkIfExistInDiffrentPlaylist(track: ItemTrack): boolean {
     let exists = false;
     for (let info of this.tracksInfo) {
       exists = info.items.some((alreadyAddedTrack: any) => {
@@ -102,7 +103,7 @@ export class DetailsService {
   }
 
   updateLocalStorage(): void {
-    let playlistsStorage: any = [];
+    let playlistsStorage: PlaylistStorage[] = [];
     this.tracksInfo.forEach((trackInfo: TrackInfo) => {
       let playlistStorage = new PlaylistStorage();
       playlistStorage.id = trackInfo.playlistId;
@@ -112,11 +113,11 @@ export class DetailsService {
     this.setLocalStorageForPlaylist(playlistsStorage);
   }
 
-  setLocalStorageForPlaylist(list: any) {
+  setLocalStorageForPlaylist(list: PlaylistStorage[]) {
     localStorage.setItem("playlists", JSON.stringify(list));
   }
 
-  getPlaylistsFromLocalStorage() {
+  getPlaylistsFromLocalStorage(): Observable<PlaylistStorage[]> {
     let playlists = localStorage.getItem("playlists");
     let parsedPlaylists = playlists !== null ? JSON.parse(playlists) : [];
     return of(parsedPlaylists);

@@ -3,6 +3,7 @@ import { DetailsService } from '../core/services/details.service';
 import { SpotifyService } from '../core/services/spotify.service';
 import { TrackInfo } from '../core/models/track-info.interface';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { ItemTrack } from '../core/models/item-track.interface';
 
 @Component({
   selector: 'app-result-page',
@@ -10,8 +11,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
   styleUrls: ['./result-page.component.scss']
 })
 export class ResultPageComponent implements OnInit {
-  tracksInfo: any = this.detailsService.tracksInfo;
-  trackList: any = this.detailsService.trackList;
+  tracksInfo: TrackInfo[] = this.detailsService.tracksInfo;
+  trackList: ItemTrack[] = this.detailsService.trackList;
   activeTrackList: any = this.detailsService.activeTrackList;
   pageSize = this.detailsService.pageSize;
   pageIndex = this.detailsService.pageIndex;
@@ -27,7 +28,7 @@ export class ResultPageComponent implements OnInit {
     this.detailsService.paginator = this.paginator;
   }
 
-  onManageSongOnPlaylist(item: any, trackInfo: TrackInfo): void {
+  onManageSongOnPlaylist(item: ItemTrack, trackInfo: TrackInfo): void {
     let exists = this.checkIfExistInPlaylist(item, trackInfo);
     let trackUri = item.track.uri;
     if (exists) {
@@ -66,7 +67,7 @@ export class ResultPageComponent implements OnInit {
     });
   }
 
-  refreshTrackList(track: any): void {
+  refreshTrackList(track: ItemTrack): void {
     let index = this.trackList.findIndex((alreadyAddedTrack: any) => {
       return alreadyAddedTrack.track.id === track.track.id;
     });
@@ -85,11 +86,11 @@ export class ResultPageComponent implements OnInit {
     return exists;
   }
 
-  checkIfExistInMorePlaylists(track: any): boolean {
+  checkIfExistInMorePlaylists(track: ItemTrack): boolean {
     let records = [];
     let elements = 0;
-    this.tracksInfo.forEach((info: any) => {
-      records = info.items.filter((alreadyAddedTrack: any) => {
+    this.tracksInfo.forEach((info: TrackInfo) => {
+      records = info.items.filter((alreadyAddedTrack: ItemTrack) => {
         return alreadyAddedTrack.track.id === track.track.id;
       });
       elements = elements + records.length;

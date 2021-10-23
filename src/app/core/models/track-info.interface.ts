@@ -1,5 +1,7 @@
+import { ItemTrack } from "./item-track.interface";
+
 export class TrackInfo {
-  items: any;
+  items: ItemTrack[];
   playlistId: string;
   playlistName: string;
 }
