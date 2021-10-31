@@ -48,13 +48,17 @@ export class ResultPageComponent implements OnInit {
   onPageChange(event: PageEvent): void {
     const startIndex = event.pageIndex * event.pageSize;
     let endIndex = startIndex + event.pageSize;
-    if (endIndex > this.trackList.length) {
+    let isLastPage = false;
+    if (endIndex >= this.trackList.length) {
       endIndex = this.trackList.length;
+      isLastPage = true;
     }
     this.activeTrackList.length = 0;
     this.trackList.slice(startIndex, endIndex).forEach((element: any) => {
       this.activeTrackList.push(element);
     });
+    this.detailsService.pageSize = event.pageSize;
+    this.detailsService.isLastPage = isLastPage;
   }
 
   refreshTracksInfo(trackInfo: TrackInfo): void {
@@ -76,7 +80,9 @@ export class ResultPageComponent implements OnInit {
       return alreadyAddedTrack.track.id === track.track.id;
     });
     this.activeTrackList.splice(indexOFActive, 1);
-    this.activeTrackList.push(this.trackList[this.pageSize - 1])
+    if (!this.detailsService.isLastPage) {
+      this.activeTrackList.push(this.trackList[this.detailsService.pageSize - 1]);
+    }
   }
 
   checkIfExistInPlaylist(item: any, trackInfo: TrackInfo): boolean {

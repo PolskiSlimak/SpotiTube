@@ -21,6 +21,7 @@ export class DetailsService {
   pageIndex = 0;
   paginator: MatPaginator;
   userIdn: string;
+  isLastPage: boolean;
 
   constructor(private router: Router,
               private spotifyService: SpotifyService) { }
