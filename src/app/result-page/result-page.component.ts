@@ -76,6 +76,7 @@ export class ResultPageComponent implements OnInit {
       return alreadyAddedTrack.track.id === track.track.id;
     });
     this.activeTrackList.splice(indexOFActive, 1);
+    this.activeTrackList.push(this.trackList[this.pageSize - 1])
   }
 
   checkIfExistInPlaylist(item: any, trackInfo: TrackInfo): boolean {
