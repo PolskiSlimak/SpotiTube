@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {TokenResponse} from '../models/token-response.interface';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
+import { YoutubeService } from './youtube.service';
 
 @Injectable()
 export class SpotifyService {
@@ -32,7 +33,6 @@ export class SpotifyService {
     'user-read-email',
     'user-read-private'
   ];
-
   private _refreshToken: string;
   private _accessToken: string;
 
@@ -63,7 +63,8 @@ export class SpotifyService {
   }
 
   constructor(private http: HttpClient,
-              private router: Router) {
+              private router: Router,
+              private youtubeService: YoutubeService) {
     this.initializeTokenRefresher();
   }
 
@@ -72,7 +73,19 @@ export class SpotifyService {
     const redirectUri = this.redirectUri.replace('/', '%2F').replace(':', '%3A');
     const url = 'https://accounts.spotify.com/authorize?client_id=' + this.clientId + '&response_type=code&redirect_uri='
       + redirectUri + '&scope=' + scopes;
+      // + '&show_dialog=true';
     window.open(url, '_self');
+  }
+
+  refreshTokens(): void {
+    this.spotifyRefreshToken().subscribe((data: TokenResponse) => {
+      if (data.refresh_token) {
+        this.refreshToken = data.refresh_token;
+      }
+      if (data.access_token) {
+        this.accessToken = data.access_token;
+      }
+    });
   }
 
   spotifyRefreshToken(): Observable<TokenResponse> {
@@ -143,6 +156,9 @@ export class SpotifyService {
   logout(): void {
     this.accessToken = '';
     this.refreshToken = '';
+    this.youtubeService.accessToken = '';
+    this.youtubeService.refreshToken = '';
+    localStorage.setItem('playlists', "");
     this.router.navigate(['./']);
   }
 
@@ -153,10 +169,7 @@ export class SpotifyService {
 
   private initializeTokenRefresher(): void {
     setInterval(() => {
-      this.spotifyRefreshToken().subscribe((data: TokenResponse) => {
-        this.refreshToken = data.refresh_token;
-        this.accessToken = data.access_token;
-      });
+      this.refreshTokens();
     }, 1000 * 3000);
   }
 

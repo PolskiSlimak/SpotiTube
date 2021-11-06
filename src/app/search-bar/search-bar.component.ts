@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlaylistInfo } from '../core/models/playlist-info.interface';
 import { DetailsService } from '../core/services/details.service';
 import { SpotifyService } from '../core/services/spotify.service';
+import { YoutubeService } from '../core/services/youtube.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -17,12 +18,20 @@ export class SearchBarComponent implements OnInit {
   // selectedOption: string = this.optionsForFrom[0].name;
   showProfile = false;
   pictureUrl = "https://i1.wp.com/similarpng.com/wp-content/plugins/userswp/assets/images/no_profile.png?ssl=1";
+  isLoggedToYoutube: boolean;
 
   constructor(private spotifyService: SpotifyService,
-              private detailsService: DetailsService) { }
+              private detailsService: DetailsService,
+              private youTubeService: YoutubeService) { }
 
   ngOnInit(): void {
     this.onProfileLoad();
+    let isLogged = sessionStorage.getItem("isLoggedToYoutube");
+    this.isLoggedToYoutube = isLogged !== null && isLogged !== '' ? JSON.parse(isLogged) : false;
+  }
+
+  onLoginToYoutube(): void {
+    this.youTubeService.youtubeAuth();
   }
 
   onSearchForPhrase(): void {
@@ -56,6 +65,12 @@ export class SearchBarComponent implements OnInit {
 
   onLogout(): void {
     this.spotifyService.logout();
+  }
+
+  onLogoutFromYoutube(): void {
+    this.isLoggedToYoutube = false;
+    sessionStorage.setItem("isLoggedToYoutube", "false");
+    this.youTubeService.logout();
   }
 
   putTracks(items: any): any {

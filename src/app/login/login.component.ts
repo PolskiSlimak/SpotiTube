@@ -18,7 +18,8 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.checkRefreshToken();
+    // TODO zrobic opieranie sie na sessionStorage w przypadku tokenow
+    // this.checkRefreshToken();
   }
 
   spotifyAuth(): void {
@@ -35,7 +36,7 @@ export class LoginComponent implements OnInit {
 
   private checkRefreshToken(): void {
     if (this.spotifyService.refreshToken != null && this.spotifyService.refreshToken !== '') {
-      this.router.navigate(['./main']);
+      this.router.navigate(['./main-page']);
     }
   }
 

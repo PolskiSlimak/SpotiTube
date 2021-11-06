@@ -26,7 +26,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DialogDeletePlaylistComponent } from './core/dialogs/dialog-delete-playlist/dialog-delete-playlist.component';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CallbackYoutubeComponent } from './login/callback-youtube/callback-youtube.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +39,8 @@ import { DialogDeletePlaylistComponent } from './core/dialogs/dialog-delete-play
     SearchBarComponent,
     ResultPageComponent,
     DialogCreatePlaylistComponent,
-    DialogDeletePlaylistComponent
+    DialogDeletePlaylistComponent,
+    CallbackYoutubeComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +57,8 @@ import { DialogDeletePlaylistComponent } from './core/dialogs/dialog-delete-play
     MatDialogModule,
     MatInputModule,
     MatFormFieldModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatProgressSpinnerModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

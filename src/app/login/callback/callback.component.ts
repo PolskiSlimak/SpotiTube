@@ -10,8 +10,6 @@ import {TokenResponse} from '../../core/models/token-response.interface';
 })
 export class CallbackComponent implements OnInit {
 
-  spinnerColor = "#e08214";
-
   constructor(private route: ActivatedRoute,
               private router: Router,
               private spotifyService: SpotifyService) {
@@ -19,7 +17,6 @@ export class CallbackComponent implements OnInit {
 
   ngOnInit(): void {
     const error = this.route.snapshot.queryParamMap.get('error');
-
     if (error != null && error !== '') {
       this.router.navigate(['./error']);
     } else {
@@ -31,7 +28,6 @@ export class CallbackComponent implements OnInit {
         if (data.access_token) {
           this.spotifyService.accessToken = data.access_token;
         }
-
         this.router.navigate(['./main-page']);
       });
     }

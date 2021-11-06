@@ -3,11 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogCreatePlaylistComponent } from '../core/dialogs/dialog-create-playlist/dialog-create-playlist.component';
 import { DialogDeletePlaylistComponent } from '../core/dialogs/dialog-delete-playlist/dialog-delete-playlist.component';
 import { DialogDataCreatePlaylist } from '../core/models/dialog-data-create-playlist.interface';
+import { PlaylistInfoYoutube } from '../core/models/playlist-info-youtube.interface';
 import { PlaylistInfo } from '../core/models/playlist-info.interface';
 import { PlaylistStorage } from '../core/models/playlist-storage.interface';
 import { TrackInfo } from '../core/models/track-info.interface';
 import { DetailsService } from '../core/services/details.service';
 import { SpotifyService } from '../core/services/spotify.service';
+import { YoutubeService } from '../core/services/youtube.service';
 @Component({
   selector: 'app-nav-bar',
   templateUrl: './nav-bar.component.html',
@@ -15,6 +17,7 @@ import { SpotifyService } from '../core/services/spotify.service';
 })
 export class NavBarComponent implements OnInit {
   playlistInfo: PlaylistInfo[] = [];
+  playlistInfoYoutube: PlaylistInfoYoutube[] = this.youtubeService.playlistInfoYoutube;
   @ViewChildren('playlistHtmlLi') playlistHtml: QueryList<ElementRef>;
   playlistName: string;
   description: string;
@@ -22,10 +25,11 @@ export class NavBarComponent implements OnInit {
   isAddedNewPlaylist: boolean;
   isDeletedPlaylist: boolean;
   deletedPlaylists: PlaylistInfo[];
-
+  isLoggedToYoutube = this.youtubeService.isLogged;
   constructor(private detailsService: DetailsService,
               private spotifyService: SpotifyService,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog,
+              private youtubeService: YoutubeService) { }
 
   ngOnInit(): void {
     this.onPlaylistLoad();

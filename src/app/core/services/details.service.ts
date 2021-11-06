@@ -120,7 +120,7 @@ export class DetailsService {
 
   getPlaylistsFromLocalStorage(): Observable<PlaylistStorage[]> {
     let playlists = localStorage.getItem("playlists");
-    let parsedPlaylists = playlists !== null ? JSON.parse(playlists) : [];
+    let parsedPlaylists = playlists !== null && playlists !== '' ? JSON.parse(playlists) : [];
     return of(parsedPlaylists);
   }
 

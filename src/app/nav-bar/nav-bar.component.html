@@ -1,5 +1,5 @@
 <!-- <div :class="sidebarOpen ? 'block' : 'hidden'" @click="sidebarOpen = false" class="fixed z-20 inset-0 bg-black opacity-50 transition-opacity lg:hidden"></div> -->
-<nav class="flex flex-col bg-purple-900 h-screen px-4 tex-gray-900 border-purple-900">
+<nav class="flex flex-col bg-purple-900 h-screen px-4 tex-gray-900 border-purple-900 overflow-auto">
   <div class="flex flex-wrap mt-8 items-center justify-center">
     <div class="w-1/2">
       <img src="https://yt3.ggpht.com/ytc/AKedOLSHlPbMDpOLk7tpBOaS741aboFID7Zp7x53VktHJw=s900-c-k-c0x00ffffff-no-rj" class="mx-auto w-20 h-20 rounded-full"/>
@@ -20,5 +20,14 @@
         </svg>
       </li>
     </ul>
+    <ng-template [ngIf]="isLoggedToYoutube === true">
+      <hr>
+      <li #playlistHtmlLi class="mb-2 flex flex-row justify-between items-center" *ngFor="let item of playlistInfoYoutube">
+        <div class="px-4 py-4 rounded rounded-lg flex-grow hover-btn" (click)="onShowMusic($event, item)">{{item.title}}</div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 icon" viewBox="0 0 20 20" (click)="onDeletePlaylist(item)">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </li>
+    </ng-template>
   </div>
 </nav>

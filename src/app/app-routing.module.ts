@@ -4,6 +4,7 @@ import {LoginComponent} from './login/login.component';
 import {MainPageComponent} from './main-page/main-page.component';
 import {CallbackComponent} from './login/callback/callback.component';
 import {ErrorPageComponent} from './login/error-page/error-page.component';
+import { CallbackYoutubeComponent } from './login/callback-youtube/callback-youtube.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'callback',
     component: CallbackComponent
+  },
+  {
+    path: 'callback-youtube',
+    component: CallbackYoutubeComponent
   },
   {
     path: 'error',
