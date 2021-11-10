@@ -86,10 +86,16 @@ export class SearchBarComponent implements OnInit {
 
   onLogout(): void {
     this.spotifyService.logout();
+    this.isLoggedToYoutube = false;
+    sessionStorage.setItem("isLoggedToYoutube", "false");
+    localStorage.setItem('playlistsYoutube', "");
+    this.youtubeService.accessToken = '';
+    this.youtubeService.refreshToken = '';
   }
 
   onLogoutFromYoutube(): void {
     this.isLoggedToYoutube = false;
+    localStorage.setItem('playlistsYoutube', "");
     sessionStorage.setItem("isLoggedToYoutube", "false");
     this.youtubeService.logout();
   }

@@ -33,31 +33,35 @@ export class DetailsYoutubeService {
 
   convertItemTrack(items: any): ItemTrack[] {
     let itemTracks: ItemTrack[] = [];
-    items.forEach((element: any) => {
+    for (let element of items) {
+      let snippet = element.snippet;
+      if (snippet.description === "This video is unavailable." || snippet.description === "This video is private.") {
+        continue;
+      }
       let itemTrack = new ItemTrack();
       let track = new TrackData();
       let album = new AlbumInfo();
 
       track.id = element.id;
-      track.uri = element.snippet.resourceId.videoId
+      track.uri = snippet.resourceId.videoId
 
       album.images = [];
       album.images.push({
-        url: element.snippet.thumbnails.default.url
+        url: snippet.thumbnails.default.url
       });
       album.images.push({
-        url: element.snippet.thumbnails.medium.url
+        url: snippet.thumbnails.medium.url
       });
       album.images.push({
-        url: element.snippet.thumbnails.high.url
+        url: snippet.thumbnails.high.url
       });
       track.album = album;
 
-      let artistAndName = element.snippet.title.split("-");
+      let artistAndName = snippet.title.split("-");
       track.artists = [];
       let artistsInfo = new ArtistsInfo();
       if (artistAndName.length == 1) {
-        artistsInfo.name = element.snippet.videoOwnerChannelTitle.split("-")[0];
+        artistsInfo.name = snippet.videoOwnerChannelTitle.split("-")[0];
         track.name = artistAndName[0];
       } else {
         artistsInfo.name = artistAndName[0];
@@ -66,9 +70,8 @@ export class DetailsYoutubeService {
       track.artists.push(artistsInfo);
 
       itemTrack.track = track;
-      itemTracks.push(itemTrack);
-    });
-    console.log(itemTracks);
+      itemTracks.push(itemTrack)
+    }
     return itemTracks;
   }
 

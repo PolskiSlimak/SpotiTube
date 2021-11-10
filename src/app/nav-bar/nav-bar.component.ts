@@ -40,7 +40,6 @@ export class NavBarComponent implements OnInit {
     if (this.detailsYoutubeService.getIsLoggedToYoutube()) {
       this.detailsYoutubeService.onPlaylistLoadYoutube();
     }
-
   }
 
   ngAfterViewInit() {

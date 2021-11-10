@@ -156,8 +156,6 @@ export class SpotifyService {
   logout(): void {
     this.accessToken = '';
     this.refreshToken = '';
-    this.youtubeService.accessToken = '';
-    this.youtubeService.refreshToken = '';
     localStorage.setItem('playlists', "");
     this.router.navigate(['./']);
   }

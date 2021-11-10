@@ -71,7 +71,6 @@ export class DetailsService {
       if (!isAlreadyExist) {
         this.trackList.push(newTrack);
         if (this.activeTrackList.length < this.pageSize) {
-          console.log(newTrack)
           this.activeTrackList.push(newTrack)
         }
       }
