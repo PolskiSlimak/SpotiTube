@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DetailsYoutubeService } from 'src/app/core/services/details-youtube.service';
 import { YoutubeService } from 'src/app/core/services/youtube.service';
 import { NavBarComponent } from 'src/app/nav-bar/nav-bar.component';
 import { TokenResponse } from '../../core/models/token-response.interface';
@@ -12,8 +13,9 @@ import { TokenResponse } from '../../core/models/token-response.interface';
 export class CallbackYoutubeComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
-    private router: Router,
-    private youtubeService: YoutubeService) { }
+              private router: Router,
+              private youtubeService: YoutubeService,
+              private detailsYoutubeService: DetailsYoutubeService) { }
 
   ngOnInit(): void {
     const error = this.route.snapshot.queryParamMap.get('error');
@@ -30,9 +32,8 @@ export class CallbackYoutubeComponent implements OnInit {
           this.youtubeService.accessToken = data.access_token;
         }
         this.router.navigate(['./main-page']);
-        this.youtubeService.isLogged = true;
         sessionStorage.setItem("isLoggedToYoutube", "true")
-        this.youtubeService.onPlaylistLoadYoutube();
+        this.detailsYoutubeService.onPlaylistLoadYoutube();
       });
     }
   }

@@ -7,6 +7,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Observable, of } from 'rxjs';
 import { PlaylistStorage } from '../models/playlist-storage.interface';
 import { PlaylistInfo } from '../models/playlist-info.interface';
+import { YoutubeService } from './youtube.service';
+import { DetailsYoutubeService } from './details-youtube.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +26,8 @@ export class DetailsService {
   isLastPage: boolean;
 
   constructor(private router: Router,
-              private spotifyService: SpotifyService) { }
+              private spotifyService: SpotifyService,
+              private youtubeService: YoutubeService) { }
 
   setTracksInfo(item: PlaylistInfo): void {
     let trackInfo = new TrackInfo();
@@ -68,6 +71,7 @@ export class DetailsService {
       if (!isAlreadyExist) {
         this.trackList.push(newTrack);
         if (this.activeTrackList.length < this.pageSize) {
+          console.log(newTrack)
           this.activeTrackList.push(newTrack)
         }
       }

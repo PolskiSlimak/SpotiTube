@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenResponse } from '../models/token-response.interface';
 import { Router } from '@angular/router';
-import { PlaylistInfoYoutube } from '../models/playlist-info-youtube.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,14 +11,11 @@ export class YoutubeService {
   private readonly scopes: string[] = [
     'readonly'
   ];
-  private readonly apiKey: string = "AIzaSyDmvsT337KNBOFjuuveYkbfVIE3MLuq6IM";
   private readonly clientId: string = "23424263580-df273m69ddu6f0a602vc6l5rceb9tpcv.apps.googleusercontent.com";
   private readonly clientSecret: string = "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";
   private _refreshToken: string;
   private _accessToken: string;
 
-  isLogged: boolean;
-  playlistInfoYoutube: PlaylistInfoYoutube[] = [];
   constructor(private http: HttpClient,
               private router: Router) {
 
@@ -82,24 +78,20 @@ export class YoutubeService {
     window.location.reload();
   }
 
-  onPlaylistLoadYoutube(): void {
-    this.getPlaylists().subscribe((data: any) => {
-      data.items.forEach((element:any) => {
-        let item = new PlaylistInfoYoutube();
-        item.id = element.id;
-        item.etag = element.id;
-        item.kind = element.kind;
-        item.title = element.snippet.title;
-        this.playlistInfoYoutube.push(item);
-      });
-    });
-  }
-
   getPlaylists(): Observable<any> {
     const url = "https://youtube.googleapis.com/youtube/v3/playlists?part=snippet&mine=true&maxResults=50";
     return this.http.get(url, this.getHeader());
   }
 
+  getTracks(playlistId: string): Observable<any> {
+    const url = "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=" + playlistId;
+    return this.http.get(url, this.getHeader());
+  }
+
+  searchForPhrase(phrase: string): Observable<any> {
+    const url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&order=viewCount&type=video&q=" + phrase;
+    return this.http.get(url, this.getHeader());
+  }
 
   private getHeader(): any {
     const headers = new HttpHeaders({

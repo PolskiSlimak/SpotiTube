@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable, of } from 'rxjs';
 import { DialogCreatePlaylistComponent } from '../core/dialogs/dialog-create-playlist/dialog-create-playlist.component';
 import { DialogDeletePlaylistComponent } from '../core/dialogs/dialog-delete-playlist/dialog-delete-playlist.component';
 import { DialogDataCreatePlaylist } from '../core/models/dialog-data-create-playlist.interface';
@@ -7,9 +8,9 @@ import { PlaylistInfoYoutube } from '../core/models/playlist-info-youtube.interf
 import { PlaylistInfo } from '../core/models/playlist-info.interface';
 import { PlaylistStorage } from '../core/models/playlist-storage.interface';
 import { TrackInfo } from '../core/models/track-info.interface';
+import { DetailsYoutubeService } from '../core/services/details-youtube.service';
 import { DetailsService } from '../core/services/details.service';
 import { SpotifyService } from '../core/services/spotify.service';
-import { YoutubeService } from '../core/services/youtube.service';
 @Component({
   selector: 'app-nav-bar',
   templateUrl: './nav-bar.component.html',
@@ -17,7 +18,6 @@ import { YoutubeService } from '../core/services/youtube.service';
 })
 export class NavBarComponent implements OnInit {
   playlistInfo: PlaylistInfo[] = [];
-  playlistInfoYoutube: PlaylistInfoYoutube[] = this.youtubeService.playlistInfoYoutube;
   @ViewChildren('playlistHtmlLi') playlistHtml: QueryList<ElementRef>;
   playlistName: string;
   description: string;
@@ -25,14 +25,22 @@ export class NavBarComponent implements OnInit {
   isAddedNewPlaylist: boolean;
   isDeletedPlaylist: boolean;
   deletedPlaylists: PlaylistInfo[];
-  isLoggedToYoutube = this.youtubeService.isLogged;
+
+  playlistInfoYoutube: PlaylistInfoYoutube[] = this.detailsYoutubeService.playlistInfoYoutube;
+  isLoggedToYoutube = this.detailsYoutubeService.getIsLoggedToYoutube();
+  @ViewChildren('playlistHtmlLiYoutube') playlistHtmlYoutube: QueryList<ElementRef>;
+
   constructor(private detailsService: DetailsService,
               private spotifyService: SpotifyService,
               public dialog: MatDialog,
-              private youtubeService: YoutubeService) { }
+              private detailsYoutubeService: DetailsYoutubeService) { }
 
   ngOnInit(): void {
     this.onPlaylistLoad();
+    if (this.detailsYoutubeService.getIsLoggedToYoutube()) {
+      this.detailsYoutubeService.onPlaylistLoadYoutube();
+    }
+
   }
 
   ngAfterViewInit() {
@@ -52,6 +60,13 @@ export class NavBarComponent implements OnInit {
         this.checkActivePlaylists();
       }
     });
+    this.playlistHtmlYoutube.changes.subscribe(() => {
+      if (false) {
+        //TODO
+      } else {
+        this.checkActivePlaylistsYoutube();
+      }
+    });
   }
 
   onPlaylistLoad(): void {
@@ -66,6 +81,11 @@ export class NavBarComponent implements OnInit {
 
   onShowMusic(event: any, item: any): void {
     this.showTracksFromCheckedPlaylist(item);
+    this.changeStyleOfPlaylist(event);
+  }
+
+  onShowMusicYoutube(event: any, item: any): void {
+    this.showTracksFromCheckedPlaylistYoutube(item);
     this.changeStyleOfPlaylist(event);
   }
 
@@ -151,10 +171,17 @@ export class NavBarComponent implements OnInit {
     this.detailsService.showMusic(item);
   }
 
+  showTracksFromCheckedPlaylistYoutube(item: any): void {
+    if (this.detailsService.isSearchPhrase === true) {
+      this.clearSearch();
+    }
+    this.detailsYoutubeService.showMusic(item);
+  }
+
   checkActivePlaylists(): void {
     this.detailsService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
       if (playlists.length > 0) {
-        this.selectActivePlaylistsInDOM(playlists);
+        this.selectActivePlaylistsInDOM(playlists, false);
         playlists.forEach((item: PlaylistStorage) => {
           this.showTracksFromCheckedPlaylist(item);
         });
@@ -162,8 +189,22 @@ export class NavBarComponent implements OnInit {
     });
   }
 
-  selectActivePlaylistsInDOM(playlists: PlaylistStorage[]) {
+  checkActivePlaylistsYoutube(): void {
+    this.detailsYoutubeService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
+      if (playlists.length > 0) {
+        this.selectActivePlaylistsInDOM(playlists, true);
+        playlists.forEach((item: PlaylistStorage) => {
+          this.showTracksFromCheckedPlaylistYoutube(item);
+        });
+      }
+    });
+  }
+
+  selectActivePlaylistsInDOM(playlists: PlaylistStorage[], isYoutube: boolean) {
     let childrens = this.playlistHtml;
+    if (isYoutube) {
+      childrens = this.playlistHtmlYoutube;
+    }
     for (let children of childrens) {
       let nativeElement = children.nativeElement;
       let childNode = nativeElement.childNodes[0];
