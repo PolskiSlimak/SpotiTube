@@ -15,7 +15,7 @@ import { YoutubeService } from './youtube.service';
 })
 export class DetailsYoutubeService {
   playlistInfoYoutube: PlaylistInfoYoutube[] = [];
-  playlistInfo: PlaylistInfoYoutube[] = [];
+
   constructor(private youtubeService: YoutubeService,
               private detailsService: DetailsService) {
 

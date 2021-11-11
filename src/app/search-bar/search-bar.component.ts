@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { AlbumInfo } from '../core/models/album-info.interface';
 import { PlaylistInfoYoutube } from '../core/models/playlist-info-youtube.interface';
 import { PlaylistInfo } from '../core/models/playlist-info.interface';
@@ -28,12 +28,20 @@ export class SearchBarComponent implements OnInit {
   constructor(private spotifyService: SpotifyService,
               private detailsService: DetailsService,
               private youtubeService: YoutubeService,
-              private detailsYoutubeService: DetailsYoutubeService) { }
+              private detailsYoutubeService: DetailsYoutubeService,
+              private elementRef: ElementRef) { }
 
   ngOnInit(): void {
     this.onProfileLoad();
     let isLogged = sessionStorage.getItem("isLoggedToYoutube");
     this.isLoggedToYoutube = isLogged !== null && isLogged !== '' ? JSON.parse(isLogged) : false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  public clickout(event: Event) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.showProfile = false;
+    }
   }
 
   onLoginToYoutube(): void {
@@ -141,7 +149,7 @@ export class SearchBarComponent implements OnInit {
   setAllPlaylistsActiveYoutube(): void {
     this.clearHtmlSelected();
     this.clearTracksInfoYoutube();
-    let playlists = this.detailsYoutubeService.playlistInfo;
+    let playlists = this.detailsYoutubeService.playlistInfoYoutube;
     playlists.forEach((element: PlaylistInfoYoutube) => {
       this.detailsYoutubeService.setTracksInfo(element);
     });

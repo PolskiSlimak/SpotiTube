@@ -10,6 +10,9 @@
       <textarea matInput [(ngModel)]="data.description"></textarea>
     </mat-form-field>
     <mat-checkbox [(ngModel)]="data.isPublic">Set to public playlist?</mat-checkbox>
+    <ng-template [ngIf]="isLoggedToYoutube === true">
+      <mat-checkbox [(ngModel)]="data.isYoutube">Create playlist for Youtube?</mat-checkbox>
+    </ng-template>
   </div>
   <div mat-dialog-actions class="justify-end">
     <button mat-button (click)="onNoClick()">Close</button>

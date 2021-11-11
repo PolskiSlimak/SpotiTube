@@ -33,7 +33,7 @@
     <div class="fixed inset-0 h-full w-full z-10"></div>
   </ng-template>
   <ng-template #elseBlock1>
-    <div class="absolute right-0 mt-36 w-48 bg-white rounded-md overflow-hidden shadow-xl">
+    <div class="absolute right-0 mt-28 w-48 bg-white rounded-md overflow-hidden shadow-xl">
       <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white" (click)="onLogout()">Logout from all</a>
       <ng-template [ngIf]="isLoggedToYoutube === false">
         <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white" (click)="onLoginToYoutube()">Login to youtube</a>
@@ -41,7 +41,6 @@
       <ng-template [ngIf]="isLoggedToYoutube === true">
         <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white" (click)="onLogoutFromYoutube()">Logout from youtube</a>
       </ng-template>
-      <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white" (click)="this.showProfile = false">Close</a>
     </div>
   </ng-template>
 </header>

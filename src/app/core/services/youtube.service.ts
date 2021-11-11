@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenResponse } from '../models/token-response.interface';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -13,6 +14,7 @@ export class YoutubeService {
   ];
   private readonly clientId: string = "23424263580-df273m69ddu6f0a602vc6l5rceb9tpcv.apps.googleusercontent.com";
   private readonly clientSecret: string = "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";
+  private readonly apiKey: string = environment.apiKey;
   private _refreshToken: string;
   private _accessToken: string;
 
@@ -51,7 +53,7 @@ export class YoutubeService {
     const scopes = this.scopes.join('%20');
     const redirectUri = this.redirectUri.replace('/', '%2F').replace(':', '%3A');
     const url = 'https://accounts.google.com/o/oauth2/v2/auth?client_id=' + this.clientId + '&response_type=code&redirect_uri='
-      + redirectUri + '&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.' + scopes + '&state=state_parameter_passthrough_value' +'&access_type=offline';
+      + redirectUri + '&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube' + '&state=state_parameter_passthrough_value' +'&access_type=offline';
     window.open(url, '_self');
   }
 
@@ -86,6 +88,21 @@ export class YoutubeService {
   getTracks(playlistId: string): Observable<any> {
     const url = "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=" + playlistId;
     return this.http.get(url, this.getHeader());
+  }
+
+  createPlaylist(playlistName: string, description: string, isPublic: boolean): Observable<any> {
+    const url = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&key=" + this.apiKey;
+    let isPublicString = String(isPublic);
+    let body = {
+      snippet: {
+        title: playlistName,
+        description: description
+      },
+      // status: {
+      //   privacyStatus: isPublicString
+      // }
+    };
+    return this.http.post(url, body, this.getHeader());
   }
 
   searchForPhrase(phrase: string): Observable<any> {

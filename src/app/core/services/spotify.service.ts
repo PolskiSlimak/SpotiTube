@@ -144,7 +144,7 @@ export class SpotifyService {
       name: playlistName,
       description: description,
       public: isPublic
-    }
+    };
     return this.http.post(url, body, this.getHeader());
   }
 
