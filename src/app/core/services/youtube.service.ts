@@ -105,6 +105,11 @@ export class YoutubeService {
     return this.http.post(url, body, this.getHeader());
   }
 
+  deletePlaylist(playlistIdn: string): Observable<any> {
+    const url = "https://www.googleapis.com/youtube/v3/playlists?id=" + playlistIdn + "&key=" + this.apiKey;
+    return this.http.delete(url, this.getHeader());
+  }
+
   searchForPhrase(phrase: string): Observable<any> {
     const url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&order=viewCount&type=video&q=" + phrase;
     return this.http.get(url, this.getHeader());

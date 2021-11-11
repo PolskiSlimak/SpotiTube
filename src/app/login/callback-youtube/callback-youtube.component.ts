@@ -32,8 +32,7 @@ export class CallbackYoutubeComponent implements OnInit {
           this.youtubeService.accessToken = data.access_token;
         }
         this.router.navigate(['./main-page']);
-        sessionStorage.setItem("isLoggedToYoutube", "true")
-        this.detailsYoutubeService.onPlaylistLoadYoutube();
+        sessionStorage.setItem("isLoggedToYoutube", "true");
       });
     }
   }

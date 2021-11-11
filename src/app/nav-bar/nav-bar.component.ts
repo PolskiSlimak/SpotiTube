@@ -30,6 +30,7 @@ export class NavBarComponent implements OnInit {
   playlistInfoYoutube: PlaylistInfoYoutube[] = this.detailsYoutubeService.playlistInfoYoutube;
   isLoggedToYoutube = this.detailsYoutubeService.getIsLoggedToYoutube();
   @ViewChildren('playlistHtmlLiYoutube') playlistHtmlYoutube: QueryList<ElementRef>;
+  deletedPlaylistsYoutube: PlaylistInfoYoutube[];
 
   constructor(private detailsService: DetailsService,
               private spotifyService: SpotifyService,
@@ -54,7 +55,9 @@ export class NavBarComponent implements OnInit {
         let foundItemTrack = itemTracks.find((itemTrack: TrackInfo) => {
           return itemTrack.playlistId === deletedPlaylist.id;
         });
-        this.detailsService.manageTracks(foundItemTrack!);
+        if (foundItemTrack) {
+          this.detailsService.manageTracks(foundItemTrack);
+        }
         this.isDeletedPlaylist = false;
       } else {
         // this.detailsService.tracksInfo = [];
@@ -64,8 +67,16 @@ export class NavBarComponent implements OnInit {
     this.playlistHtmlYoutube.changes.subscribe(() => {
       if (this.isAddedNewPlaylist) {
         this.isAddedNewPlaylist = false;
-      } else if (false) {
-        //TODO
+      } else if (this.isDeletedPlaylist) {
+        let itemTracks = this.detailsService.tracksInfo;
+        let deletedPlaylist = this.deletedPlaylistsYoutube[0];
+        let foundItemTrack = itemTracks.find((itemTrack: TrackInfo) => {
+          return itemTrack.playlistId === deletedPlaylist.id;
+        });
+        if (foundItemTrack) {
+          this.detailsYoutubeService.manageTracks(foundItemTrack);
+        }
+        this.isDeletedPlaylist = false;
       } else {
         this.checkActivePlaylistsYoutube();
       }
@@ -105,11 +116,11 @@ export class NavBarComponent implements OnInit {
       if (result !== undefined && result.playlistName !== undefined) {
         if (result.isYoutube) {
           this.youtubeSerivce.createPlaylist(result.playlistName, result.description, result.isPublic).subscribe((data: any) => {
-            this.updatePlaylistYoutube();
+            this.updatePlaylistYoutube(true);
           });
         } else {
           this.spotifyService.createPlaylist(this.detailsService.userIdn, result.playlistName, result.description, result.isPublic).subscribe((data: any) => {
-            this.updatePlaylistList();
+            this.updatePlaylistList(true);
           });
         }
       }
@@ -120,18 +131,24 @@ export class NavBarComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogDeletePlaylistComponent, {});
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed === true) {
-        this.spotifyService.deletePlaylist(item.id).subscribe((data: any) => {
-          this.updatePlaylistList();
-        });
+        if (item instanceof PlaylistInfoYoutube) {
+          this.youtubeSerivce.deletePlaylist(item.id).subscribe((data: any) => {
+            this.updatePlaylistYoutube(false);
+          });
+        } else {
+          this.spotifyService.deletePlaylist(item.id).subscribe((data: any) => {
+            this.updatePlaylistList(false);
+          });
+        }
       }
     });
   }
 
-  updatePlaylistList(): void {
+  updatePlaylistList(isCreatePlaylist: boolean): void {
     this.spotifyService.getPlaylists().subscribe((data: any) => {
       let items: PlaylistInfo[] = data.items;
       if (items) {
-        if (items.length > this.playlistInfo.length) {
+        if (isCreatePlaylist) {
           this.addNewPlaylistToList(items);
         } else {
           this.deletePlaylistFromList(items);
@@ -140,7 +157,7 @@ export class NavBarComponent implements OnInit {
     });
   }
 
-  updatePlaylistYoutube(): void {
+  updatePlaylistYoutube(isCreatePlaylist: boolean): void {
     this.youtubeSerivce.getPlaylists().subscribe((data: any) => {
       let items = data.items;
       if (items) {
@@ -153,10 +170,10 @@ export class NavBarComponent implements OnInit {
           item.name = element.snippet.title;
           playlistItems.push(item);
         });
-        if (playlistItems.length > this.playlistInfoYoutube.length) {
+        if (isCreatePlaylist) {
           this.addNewPlaylistToListYoutube(playlistItems);
         } else {
-
+          this.deletePlaylistFromListYoutube(playlistItems);
         }
       }
     })
@@ -175,13 +192,17 @@ export class NavBarComponent implements OnInit {
 
   addNewPlaylistToListYoutube(items: PlaylistInfoYoutube[]): void {
     let newPlaylists = items.filter((playlistInfo: PlaylistInfoYoutube) => {
-      let isExists = this.playlistInfoYoutube.some((playlistInfo2: PlaylistInfoYoutube) => {
+      let isExists = this.detailsYoutubeService.playlistInfoYoutube.some((playlistInfo2: PlaylistInfoYoutube) => {
         return playlistInfo.id === playlistInfo2.id;
       });
       return isExists === false;
     });
     this.isAddedNewPlaylist = true;
-    this.detailsYoutubeService.playlistInfoYoutube.unshift(newPlaylists[0]);
+    if (newPlaylists.length > 0) {
+      this.detailsYoutubeService.playlistInfoYoutube.unshift(newPlaylists[0]);
+    } else {
+      this.updatePlaylistYoutube(true);
+    }
   }
 
   deletePlaylistFromList(items: PlaylistInfo[]): void {
@@ -193,6 +214,17 @@ export class NavBarComponent implements OnInit {
     });
     this.isDeletedPlaylist = true;
     this.deletedPlaylists = this.detailsService.playlistInfo.splice(indexOfPlaylist, 1);
+  }
+
+  deletePlaylistFromListYoutube(items: PlaylistInfoYoutube[]): void {
+    let indexOfPlaylist = this.detailsYoutubeService.playlistInfoYoutube.findIndex((playlistInfo: PlaylistInfoYoutube) => {
+      let isExists = items.some((playlistInfo2: PlaylistInfoYoutube) => {
+        return playlistInfo.id === playlistInfo2.id;
+      });
+      return isExists === false;
+    });
+    this.isDeletedPlaylist = true;
+    this.deletedPlaylistsYoutube = this.detailsYoutubeService.playlistInfoYoutube.splice(indexOfPlaylist, 1);
   }
 
   changeStyleOfPlaylist(event: any): void {
