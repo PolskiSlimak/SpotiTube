@@ -81,26 +81,26 @@ export class YoutubeService {
   }
 
   getPlaylists(): Observable<any> {
-    const url = "https://youtube.googleapis.com/youtube/v3/playlists?part=snippet&mine=true&maxResults=50";
+    const url = "https://youtube.googleapis.com/youtube/v3/playlists?part=snippet&mine=true&maxResults=50" + "&key=" + this.apiKey;
     return this.http.get(url, this.getHeader());
   }
 
   getTracks(playlistId: string): Observable<any> {
-    const url = "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=" + playlistId;
+    const url = "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=" + playlistId + "&key=" + this.apiKey;
     return this.http.get(url, this.getHeader());
   }
 
   createPlaylist(playlistName: string, description: string, isPublic: boolean): Observable<any> {
-    const url = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&key=" + this.apiKey;
-    let isPublicString = String(isPublic);
+    const url = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&part=status&key=" + this.apiKey;
+    let isPublicString = isPublic ? "public" : "private";
     let body = {
       snippet: {
         title: playlistName,
         description: description
       },
-      // status: {
-      //   privacyStatus: isPublicString
-      // }
+      status: {
+        privacyStatus: isPublicString
+      }
     };
     return this.http.post(url, body, this.getHeader());
   }
@@ -111,8 +111,27 @@ export class YoutubeService {
   }
 
   searchForPhrase(phrase: string): Observable<any> {
-    const url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&order=viewCount&type=video&q=" + phrase;
+    const url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&type=video&q=" + phrase + "&key=" + this.apiKey;
     return this.http.get(url, this.getHeader());
+  }
+
+  deleteTrackFromPlaylist(playlistItemIdn: string): Observable<any> {
+    const url = "https://www.googleapis.com/youtube/v3/playlistItems?id=" + playlistItemIdn + "&key=" + this.apiKey;
+    return this.http.delete(url, this.getHeader());
+  }
+
+  addTrackToPlaylist(playlistIdn: string, videoIdn: string): Observable<any> {
+    const url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet" + "&key=" + this.apiKey;
+    let body = {
+      snippet: {
+        playlistId: playlistIdn,
+        resourceId: {
+          kind: "youtube#video",
+          videoId: videoIdn,
+        }
+      },
+    };
+    return this.http.post(url, body, this.getHeader());
   }
 
   private getHeader(): any {

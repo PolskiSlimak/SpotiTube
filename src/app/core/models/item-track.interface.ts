@@ -7,4 +7,5 @@ export class ItemTrack {
   primary_color: any;
   track: TrackData;
   video_thumbnail: any;
+  isYoutubeResource: boolean;
 }

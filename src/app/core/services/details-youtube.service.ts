@@ -15,6 +15,7 @@ import { YoutubeService } from './youtube.service';
 })
 export class DetailsYoutubeService {
   playlistInfoYoutube: PlaylistInfoYoutube[] = [];
+  isSearchYoutube: boolean = false;
 
   constructor(private youtubeService: YoutubeService,
               private detailsService: DetailsService) {
@@ -40,39 +41,53 @@ export class DetailsYoutubeService {
       }
       let itemTrack = new ItemTrack();
       let track = new TrackData();
-      let album = new AlbumInfo();
+      track.id = snippet.resourceId.videoId;
+      track.uri = element.id;
 
-      track.id = element.id;
-      track.uri = snippet.resourceId.videoId
-
-      album.images = [];
-      album.images.push({
-        url: snippet.thumbnails.default.url
-      });
-      album.images.push({
-        url: snippet.thumbnails.medium.url
-      });
-      album.images.push({
-        url: snippet.thumbnails.high.url
-      });
+      let album = this.getAlbumImages(snippet);
       track.album = album;
 
-      let artistAndName = snippet.title.split("-");
+      let artistsInfo = this.getArtistAndName(snippet, track, false);
       track.artists = [];
-      let artistsInfo = new ArtistsInfo();
-      if (artistAndName.length == 1) {
-        artistsInfo.name = snippet.videoOwnerChannelTitle.split("-")[0];
-        track.name = artistAndName[0];
-      } else {
-        artistsInfo.name = artistAndName[0];
-        track.name = artistAndName[1] ? artistAndName[1]: "";
-      }
       track.artists.push(artistsInfo);
 
       itemTrack.track = track;
+      itemTrack.isYoutubeResource = true;
       itemTracks.push(itemTrack)
     }
     return itemTracks;
+  }
+
+  getAlbumImages(snippet: any): AlbumInfo {
+    let album = new AlbumInfo();
+    album.images = [];
+    album.images.push({
+      url: snippet.thumbnails.default.url
+    });
+    album.images.push({
+      url: snippet.thumbnails.medium.url
+    });
+    album.images.push({
+      url: snippet.thumbnails.high.url
+    });
+    return album;
+  }
+
+  getArtistAndName(snippet: any, trackData: TrackData, isForSearch: boolean): ArtistsInfo {
+    let artistAndName = snippet.title.split("-");
+    let artistsInfo = new ArtistsInfo();
+    if (artistAndName.length == 1) {
+      if (isForSearch) {
+        artistsInfo.name = snippet.channelTitle.split("-")[0];
+      } else {
+        artistsInfo.name = snippet.videoOwnerChannelTitle.split("-")[0];
+      }
+      trackData.name = artistAndName[0];
+    } else {
+      artistsInfo.name = artistAndName[0];
+      trackData.name = artistAndName[1];
+    }
+    return artistsInfo;
   }
 
   onPlaylistLoadYoutube(): void {

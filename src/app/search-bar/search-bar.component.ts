@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { AlbumInfo } from '../core/models/album-info.interface';
+import { ItemTrack } from '../core/models/item-track.interface';
 import { PlaylistInfoYoutube } from '../core/models/playlist-info-youtube.interface';
 import { PlaylistInfo } from '../core/models/playlist-info.interface';
 import { TrackData } from '../core/models/track-data.interface';
@@ -15,7 +16,7 @@ import { YoutubeService } from '../core/services/youtube.service';
 })
 export class SearchBarComponent implements OnInit {
   phraseValue: any;
-  isSearchYoutube: boolean;
+  isSearchYoutube: boolean = this.detailsYoutubeService.isSearchYoutube;
   // optionsForFrom = [
   //   { name: 'track' },
   //   { name: 'album' }
@@ -49,6 +50,7 @@ export class SearchBarComponent implements OnInit {
   }
 
   onSwitchSearch(): void {
+    this.detailsYoutubeService.isSearchYoutube = !this.detailsYoutubeService.isSearchYoutube;
     this.isSearchYoutube = !this.isSearchYoutube;
   }
 
@@ -123,16 +125,24 @@ export class SearchBarComponent implements OnInit {
     this.detailsService.trackList.length = 0;
     this.detailsService.activeTrackList.length = 0;
     items.forEach((item: any) => {
+      let snippet = item.snippet;
       let convertedItem = new TrackData();
-      let album = new AlbumInfo();
-      album.images = item.snippet.thumbnails;
+      convertedItem.id = item.id.videoId;
+      convertedItem.uri; //uri nie jest potrzebne bo nie jest na zadnej playliscie
+
+      let album = this.detailsYoutubeService.getAlbumImages(snippet);
       convertedItem.album = album;
-      let artistAndName = item.snippet.title.split("-");
-      convertedItem.artists = artistAndName[0];
-      convertedItem.artists = artistAndName[1] ? artistAndName[1]: "";
-      this.detailsService.trackList.push({track: convertedItem})
+
+      let artistsInfo = this.detailsYoutubeService.getArtistAndName(snippet, convertedItem, true);
+      convertedItem.artists = [];
+      convertedItem.artists.push(artistsInfo);
+
+      let itemTrack = new ItemTrack();
+      itemTrack.track = convertedItem;
+      itemTrack.isYoutubeResource = true;
+      this.detailsService.trackList.push(itemTrack)
       if (this.detailsService.activeTrackList.length < this.detailsService.pageSize) {
-        this.detailsService.activeTrackList.push({track: item})
+        this.detailsService.activeTrackList.push(itemTrack)
       }
     });
   }
@@ -158,7 +168,9 @@ export class SearchBarComponent implements OnInit {
   clearHtmlSelected(): void {
     let childrens = this.detailsService.getPlaylistsDOM();
     for (let children of childrens) {
-      children.childNodes[0].className = children.childNodes[0].className.replace("clicked-btn", "hover-btn");
+      if (children.childNodes[0]) {
+        children.childNodes[0].className = children.childNodes[0].className.replace("clicked-btn", "hover-btn");
+      }
     }
   }
 
