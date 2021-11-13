@@ -60,7 +60,6 @@ export class NavBarComponent implements OnInit {
         }
         this.isDeletedPlaylist = false;
       } else {
-        // this.detailsService.tracksInfo = [];
         this.checkActivePlaylists();
       }
     });

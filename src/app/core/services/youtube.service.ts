@@ -61,7 +61,6 @@ export class YoutubeService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
-    // const isRefreshTokenPresent = this.refreshToken !== '' && this.refreshToken != null;
     const payload = new HttpParams()
       .append('redirect_uri', this.redirectUri)
       .append('client_id', this.clientId)
@@ -70,7 +69,6 @@ export class YoutubeService {
       .append('code', this.accessToken);
     const options = { headers };
     const url = 'https://oauth2.googleapis.com/token';
-    // https://accounts.google.com/o/oauth2/token
     return this.http.post<TokenResponse>(url, payload.toString(), options);
   }
 

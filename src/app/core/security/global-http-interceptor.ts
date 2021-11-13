@@ -18,8 +18,7 @@ export class GlobalHttpInterceptor   implements HttpInterceptor {
       catchError((error) => {
         switch (error.status) {
           case 401:
-            //sprawdzic co dac do if
-            if (true) {
+            if (error.url.includes("spotify")) {
               this._spotifyService.spotifyRefreshToken().subscribe((data: TokenResponse) => {
                 if (data.refresh_token) {
                   this._spotifyService.refreshToken = data.refresh_token;
@@ -27,6 +26,7 @@ export class GlobalHttpInterceptor   implements HttpInterceptor {
                 if (data.access_token) {
                   this._spotifyService.accessToken = data.access_token;
                 }
+                window.location.reload();
                 return next.handle(req);
               });
             } else {
@@ -37,6 +37,7 @@ export class GlobalHttpInterceptor   implements HttpInterceptor {
                 if (data.access_token) {
                   this._youtubeService.accessToken = data.access_token;
                 }
+                window.location.reload();
                 return next.handle(req);
               });
               break;

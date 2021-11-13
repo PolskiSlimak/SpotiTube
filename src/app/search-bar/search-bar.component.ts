@@ -17,11 +17,6 @@ import { YoutubeService } from '../core/services/youtube.service';
 export class SearchBarComponent implements OnInit {
   phraseValue: any;
   isSearchYoutube: boolean = this.detailsYoutubeService.isSearchYoutube;
-  // optionsForFrom = [
-  //   { name: 'track' },
-  //   { name: 'album' }
-  // ];
-  // selectedOption: string = this.optionsForFrom[0].name;
   showProfile = false;
   pictureUrl = "https://i1.wp.com/similarpng.com/wp-content/plugins/userswp/assets/images/no_profile.png?ssl=1";
   isLoggedToYoutube: boolean;
@@ -57,7 +52,6 @@ export class SearchBarComponent implements OnInit {
   onSearchForPhrase(): void {
     let formattedPhrase = this.phraseValue.replace(" ", "+");
     this.spotifyService.searchForPhrase(formattedPhrase, "track").subscribe((data: any) => {
-      // let searchedType = "track" + "s";
       this.phraseValue = "";
       this.putTracks(data["tracks"].items);
       this.detailsService.isSearchPhrase = true;
@@ -68,7 +62,6 @@ export class SearchBarComponent implements OnInit {
   onSearchForPhraseYoutube(): void {
     let formattedPhrase = this.phraseValue.replace(" ", "%20");
     this.youtubeService.searchForPhrase(formattedPhrase).subscribe((data: any) => {
-      // let searchedType = "track" + "s";
       this.phraseValue = "";
       this.putTracksYoutube(data.items);
       this.detailsService.isSearchPhrase = true;
