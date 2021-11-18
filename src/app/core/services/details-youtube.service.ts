@@ -120,9 +120,11 @@ export class DetailsYoutubeService {
     if (index > -1) {
       this.detailsService.tracksInfo.splice(index, 1);
       this.detailsService.deleteRelatedTracks(trackInfo.items);
+      this.detailsService.refreshTracksInfo$.next(this.detailsService.tracksInfo);
     } else {
       this.detailsService.tracksInfo.push(trackInfo);
       this.detailsService.updateShownTracks(trackInfo.items);
+      this.detailsService.refreshTracksInfo$.next(this.detailsService.tracksInfo);
     }
     this.updateLocalStorage();
   }

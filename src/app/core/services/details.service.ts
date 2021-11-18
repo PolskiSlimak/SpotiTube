@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { TrackInfo } from '../models/track-info.interface';
 import { ItemTrack } from '../models/item-track.interface';
 import { MatPaginator } from '@angular/material/paginator';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { PlaylistStorage } from '../models/playlist-storage.interface';
 import { PlaylistInfo } from '../models/playlist-info.interface';
 
@@ -23,6 +23,7 @@ export class DetailsService {
   userIdn: string;
   isLastPage: boolean = true;
 
+  refreshTracksInfo$ = new BehaviorSubject<TrackInfo[]>([]);
   constructor(private router: Router,
               private spotifyService: SpotifyService) { }
 
@@ -52,10 +53,13 @@ export class DetailsService {
     });
     if (index > -1) {
       this.tracksInfo.splice(index, 1);
+      this.tracksInfo = this.tracksInfo.slice();
       this.deleteRelatedTracks(trackInfo.items);
+      this.refreshTracksInfo$.next(this.tracksInfo);
     } else {
-      this.tracksInfo.push(trackInfo);
+      this.tracksInfo = [...this.tracksInfo, trackInfo];
       this.updateShownTracks(trackInfo.items);
+      this.refreshTracksInfo$.next(this.tracksInfo);
     }
     this.updateLocalStorage();
   }

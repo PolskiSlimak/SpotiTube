@@ -1,0 +1,12 @@
+<ng-select class=""
+  [items]="this.tracksInfo"
+  bindLabel="playlistName"
+  placeholder="Select playlists"
+  [multiple]="true"
+  [minTermLength]="2"
+  [closeOnSelect]="false"
+  typeToSearchText="Please enter 2 or more characters"
+  [(ngModel)]="selectedTracksInfo"
+  (remove)="onRemove($event)"
+  (add)="onAdd($event)">
+</ng-select>

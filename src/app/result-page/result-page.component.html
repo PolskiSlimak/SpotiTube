@@ -1,12 +1,12 @@
 <div class="flex flex-col mt-8">
   <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-    <div class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
-      <table class="min-w-full">
+    <div class="overflow-hidden sm:rounded-lg border-b border-gray-200">
+      <table class="min-w-full table-fixed">
         <thead>
           <tr>
-            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Artists</th>
-            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Song title</th>
-            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Playlists</th>
+            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12">Artists</th>
+            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12">Song title</th>
+            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-3/12">Playlists</th>
           </tr>
         </thead>
           <tbody class="bg-white">
@@ -30,26 +30,32 @@
               </td>
               <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div class="text-sm leading-5 text-gray-900">{{item.track.name}}</div>
-                  <!-- <div class="text-sm leading-5 text-gray-500">Web dev</div> -->
               </td>
               <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                <button mat-button [matMenuTriggerFor]="menu">...</button>
-                <mat-menu #menu="matMenu">
-                  <div *ngFor="let trackInfo of tracksInfo">
-                    <div *ngIf="checkIfExistInPlaylist(item, trackInfo) === true; else elseBlock2">
-                      <button mat-menu-item class="float-left">
-                        <input type="checkbox" (click)="onManageSongOnPlaylist(item, trackInfo)" checked class="mr-2">{{trackInfo.playlistName}}
-                      </button>
-                    </div>
-                    <ng-template #elseBlock2>
-                      <button mat-menu-item>
-                        <input type="checkbox" (click)="onManageSongOnPlaylist(item, trackInfo)" class="mr-2">{{trackInfo.playlistName}}
-                      </button>
-                    </ng-template>
-                  </div>
-                </mat-menu>
+                <app-playlist-result-page #playlistResultPageHtml [(trackList)]="trackList" [(activeTrackList)]="activeTrackList" [itemTrack]="item"></app-playlist-result-page>
               </td>
             </tr>
+            <ng-template [ngIf]="pageSize-activeTrackList.length > 0 && pageIndex > 0 && isLastPage === true && activeTrackList.length > 0">
+              <tr *ngFor="let i of [].constructor(pageSize-activeTrackList.length)">
+                <td class="w-full h-full" class="px-6 py-4 whitespace-no-wrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10">
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm leading-5 text-gray-900">
+                        <div class="font-medium"></div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-no-wrap">
+                  <div class="text-sm leading-5 text-gray-900"></div>
+                </td>
+                <td class="px-6 py-4 whitespace-no-wrap">
+                </td>
+              </tr>
+              <tr class="border-b border-gray-200"></tr>
+          </ng-template>
           </tbody>
       </table>
       <mat-paginator #paginator   [length]="this.trackList.length"
