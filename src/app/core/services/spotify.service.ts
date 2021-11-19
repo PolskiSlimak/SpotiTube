@@ -73,7 +73,7 @@ export class SpotifyService {
     const redirectUri = this.redirectUri.replace('/', '%2F').replace(':', '%3A');
     const url = 'https://accounts.spotify.com/authorize?client_id=' + this.clientId + '&response_type=code&redirect_uri='
       + redirectUri + '&scope=' + scopes;
-      // + '&show_dialog=true';
+      + '&show_dialog=true';
     window.open(url, '_self');
   }
 
