@@ -29,6 +29,7 @@ export class PlaylistResultPageComponent implements OnInit {
   ngOnInit(): void {
     this.detailsService.refreshTracksInfo$.subscribe((tracksInfo : TrackInfo[]) => {
       this.tracksInfo = tracksInfo;
+      this.tracksInfo = [...this.tracksInfo];
       if (this.selectedTracksInfo.length > this.tracksInfo.length) {
         this.selectedTracksInfo = [];
       }

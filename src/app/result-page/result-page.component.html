@@ -38,7 +38,7 @@
               </tr>
             </ng-template>
             <ng-template #elseBlock>
-              <ng-template [ngIf]="this.detailsService.isSearchPhrase" [ngIfElse]="elseBlock1">
+              <ng-template [ngIf]="this.detailsService.isSearchPhrase === true" [ngIfElse]="elseBlock1">
                 <tr>
                   <td></td>
                   <td>No results found</td>

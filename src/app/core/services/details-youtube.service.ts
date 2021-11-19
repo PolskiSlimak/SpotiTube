@@ -29,6 +29,7 @@ export class DetailsYoutubeService {
     this.youtubeService.getTracks(trackInfo.playlistId).subscribe((data: any) => {
       trackInfo.items = this.convertItemTrack(data.items);
       this.detailsService.tracksInfo.push(trackInfo);
+      this.detailsService.refreshTracksInfo$.next(this.detailsService.tracksInfo);
     });
   }
 

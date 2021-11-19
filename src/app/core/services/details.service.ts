@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { SpotifyService } from './spotify.service';
-import { Router } from '@angular/router';
 import { TrackInfo } from '../models/track-info.interface';
 import { ItemTrack } from '../models/item-track.interface';
 import { MatPaginator } from '@angular/material/paginator';
@@ -22,10 +21,9 @@ export class DetailsService {
   paginator: MatPaginator;
   userIdn: string;
   isLastPage: boolean = true;
-
   refreshTracksInfo$ = new BehaviorSubject<TrackInfo[]>([]);
-  constructor(private router: Router,
-              private spotifyService: SpotifyService) { }
+
+  constructor(private spotifyService: SpotifyService) { }
 
   setTracksInfo(item: PlaylistInfo): void {
     let trackInfo = new TrackInfo();
@@ -34,6 +32,7 @@ export class DetailsService {
     this.spotifyService.getTracks(trackInfo.playlistId).subscribe((data: any) => {
       trackInfo.items = data.items;
       this.tracksInfo.push(trackInfo);
+      this.refreshTracksInfo$.next(this.tracksInfo);
     });
   }
 

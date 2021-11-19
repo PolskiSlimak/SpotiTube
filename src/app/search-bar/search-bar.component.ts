@@ -30,7 +30,7 @@ export class SearchBarComponent implements OnInit {
   ngOnInit(): void {
     this.onProfileLoad();
     let isLogged = sessionStorage.getItem("isLoggedToYoutube");
-    this.isLoggedToYoutube = isLogged !== null && isLogged !== '' ? JSON.parse(isLogged) : false;
+    this.isLoggedToYoutube = isLogged !== null && isLogged !== '' ? JSON.parse(isLogged) : this.detailsYoutubeService.getIsLoggedToYoutube();
   }
 
   @HostListener('document:click', ['$event'])
