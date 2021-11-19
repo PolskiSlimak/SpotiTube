@@ -254,9 +254,10 @@ export class NavBarComponent implements OnInit {
   checkActivePlaylists(): void {
     this.detailsService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
       if (playlists.length > 0) {
-        this.selectActivePlaylistsInDOM(playlists, false);
         playlists.forEach((item: PlaylistStorage) => {
-          this.showTracksFromCheckedPlaylist(item);
+          if (this.selectActivePlaylistsInDOMAndCheckExist(item, false)) {
+            this.showTracksFromCheckedPlaylist(item);
+          }
         });
       }
     });
@@ -265,16 +266,18 @@ export class NavBarComponent implements OnInit {
   checkActivePlaylistsYoutube(): void {
     this.detailsYoutubeService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
       if (playlists.length > 0) {
-        this.selectActivePlaylistsInDOM(playlists, true);
         playlists.forEach((item: PlaylistStorage) => {
-          this.showTracksFromCheckedPlaylistYoutube(item);
+          if (this.selectActivePlaylistsInDOMAndCheckExist(item, true)) {
+            this.showTracksFromCheckedPlaylistYoutube(item);
+          }
         });
       }
     });
   }
 
-  selectActivePlaylistsInDOM(playlists: PlaylistStorage[], isYoutube: boolean) {
+  selectActivePlaylistsInDOMAndCheckExist(playlistStorage: PlaylistStorage, isYoutube: boolean): boolean {
     let childrens = this.playlistHtml;
+    let isExists = false;
     if (isYoutube) {
       childrens = this.playlistHtmlYoutube;
     }
@@ -282,13 +285,13 @@ export class NavBarComponent implements OnInit {
       let nativeElement = children.nativeElement;
       let childNode = nativeElement.childNodes[0];
       let playlistName = childNode.innerText;
-      let isChecked = playlists.some((playlist: PlaylistStorage) => {
-        return playlistName === playlist.name;
-      });
+      let isChecked = playlistName === playlistStorage.name;
       if (isChecked) {
         childNode.className = childNode.className.replace("hover-btn", "clicked-btn");
+        isExists = true;
       }
     }
+    return isExists;
   }
 
   clearSearch(): void {

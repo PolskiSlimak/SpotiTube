@@ -50,6 +50,9 @@ export class SearchBarComponent implements OnInit {
   }
 
   onSearchForPhrase(): void {
+    if (!this.phraseValue) {
+      return
+    }
     let formattedPhrase = this.phraseValue.replace(" ", "+");
     this.spotifyService.searchForPhrase(formattedPhrase, "track").subscribe((data: any) => {
       this.phraseValue = "";
@@ -60,6 +63,9 @@ export class SearchBarComponent implements OnInit {
   }
 
   onSearchForPhraseYoutube(): void {
+    if (!this.phraseValue) {
+      return
+    }
     let formattedPhrase = this.phraseValue.replace(" ", "%20");
     this.youtubeService.searchForPhrase(formattedPhrase).subscribe((data: any) => {
       this.phraseValue = "";

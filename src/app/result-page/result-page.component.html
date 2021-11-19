@@ -10,31 +10,49 @@
           </tr>
         </thead>
           <tbody class="bg-white">
-            <tr *ngFor="let item of activeTrackList">
-              <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                <div class="flex items-center">
-                  <div class="flex-shrink-0 h-10 w-10">
-                    <img class="h-10 w-10 rounded-full" src={{item.track.album.images[2].url}} alt="">
-                  </div>
-                  <div class="ml-4">
-                    <div class="text-sm leading-5 text-gray-900">
-                      <div class="font-medium">{{item.track.artists[0].name}}</div>
-                      <ng-template [ngIf]="item.track.artists.length > 1">
-                        <div *ngFor="let artist of item.track.artists.slice(1); let i=index" class="float-left font-light">
-                          <ng-template [ngIf]="i<3">& {{artist.name}}&nbsp;</ng-template>
-                        </div>
-                      </ng-template>
+            <ng-template [ngIf]="activeTrackList.length > 0" [ngIfElse]="elseBlock">
+              <tr *ngFor="let item of activeTrackList">
+                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10">
+                      <img class="h-10 w-10 rounded-full" src={{item.track.album.images[2].url}} alt="">
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm leading-5 text-gray-900">
+                        <div class="font-medium">{{item.track.artists[0].name}}</div>
+                        <ng-template [ngIf]="item.track.artists.length > 1">
+                          <div *ngFor="let artist of item.track.artists.slice(1); let i=index" class="float-left font-light">
+                            <ng-template [ngIf]="i<3">& {{artist.name}}&nbsp;</ng-template>
+                          </div>
+                        </ng-template>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                <div class="text-sm leading-5 text-gray-900">{{item.track.name}}</div>
-              </td>
-              <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                <app-playlist-result-page #playlistResultPageHtml [(trackList)]="trackList" [(activeTrackList)]="activeTrackList" [itemTrack]="item"></app-playlist-result-page>
-              </td>
-            </tr>
+                </td>
+                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                  <div class="text-sm leading-5 text-gray-900">{{item.track.name}}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                  <app-playlist-result-page #playlistResultPageHtml [(trackList)]="trackList" [(activeTrackList)]="activeTrackList" [itemTrack]="item"></app-playlist-result-page>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template #elseBlock>
+              <ng-template [ngIf]="this.detailsService.isSearchPhrase" [ngIfElse]="elseBlock1">
+                <tr>
+                  <td></td>
+                  <td>No results found</td>
+                  <td></td>
+                </tr>
+              </ng-template>
+              <ng-template #elseBlock1>
+                <tr>
+                  <td></td>
+                  <td>No content to show</td>
+                  <td></td>
+                </tr>
+              </ng-template>
+            </ng-template>
             <ng-template [ngIf]="pageSize-activeTrackList.length > 0 && pageIndex > 0 && isLastPage === true && activeTrackList.length > 0">
               <tr *ngFor="let i of [].constructor(pageSize-activeTrackList.length)">
                 <td class="w-full h-full" class="px-6 py-4 whitespace-no-wrap">

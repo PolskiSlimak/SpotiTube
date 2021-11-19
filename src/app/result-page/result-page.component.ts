@@ -17,7 +17,7 @@ export class ResultPageComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private detailsService: DetailsService) { }
+  constructor(public detailsService: DetailsService) { }
 
   ngOnInit(): void {
   }
