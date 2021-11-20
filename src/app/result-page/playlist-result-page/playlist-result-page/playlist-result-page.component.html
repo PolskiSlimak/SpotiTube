@@ -8,5 +8,6 @@
   typeToSearchText="Please enter 2 or more characters"
   [(ngModel)]="selectedTracksInfo"
   (remove)="onRemove($event)"
-  (add)="onAdd($event)">
+  (add)="onAdd($event)"
+  (clear)="onClear()">
 </ng-select>

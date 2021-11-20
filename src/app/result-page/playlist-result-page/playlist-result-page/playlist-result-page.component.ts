@@ -48,57 +48,106 @@ export class PlaylistResultPageComponent implements OnInit {
   }
 
   onAdd(selectedTrack: TrackInfo): void {
-    let trackUri = this.itemTrack.track.uri;
     if (this.itemTrack.isYoutubeResource) {
-      this.youtubeService.addTrackToPlaylist(selectedTrack.playlistId, this.itemTrack.track.id).subscribe(() => {
-        this.refreshTracksInfo(selectedTrack, true);
-      });
-    } else {
-      this.spotifyService.addTrackToPlaylist(selectedTrack.playlistId, trackUri).subscribe(() => {
-        this.refreshTracksInfo(selectedTrack, false);
-      });
-    }
-  }
-
-  onRemove(event: any): void {
-    let removedTrackInfo: TrackInfo = event.value;
-    let trackUri = this.itemTrack.track.uri;
-    if (this.itemTrack.isYoutubeResource) {
-      this.youtubeService.deleteTrackFromPlaylist(trackUri).subscribe(() => {
-        this.refreshTracks(removedTrackInfo, true);
-      });
-    } else {
-      this.spotifyService.deleteTrackFromPlaylist(removedTrackInfo.playlistId, {uri:trackUri}).subscribe(() => {
-        this.refreshTracks(removedTrackInfo, false);
-      });
-    }
-  }
-
-  refreshTracks(removedTrackInfo: TrackInfo, isYoutube: boolean): void {
-    this.refreshTracksInfo(removedTrackInfo, isYoutube);
-    if (!this.checkIfExistInMorePlaylists(this.itemTrack)) {
-      this.refreshTrackList(this.itemTrack);
-    }
-  }
-
-  refreshTracksInfo(trackInfo: TrackInfo, isYoutube: boolean): void {
-    if (isYoutube) {
-      this.youtubeService.getTracks(trackInfo.playlistId).subscribe((data: any) => {
+      let callbackYoutube = (trackInfo: TrackInfo, data: any): void => {
         trackInfo.items = this.detailsYoutubeService.convertItemTrack(data.items);
         let indexOfTrackInfo = this.tracksInfo.findIndex((trackInfoAdded: TrackInfo) => {
           return trackInfoAdded.playlistId === trackInfo.playlistId;
         });
         this.tracksInfo[indexOfTrackInfo] = trackInfo;
         this.detailsService.tracksInfo = this.tracksInfo;
+      };
+      this.youtubeService.addTrackToPlaylist(selectedTrack.playlistId, this.itemTrack.track.id).subscribe(() => {
+        this.refreshTracksInfo(selectedTrack, true, callbackYoutube);
       });
     } else {
-      this.spotifyService.getTracks(trackInfo.playlistId).subscribe((data: any) => {
+      let callbackSpotify = (trackInfo: TrackInfo, data: any): void => {
         trackInfo.items = data.items;
         let indexOfTrackInfo = this.tracksInfo.findIndex((trackInfoAdded: TrackInfo) => {
           return trackInfoAdded.playlistId === trackInfo.playlistId;
         });
         this.tracksInfo[indexOfTrackInfo] = trackInfo;
         this.detailsService.tracksInfo = this.tracksInfo;
+      };
+      this.spotifyService.addTrackToPlaylist(selectedTrack.playlistId, this.itemTrack.track.uri).subscribe(() => {
+        this.refreshTracksInfo(selectedTrack, false, callbackSpotify);
+      });
+    }
+  }
+
+  onRemove(event: any): void {
+    let removedTrackInfo: TrackInfo = event.value;
+    let trackUri = this.reciveTrackUri(removedTrackInfo);
+    if (this.itemTrack.isYoutubeResource) {
+      this.processDeleteTrackInfoAndList(true, removedTrackInfo, trackUri);
+    } else {
+      this.processDeleteTrackInfoAndList(false, removedTrackInfo, trackUri);
+    }
+  }
+
+  onClear(): void {
+    for (let removedTrackInfo of this.tracksInfo) {
+      let trackUri = this.reciveTrackUri(removedTrackInfo);
+      if (this.itemTrack.isYoutubeResource) {
+        this.processDeleteTrackInfoAndList(true, removedTrackInfo, trackUri);
+      } else {
+        this.processDeleteTrackInfoAndList(false, removedTrackInfo, trackUri);
+      }
+    }
+  }
+
+  reciveTrackUri(trackInfoToFetchUri: TrackInfo): string {
+    for (let itemTrack of trackInfoToFetchUri.items) {
+      let track = itemTrack.track
+      if (track.id === this.itemTrack.track.id) {
+        return track.uri;
+      }
+    }
+    return "";
+  }
+
+  processDeleteTrackInfoAndList(isYoutube: boolean, removedTrackInfo: TrackInfo, trackUri: string): void {
+    if (isYoutube) {
+      let callbackYoutube = (trackInfo: TrackInfo, data: any): void => {
+        trackInfo.items = this.detailsYoutubeService.convertItemTrack(data.items);
+        let indexOfTrackInfo = this.tracksInfo.findIndex((trackInfoAdded: TrackInfo) => {
+          return trackInfoAdded.playlistId === trackInfo.playlistId;
+        });
+        this.tracksInfo[indexOfTrackInfo] = trackInfo;
+        this.detailsService.tracksInfo = this.tracksInfo;
+        if (!this.checkIfExistInMorePlaylists(this.itemTrack) && !this.detailsService.isSearchPhrase) {
+          this.refreshTrackList(this.itemTrack);
+        }
+      };
+      this.youtubeService.deleteTrackFromPlaylist(trackUri).subscribe(() => {
+        this.refreshTracksInfo(removedTrackInfo, true, callbackYoutube);
+      });
+    } else {
+      let callbackSpotify = (trackInfo: TrackInfo, data: any): void => {
+        trackInfo.items = data.items;
+        let indexOfTrackInfo = this.tracksInfo.findIndex((trackInfoAdded: TrackInfo) => {
+          return trackInfoAdded.playlistId === trackInfo.playlistId;
+        });
+        this.tracksInfo[indexOfTrackInfo] = trackInfo;
+        this.detailsService.tracksInfo = this.tracksInfo;
+        if (!this.checkIfExistInMorePlaylists(this.itemTrack) && !this.detailsService.isSearchPhrase) {
+          this.refreshTrackList(this.itemTrack);
+        }
+      };
+      this.spotifyService.deleteTrackFromPlaylist(removedTrackInfo.playlistId, {uri:trackUri}).subscribe(() => {
+        this.refreshTracksInfo(removedTrackInfo, false, callbackSpotify);
+      });
+    }
+  }
+
+  refreshTracksInfo(trackInfo: TrackInfo, isYoutube: boolean, callback: (trackInfo: TrackInfo, data: any) => void): void {
+    if (isYoutube) {
+      this.youtubeService.getTracks(trackInfo.playlistId).subscribe((data: any) => {
+        callback(trackInfo, data)
+      });
+    } else {
+      this.spotifyService.getTracks(trackInfo.playlistId).subscribe((data: any) => {
+        callback(trackInfo, data);
       });
     }
   }
@@ -107,16 +156,20 @@ export class PlaylistResultPageComponent implements OnInit {
     let index = this.trackList.findIndex((alreadyAddedTrack: ItemTrack) => {
       return alreadyAddedTrack.track.id === track.track.id;
     });
-    this.trackList.splice(index, 1);
-    this.trackListChange.emit(this.trackList);
+    if (index != -1) {
+      this.trackList.splice(index, 1);
+      this.trackListChange.emit(this.trackList);
+    }
     let indexOFActive = this.activeTrackList.findIndex((alreadyAddedTrack: ItemTrack) => {
       return alreadyAddedTrack.track.id === track.track.id;
     });
-    this.activeTrackList.splice(indexOFActive, 1);
-    if (this.trackList.length >= this.detailsService.pageSize) {
-      this.activeTrackList.push(this.trackList[this.detailsService.pageSize - 1]);
+    if (indexOFActive != -1) {
+      this.activeTrackList.splice(indexOFActive, 1);
+      if (this.trackList.length >= this.detailsService.pageSize) {
+        this.activeTrackList.push(this.trackList[this.detailsService.pageSize - 1]);
+      }
+      this.activeTrackListChange.emit(this.activeTrackList);
     }
-    this.activeTrackListChange.emit(this.activeTrackList);
   }
 
   checkIfExistInPlaylist(item: ItemTrack, trackInfo: TrackInfo): boolean {
@@ -128,7 +181,7 @@ export class PlaylistResultPageComponent implements OnInit {
   }
 
   checkIfExistInMorePlaylists(track: ItemTrack): boolean {
-    let records = [];
+    let records: ItemTrack[] = [];
     let elements = 0;
     this.tracksInfo.forEach((info: TrackInfo) => {
       records = info.items.filter((alreadyAddedTrack: ItemTrack) => {
@@ -136,6 +189,6 @@ export class PlaylistResultPageComponent implements OnInit {
       });
       elements = elements + records.length;
     });
-    return elements > 1;
+    return elements > 0;
   }
 }

@@ -54,7 +54,7 @@ export class DetailsYoutubeService {
 
       itemTrack.track = track;
       itemTrack.isYoutubeResource = true;
-      itemTracks.push(itemTrack)
+      itemTracks.push(itemTrack);
     }
     return itemTracks;
   }

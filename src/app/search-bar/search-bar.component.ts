@@ -1,5 +1,4 @@
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
-import { AlbumInfo } from '../core/models/album-info.interface';
 import { ItemTrack } from '../core/models/item-track.interface';
 import { PlaylistInfoYoutube } from '../core/models/playlist-info-youtube.interface';
 import { PlaylistInfo } from '../core/models/playlist-info.interface';
@@ -45,8 +44,10 @@ export class SearchBarComponent implements OnInit {
   }
 
   onSwitchSearch(): void {
-    this.detailsYoutubeService.isSearchYoutube = !this.detailsYoutubeService.isSearchYoutube;
-    this.isSearchYoutube = !this.isSearchYoutube;
+    if (this.isLoggedToYoutube) {
+      this.detailsYoutubeService.isSearchYoutube = !this.detailsYoutubeService.isSearchYoutube;
+      this.isSearchYoutube = !this.isSearchYoutube;
+    }
   }
 
   onSearchForPhrase(): void {
