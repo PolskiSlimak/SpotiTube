@@ -1,9 +1,9 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, of } from 'rxjs';
 import { DialogCreatePlaylistComponent } from '../core/dialogs/dialog-create-playlist/dialog-create-playlist.component';
 import { DialogDeletePlaylistComponent } from '../core/dialogs/dialog-delete-playlist/dialog-delete-playlist.component';
 import { DialogDataCreatePlaylist } from '../core/models/dialog-data-create-playlist.interface';
+import { PhraseStorage } from '../core/models/phrase-storage.interface';
 import { PlaylistInfoYoutube } from '../core/models/playlist-info-youtube.interface';
 import { PlaylistInfo } from '../core/models/playlist-info.interface';
 import { PlaylistStorage } from '../core/models/playlist-storage.interface';
@@ -47,39 +47,71 @@ export class NavBarComponent implements OnInit {
 
   ngAfterViewInit() {
     this.playlistHtml.changes.subscribe(() => {
-      if (this.isAddedNewPlaylist) {
-        this.isAddedNewPlaylist = false;
-      } else if (this.isDeletedPlaylist) {
-        let itemTracks = this.detailsService.tracksInfo;
-        let deletedPlaylist = this.deletedPlaylists[0];
-        let foundItemTrack = itemTracks.find((itemTrack: TrackInfo) => {
-          return itemTrack.playlistId === deletedPlaylist.id;
-        });
-        if (foundItemTrack) {
-          this.detailsService.manageTracks(foundItemTrack);
-        }
-        this.isDeletedPlaylist = false;
-      } else {
-        this.checkActivePlaylists();
-      }
+      this.checkWhatToDo();
     });
     this.playlistHtmlYoutube.changes.subscribe(() => {
-      if (this.isAddedNewPlaylist) {
-        this.isAddedNewPlaylist = false;
-      } else if (this.isDeletedPlaylist) {
-        let itemTracks = this.detailsService.tracksInfo;
-        let deletedPlaylist = this.deletedPlaylistsYoutube[0];
-        let foundItemTrack = itemTracks.find((itemTrack: TrackInfo) => {
-          return itemTrack.playlistId === deletedPlaylist.id;
-        });
-        if (foundItemTrack) {
-          this.detailsYoutubeService.manageTracks(foundItemTrack);
-        }
-        this.isDeletedPlaylist = false;
-      } else {
-        this.checkActivePlaylistsYoutube();
-      }
+      this.checkWhatToDoYoutube();
     });
+  }
+
+  checkWhatToDo(): void {
+    let phraseStorage: PhraseStorage = this.detailsService.getPhraseFromLocalStorage();
+    if (this.isAddedNewPlaylist) {
+      this.isAddedNewPlaylist = false;
+    } else if (this.isDeletedPlaylist) {
+      this.deletePlaylist();
+    } else if (phraseStorage !== null && !phraseStorage.isYoutubePhrase) {
+      this.searchAgain(phraseStorage.phrase);
+    } else {
+      this.checkActivePlaylists();
+    }
+  }
+
+  checkWhatToDoYoutube(): void {
+    let phraseStorage: PhraseStorage = this.detailsService.getPhraseFromLocalStorage();
+    if (this.isAddedNewPlaylist) {
+      this.isAddedNewPlaylist = false;
+    } else if (this.isDeletedPlaylist) {
+      this.deletePlaylistYoutube();
+    } else if (phraseStorage !== null && phraseStorage.isYoutubePhrase) {
+      this.searchAgainYoutube(phraseStorage.phrase);
+    } else {
+      this.checkActivePlaylistsYoutube();
+    }
+  }
+
+  deletePlaylist(): void {
+    let itemTracks = this.detailsService.tracksInfo;
+    let deletedPlaylist = this.deletedPlaylists[0];
+    let foundItemTrack = itemTracks.find((itemTrack: TrackInfo) => {
+      return itemTrack.playlistId === deletedPlaylist.id;
+    });
+    if (foundItemTrack) {
+      this.detailsService.manageTracks(foundItemTrack);
+    }
+    this.isDeletedPlaylist = false;
+  }
+
+  deletePlaylistYoutube(): void {
+    let itemTracks = this.detailsService.tracksInfo;
+    let deletedPlaylist = this.deletedPlaylistsYoutube[0];
+    let foundItemTrack = itemTracks.find((itemTrack: TrackInfo) => {
+      return itemTrack.playlistId === deletedPlaylist.id;
+    });
+    if (foundItemTrack) {
+      this.detailsYoutubeService.manageTracks(foundItemTrack);
+    }
+    this.isDeletedPlaylist = false;
+  }
+
+  searchAgain(phrase: string): void {
+    this.detailsService.removeLocalStoragePlaylist();
+    this.detailsService.searchInSpotify(phrase);
+  }
+
+  searchAgainYoutube(phrase: string): void {
+    this.detailsService.removeLocalStoragePlaylist();
+    this.detailsYoutubeService.searchInYoutube(phrase);
   }
 
   onPlaylistLoad(): void {
@@ -299,5 +331,6 @@ export class NavBarComponent implements OnInit {
     this.detailsService.trackList.length = 0;
     this.detailsService.tracksInfo.length = 0;
     this.detailsService.activeTrackList.length = 0;
+    this.detailsService.removePhraseFromLocalStorage();
   }
 }

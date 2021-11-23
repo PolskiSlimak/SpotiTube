@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { PlaylistStorage } from '../models/playlist-storage.interface';
 import { PlaylistInfo } from '../models/playlist-info.interface';
+import { PhraseStorage } from '../models/phrase-storage.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,7 @@ export class DetailsService {
   userIdn: string;
   isLastPage: boolean = true;
   refreshTracksInfo$ = new BehaviorSubject<TrackInfo[]>([]);
+  phraseValue: any;
 
   constructor(private spotifyService: SpotifyService) { }
 
@@ -117,8 +119,12 @@ export class DetailsService {
     this.setLocalStorageForPlaylist(playlistsStorage);
   }
 
-  setLocalStorageForPlaylist(list: PlaylistStorage[]) {
+  setLocalStorageForPlaylist(list: PlaylistStorage[]): void {
     localStorage.setItem("playlists", JSON.stringify(list));
+  }
+
+  removeLocalStoragePlaylist(): void {
+    localStorage.removeItem("playlists");
   }
 
   getPlaylistsFromLocalStorage(): Observable<PlaylistStorage[]> {
@@ -129,5 +135,65 @@ export class DetailsService {
 
   getPlaylistsDOM(): any {
     return document.getElementById("playlistsHtml")!.children;
+  }
+
+  setPhraseToLocalStorage(formattedPhrase: PhraseStorage): void {
+      localStorage.setItem("phraseToSearch", JSON.stringify(formattedPhrase));
+  }
+
+  removePhraseFromLocalStorage(): void {
+    localStorage.removeItem("phraseToSearch");
+  }
+
+  getPhraseFromLocalStorage(): PhraseStorage {
+    let phrase = localStorage.getItem("phraseToSearch");
+    return phrase !== null && phrase !== '' ? JSON.parse(phrase): null;
+  }
+
+  searchInSpotify(formattedPhrase: string): void {
+    this.spotifyService.searchForPhrase(formattedPhrase, "track").subscribe((data: any) => {
+      this.phraseValue = "";
+      this.putTracks(data["tracks"].items);
+      this.isSearchPhrase = true;
+      this.setAllPlaylistsActive();
+      this.setPhraseToLocalStorage({
+        phrase: formattedPhrase,
+        isYoutubePhrase: false
+      });
+    });
+  }
+
+  putTracks(items: any): void {
+    this.trackList.length = 0;
+    this.activeTrackList.length = 0;
+    items.forEach((item: any) => {
+      this.trackList.push({track: item})
+      if (this.activeTrackList.length < this.pageSize) {
+        this.activeTrackList.push({track: item})
+      }
+    });
+  }
+
+  setAllPlaylistsActive(): void {
+    this.clearHtmlSelected();
+    this.clearTracksInfo();
+    let playlists = this.playlistInfo;
+    playlists.forEach((element: PlaylistInfo) => {
+      this.setTracksInfo(element);
+    });
+  }
+
+  clearHtmlSelected(): void {
+    let childrens = this.getPlaylistsDOM();
+    for (let children of childrens) {
+      if (children.childNodes[0]) {
+        children.childNodes[0].className = children.childNodes[0].className.replace("clicked-btn", "hover-btn");
+      }
+    }
+  }
+
+  clearTracksInfo(): void {
+    this.tracksInfo.length = 0;
+    this.updateLocalStorage();
   }
 }

@@ -156,4 +156,57 @@ export class DetailsYoutubeService {
     let converted = isLogged !== null && isLogged !== '' ? JSON.parse(isLogged) : false;
     return converted;
   }
+
+  searchInYoutube(formattedPhrase: string): void {
+    this.youtubeService.searchForPhrase(formattedPhrase).subscribe((data: any) => {
+      this.detailsService.phraseValue = "";
+      this.putTracksYoutube(data.items);
+      this.detailsService.isSearchPhrase = true;
+      this.setAllPlaylistsActiveYoutube();
+      this.detailsService.setPhraseToLocalStorage({
+        phrase: formattedPhrase,
+        isYoutubePhrase: true
+      });
+    });
+  }
+
+  putTracksYoutube(items: any): void {
+    this.detailsService.trackList.length = 0;
+    this.detailsService.activeTrackList.length = 0;
+    items.forEach((item: any) => {
+      let snippet = item.snippet;
+      let convertedItem = new TrackData();
+      convertedItem.id = item.id.videoId;
+      convertedItem.uri; //uri nie jest potrzebne bo nie jest na zadnej playliscie
+
+      let album = this.getAlbumImages(snippet);
+      convertedItem.album = album;
+
+      let artistsInfo = this.getArtistAndName(snippet, convertedItem, true);
+      convertedItem.artists = [];
+      convertedItem.artists.push(artistsInfo);
+
+      let itemTrack = new ItemTrack();
+      itemTrack.track = convertedItem;
+      itemTrack.isYoutubeResource = true;
+      this.detailsService.trackList.push(itemTrack)
+      if (this.detailsService.activeTrackList.length < this.detailsService.pageSize) {
+        this.detailsService.activeTrackList.push(itemTrack)
+      }
+    });
+  }
+
+  setAllPlaylistsActiveYoutube(): void {
+    this.detailsService.clearHtmlSelected();
+    this.clearTracksInfoYoutube();
+    let playlists = this.playlistInfoYoutube;
+    playlists.forEach((element: PlaylistInfoYoutube) => {
+      this.setTracksInfo(element);
+    });
+  }
+
+  clearTracksInfoYoutube(): void {
+    this.detailsService.tracksInfo.length = 0;
+    this.updateLocalStorage();
+  }
 }
