@@ -24,6 +24,7 @@ export class DetailsService {
   isLastPage: boolean = true;
   refreshTracksInfo$ = new BehaviorSubject<TrackInfo[]>([]);
   phraseValue: any;
+  themeColor: string;
 
   constructor(private spotifyService: SpotifyService) { }
 
@@ -156,6 +157,7 @@ export class DetailsService {
       this.putTracks(data["tracks"].items);
       this.isSearchPhrase = true;
       this.setAllPlaylistsActive();
+      this.themeColor = "spotify";
       this.setPhraseToLocalStorage({
         phrase: formattedPhrase,
         isYoutubePhrase: false

@@ -85,6 +85,7 @@ export class SearchBarComponent implements OnInit {
     this.isLoggedToYoutube = false;
     sessionStorage.setItem("isLoggedToYoutube", "false");
     localStorage.setItem('playlistsYoutube', "");
+    localStorage.removeItem("phraseToSearch");
     this.youtubeService.accessToken = '';
     this.youtubeService.refreshToken = '';
   }
@@ -93,6 +94,7 @@ export class SearchBarComponent implements OnInit {
     this.isLoggedToYoutube = false;
     localStorage.setItem('playlistsYoutube', "");
     sessionStorage.setItem("isLoggedToYoutube", "false");
+    localStorage.removeItem("phraseToSearch");
     this.youtubeService.logout();
   }
 }

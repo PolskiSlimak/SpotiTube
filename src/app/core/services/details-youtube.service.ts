@@ -163,6 +163,7 @@ export class DetailsYoutubeService {
       this.putTracksYoutube(data.items);
       this.detailsService.isSearchPhrase = true;
       this.setAllPlaylistsActiveYoutube();
+      this.detailsService.themeColor = "youtube";
       this.detailsService.setPhraseToLocalStorage({
         phrase: formattedPhrase,
         isYoutubePhrase: true
