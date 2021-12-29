@@ -2,7 +2,9 @@ import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreatePlaylistComponent } from '../core/dialogs/dialog-create-playlist/dialog-create-playlist.component';
 import { DialogDeletePlaylistComponent } from '../core/dialogs/dialog-delete-playlist/dialog-delete-playlist.component';
+import { DialogModifyPlaylistComponent } from '../core/dialogs/dialog-modify-playlist/dialog-modify-playlist.component';
 import { DialogDataCreatePlaylist } from '../core/models/dialog-data-create-playlist.interface';
+import { DialogDataModifyPlaylist } from '../core/models/dialog-data-modify-playlist.interface';
 import { PhraseStorage } from '../core/models/phrase-storage.interface';
 import { PlaylistInfoYoutube } from '../core/models/playlist-info-youtube.interface';
 import { PlaylistInfo } from '../core/models/playlist-info.interface';
@@ -24,6 +26,7 @@ export class NavBarComponent implements OnInit {
   description: string;
   isPublic: boolean;
   isAddedNewPlaylist: boolean;
+  isModifiedPlaylist: boolean;
   isDeletedPlaylist: boolean;
   deletedPlaylists: PlaylistInfo[];
 
@@ -39,10 +42,7 @@ export class NavBarComponent implements OnInit {
               private youtubeSerivce: YoutubeService) { }
 
   ngOnInit(): void {
-    this.onPlaylistLoad();
-    if (this.detailsYoutubeService.getIsLoggedToYoutube()) {
-      this.detailsYoutubeService.onPlaylistLoadYoutube();
-    }
+    this.refreshPlaylists();
   }
 
   ngAfterViewInit() {
@@ -54,12 +54,28 @@ export class NavBarComponent implements OnInit {
     });
   }
 
+  refreshPlaylists(): void {
+    this.onPlaylistLoad();
+    if (this.detailsYoutubeService.getIsLoggedToYoutube()) {
+      this.detailsYoutubeService.onPlaylistLoadYoutube();
+    }
+  }
+
   checkWhatToDo(): void {
     let phraseStorage: PhraseStorage = this.detailsService.getPhraseFromLocalStorage();
     if (this.isAddedNewPlaylist) {
       this.isAddedNewPlaylist = false;
     } else if (this.isDeletedPlaylist) {
       this.deletePlaylist();
+    } else if (this.isModifiedPlaylist) {
+      this.isModifiedPlaylist = false;
+      this.detailsService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
+        if (playlists.length > 0) {
+          playlists.forEach((item: PlaylistStorage) => {
+            this.selectActivePlaylistsInDOMAndCheckExist(item, false);
+          });
+        }
+      });
     } else if (phraseStorage !== null && !phraseStorage.isYoutubePhrase) {
       this.searchAgain(phraseStorage.phrase);
     } else {
@@ -73,6 +89,15 @@ export class NavBarComponent implements OnInit {
       this.isAddedNewPlaylist = false;
     } else if (this.isDeletedPlaylist) {
       this.deletePlaylistYoutube();
+    } else if (this.isModifiedPlaylist) {
+      this.isModifiedPlaylist = false;
+      this.detailsYoutubeService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
+        if (playlists.length > 0) {
+          playlists.forEach((item: PlaylistStorage) => {
+            this.selectActivePlaylistsInDOMAndCheckExist(item, true);
+          });
+        }
+      });
     } else if (phraseStorage !== null && phraseStorage.isYoutubePhrase) {
       this.searchAgainYoutube(phraseStorage.phrase);
     } else {
@@ -158,6 +183,85 @@ export class NavBarComponent implements OnInit {
         }
       }
     });
+  }
+
+  onEditPlaylist(item: any): void {
+    const dialogRef = this.dialog.open(DialogModifyPlaylistComponent, {
+      width: '20rem',
+      data: {
+        playlistName: this.playlistName,
+        description: this.description,
+        isPublic: this.isPublic
+      }
+    });
+    dialogRef.afterClosed().subscribe((result: DialogDataModifyPlaylist) => {
+      if (result !== undefined && result.playlistName !== undefined) {
+        if (item instanceof PlaylistInfoYoutube) {
+          this.youtubeSerivce.modifyPlaylist(item.id, result.playlistName, result.description, result.isPublic).subscribe((data: any) => {
+            this.updatePlaylistYoutubeAfterModify(data);
+          });
+        } else {
+          this.spotifyService.modifyPlaylistInfo(item.id, result.playlistName, result.description, result.isPublic).subscribe((data: any) => {
+            this.updatePlaylistAfterModify(item);
+          });
+        }
+      }
+    });
+  }
+
+  updatePlaylistAfterModify(item: PlaylistInfo): void {
+    this.spotifyService.getPlaylists().subscribe((data: any) => {
+      let newPlaylistInfo : PlaylistInfo = data.items.filter((newPlaylistInfo: PlaylistInfo) => {
+        return newPlaylistInfo.id === item.id;
+      })[0];
+      let indexOfOldPlaylistInfo = this.playlistInfo.findIndex((oldPlaylistInfo: PlaylistInfo) => {
+        return oldPlaylistInfo.id === newPlaylistInfo.id;
+      });
+      this.playlistInfo[indexOfOldPlaylistInfo] = newPlaylistInfo;
+      this.playlistInfo = [...this.playlistInfo];
+      this.refreshTracksInfoAfterModify(newPlaylistInfo);
+      this.detailsService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
+        if (playlists.length > 0) {
+          playlists.forEach((item: PlaylistStorage) => {
+            if (item.id === newPlaylistInfo.id) {
+              item.name = newPlaylistInfo.name;
+            }
+          });
+          this.detailsService.setLocalStorageForPlaylist(playlists);
+        }
+      });
+      this.isModifiedPlaylist = true;
+    });
+  }
+
+  updatePlaylistYoutubeAfterModify(data: any): void {
+    let newPlaylistInfoYoutube = this.detailsYoutubeService.convertToPlaylistInfoYoutube(data);
+    let indexOfOldPlaylistInfo = this.playlistInfoYoutube.findIndex((oldPlaylistInfo: PlaylistInfoYoutube) => {
+      return oldPlaylistInfo.id === newPlaylistInfoYoutube.id;
+    });
+    this.playlistInfoYoutube[indexOfOldPlaylistInfo] = newPlaylistInfoYoutube;
+    this.playlistInfoYoutube = [...this.playlistInfoYoutube];
+    this.refreshTracksInfoAfterModify(newPlaylistInfoYoutube);
+    this.detailsYoutubeService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
+      if (playlists.length > 0) {
+        playlists.forEach((item: PlaylistStorage) => {
+          if (item.id === newPlaylistInfoYoutube.id) {
+            item.name = newPlaylistInfoYoutube.name;
+          }
+        });
+        this.detailsYoutubeService.setLocalStorageForPlaylist(playlists);
+      }
+    });
+    this.isModifiedPlaylist = true;
+  }
+
+  refreshTracksInfoAfterModify(newPlaylistInfo: any): void {
+    this.detailsService.tracksInfo.forEach((trackInfo: TrackInfo) => {
+      if (trackInfo.playlistId === newPlaylistInfo.id) {
+        trackInfo.playlistName = newPlaylistInfo.name;
+      }
+    });
+    this.detailsService.refreshTracksInfo$.next(this.detailsService.tracksInfo);
   }
 
   onDeletePlaylist(item: any): void {

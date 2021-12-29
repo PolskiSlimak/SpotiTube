@@ -30,6 +30,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CallbackYoutubeComponent } from './login/callback-youtube/callback-youtube.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { PlaylistResultPageComponent } from './result-page/playlist-result-page/playlist-result-page/playlist-result-page.component';
+import { DialogModifyPlaylistComponent } from './core/dialogs/dialog-modify-playlist/dialog-modify-playlist.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { PlaylistResultPageComponent } from './result-page/playlist-result-page/
     DialogCreatePlaylistComponent,
     DialogDeletePlaylistComponent,
     CallbackYoutubeComponent,
-    PlaylistResultPageComponent
+    PlaylistResultPageComponent,
+    DialogModifyPlaylistComponent
   ],
   imports: [
     BrowserModule,

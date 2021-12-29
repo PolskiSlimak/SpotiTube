@@ -94,14 +94,19 @@ export class DetailsYoutubeService {
   onPlaylistLoadYoutube(): void {
     this.youtubeService.getPlaylists().subscribe((data: any) => {
       data.items.forEach((element:any) => {
-        let item = new PlaylistInfoYoutube();
-        item.id = element.id;
-        item.etag = element.id;
-        item.kind = element.kind;
-        item.name = element.snippet.title;
+        let item = this.convertToPlaylistInfoYoutube(element);
         this.playlistInfoYoutube.push(item);
       });
     });
+  }
+
+  convertToPlaylistInfoYoutube(element: any): PlaylistInfoYoutube {
+    let item = new PlaylistInfoYoutube();
+    item.id = element.id;
+    item.etag = element.etag;
+    item.kind = element.kind;
+    item.name = element.snippet.title;
+    return item;
   }
 
   showMusic(item: any): void {

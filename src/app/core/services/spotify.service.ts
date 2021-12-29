@@ -153,6 +153,16 @@ export class SpotifyService {
     return this.http.delete(url, this.getHeader());
   }
 
+  modifyPlaylistInfo(playlistIdn: string, playlistName: string, description: string, isPublic: boolean): Observable<any> {
+    const url = "https://api.spotify.com/v1/playlists/" + playlistIdn;
+    let body = {
+      name: playlistName,
+      description: description,
+      public: isPublic
+    };
+    return this.http.put(url, body, this.getHeader());
+  }
+
   logout(): void {
     this.accessToken = '';
     this.refreshToken = '';

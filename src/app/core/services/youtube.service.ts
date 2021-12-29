@@ -103,6 +103,22 @@ export class YoutubeService {
     return this.http.post(url, body, this.getHeader());
   }
 
+  modifyPlaylist(playlistIdn: string, playlistName: string, description: string, isPublic: boolean): Observable<any> {
+    const url = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&part=status&part=id&key=" + this.apiKey;
+    let isPublicString = isPublic ? "public" : "private";
+    let body = {
+      id: playlistIdn,
+      snippet: {
+        title: playlistName,
+        description: description
+      },
+      status: {
+        privacyStatus: isPublicString
+      }
+    };
+    return this.http.put(url, body, this.getHeader());
+  }
+
   deletePlaylist(playlistIdn: string): Observable<any> {
     const url = "https://www.googleapis.com/youtube/v3/playlists?id=" + playlistIdn + "&key=" + this.apiKey;
     return this.http.delete(url, this.getHeader());
