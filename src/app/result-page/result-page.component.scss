@@ -4,4 +4,8 @@
 .youtube-bg {
   background-color: #ff6666;
 }
+::ng-deep .mat-paginator {
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
 

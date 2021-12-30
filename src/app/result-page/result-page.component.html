@@ -1,99 +1,95 @@
-<div class="flex flex-col mt-8">
-  <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-    <div class="overflow-hidden sm:rounded-lg border-b border-gray-200">
-      <table class="min-w-full table-fixed">
-        <thead>
-          <tr [ngSwitch]="this.detailsService.themeColor">
-            <ng-template [ngSwitchCase]="'spotify'">
-              <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12 spotify-bg">Artists</th>
-              <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12 spotify-bg">Song title</th>
-              <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-3/12 spotify-bg">Playlists</th>
-            </ng-template>
-            <ng-template [ngSwitchCase]="'youtube'">
-              <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12 youtube-bg">Artists</th>
-              <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12 youtube-bg">Song title</th>
-              <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-3/12 youtube-bg">Playlists</th>
-            </ng-template>
-            <ng-template [ngSwitchDefault]>
-              <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12">Artists</th>
-              <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12">Song title</th>
-              <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-3/12">Playlists</th>
-            </ng-template>
+<div class="flex flex-col mt-8 -my-2 py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 sm:rounded-lg border-b border-gray-200">
+  <table class="min-w-full table-fixed">
+    <thead>
+      <tr [ngSwitch]="this.detailsService.themeColor">
+        <ng-template [ngSwitchCase]="'spotify'">
+          <th class="rounded-tl-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12 spotify-bg">Artists</th>
+          <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12 spotify-bg">Song title</th>
+          <th class="rounded-tr-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-3/12 spotify-bg">Playlists</th>
+        </ng-template>
+        <ng-template [ngSwitchCase]="'youtube'">
+          <th class="rounded-tl-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12 youtube-bg">Artists</th>
+          <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12 youtube-bg">Song title</th>
+          <th class="rounded-tr-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-3/12 youtube-bg">Playlists</th>
+        </ng-template>
+        <ng-template [ngSwitchDefault]>
+          <th class="rounded-tl-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12">Artists</th>
+          <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12">Song title</th>
+          <th class="rounded-tr-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-3/12">Playlists</th>
+        </ng-template>
+      </tr>
+    </thead>
+      <tbody class="bg-white">
+        <ng-template [ngIf]="activeTrackList.length > 0" [ngIfElse]="elseBlock">
+          <tr *ngFor="let item of activeTrackList">
+            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10">
+                  <img class="h-10 w-10 rounded-full" src={{item.track.album.images[2].url}} alt="">
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm leading-5 text-gray-900">
+                    <div class="font-medium">{{item.track.artists[0].name}}</div>
+                    <ng-template [ngIf]="item.track.artists.length > 1">
+                      <div *ngFor="let artist of item.track.artists.slice(1); let i=index" class="float-left font-light">
+                        <ng-template [ngIf]="i<3">& {{artist.name}}&nbsp;</ng-template>
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+              <div class="text-sm leading-5 text-gray-900">{{item.track.name}}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+              <app-playlist-result-page #playlistResultPageHtml [(trackList)]="trackList" [(activeTrackList)]="activeTrackList" [itemTrack]="item"></app-playlist-result-page>
+            </td>
           </tr>
-        </thead>
-          <tbody class="bg-white">
-            <ng-template [ngIf]="activeTrackList.length > 0" [ngIfElse]="elseBlock">
-              <tr *ngFor="let item of activeTrackList">
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="flex items-center">
-                    <div class="flex-shrink-0 h-10 w-10">
-                      <img class="h-10 w-10 rounded-full" src={{item.track.album.images[2].url}} alt="">
-                    </div>
-                    <div class="ml-4">
-                      <div class="text-sm leading-5 text-gray-900">
-                        <div class="font-medium">{{item.track.artists[0].name}}</div>
-                        <ng-template [ngIf]="item.track.artists.length > 1">
-                          <div *ngFor="let artist of item.track.artists.slice(1); let i=index" class="float-left font-light">
-                            <ng-template [ngIf]="i<3">& {{artist.name}}&nbsp;</ng-template>
-                          </div>
-                        </ng-template>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">{{item.track.name}}</div>
-                </td>
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <app-playlist-result-page #playlistResultPageHtml [(trackList)]="trackList" [(activeTrackList)]="activeTrackList" [itemTrack]="item"></app-playlist-result-page>
-                </td>
-              </tr>
-            </ng-template>
-            <ng-template #elseBlock>
-              <ng-template [ngIf]="this.detailsService.isSearchPhrase === true" [ngIfElse]="elseBlock1">
-                <tr>
-                  <td></td>
-                  <td>No results found</td>
-                  <td></td>
-                </tr>
-              </ng-template>
-              <ng-template #elseBlock1>
-                <tr>
-                  <td></td>
-                  <td>No content to show</td>
-                  <td></td>
-                </tr>
-              </ng-template>
-            </ng-template>
-            <ng-template [ngIf]="pageSize-activeTrackList.length > 0 && pageIndex > 0 && isLastPage === true && activeTrackList.length > 0">
-              <tr *ngFor="let i of [].constructor(pageSize-activeTrackList.length)">
-                <td class="w-full h-full" class="px-6 py-4 whitespace-no-wrap">
-                  <div class="flex items-center">
-                    <div class="flex-shrink-0 h-10 w-10">
-                    </div>
-                    <div class="ml-4">
-                      <div class="text-sm leading-5 text-gray-900">
-                        <div class="font-medium"></div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-no-wrap">
-                  <div class="text-sm leading-5 text-gray-900"></div>
-                </td>
-                <td class="px-6 py-4 whitespace-no-wrap">
-                </td>
-              </tr>
-              <tr class="border-b border-gray-200"></tr>
+        </ng-template>
+        <ng-template #elseBlock>
+          <ng-template [ngIf]="this.detailsService.isSearchPhrase === true" [ngIfElse]="elseBlock1">
+            <tr>
+              <td></td>
+              <td>No results found</td>
+              <td></td>
+            </tr>
           </ng-template>
-          </tbody>
-      </table>
-      <mat-paginator #paginator   [length]="this.trackList.length"
-                                  [pageSize]="pageSize"
-                                  [pageIndex]="pageIndex"
-                                  [pageSizeOptions]="[5, 10, 25, 50]"
-                                  (page)="onPageChange($event)">
-      </mat-paginator>
-    </div>
-  </div>
+          <ng-template #elseBlock1>
+            <tr>
+              <td></td>
+              <td>No content to show</td>
+              <td></td>
+            </tr>
+          </ng-template>
+        </ng-template>
+        <ng-template [ngIf]="pageSize-activeTrackList.length > 0 && pageIndex > 0 && isLastPage === true && activeTrackList.length > 0">
+          <tr *ngFor="let i of [].constructor(pageSize-activeTrackList.length)">
+            <td class="w-full h-full" class="px-6 py-4 whitespace-no-wrap">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10">
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm leading-5 text-gray-900">
+                    <div class="font-medium"></div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-no-wrap">
+              <div class="text-sm leading-5 text-gray-900"></div>
+            </td>
+            <td class="px-6 py-4 whitespace-no-wrap">
+            </td>
+          </tr>
+          <tr class="border-b border-gray-200"></tr>
+      </ng-template>
+      </tbody>
+  </table>
+  <mat-paginator #paginator   [length]="this.trackList.length"
+                              [pageSize]="pageSize"
+                              [pageIndex]="pageIndex"
+                              [pageSizeOptions]="[5, 10, 25, 50]"
+                              (page)="onPageChange($event)">
+  </mat-paginator>
 </div>

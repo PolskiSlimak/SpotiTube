@@ -6,7 +6,16 @@
   [minTermLength]="2"
   [closeOnSelect]="false"
   typeToSearchText="Please enter 2 or more characters"
-  [(ngModel)]="selectedTracksInfo"
+  [(ngModel)]="selectedTracksInfo">
+  <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+        <span class="ng-value-label">{{$any(item).playlistName}}</span>
+        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+    </div>
+    <div class="ng-value" *ngIf="items.length > 2">
+        <span class="ng-value-label">{{items.length - 2}} more...</span>
+    </div>
+  </ng-template>
   (remove)="onRemove($event)"
   (add)="onAdd($event)"
   (clear)="onClear()">
