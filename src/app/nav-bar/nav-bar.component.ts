@@ -27,6 +27,7 @@ export class NavBarComponent implements OnInit {
   isPublic: boolean;
   isAddedNewPlaylist: boolean;
   isModifiedPlaylist: boolean;
+  isChangedSortingType: boolean;
   isDeletedPlaylist: boolean;
   deletedPlaylists: PlaylistInfo[];
 
@@ -35,7 +36,7 @@ export class NavBarComponent implements OnInit {
   @ViewChildren('playlistHtmlLiYoutube') playlistHtmlYoutube: QueryList<ElementRef>;
   deletedPlaylistsYoutube: PlaylistInfoYoutube[];
 
-  constructor(private detailsService: DetailsService,
+  constructor(public detailsService: DetailsService,
               private spotifyService: SpotifyService,
               public dialog: MatDialog,
               private detailsYoutubeService: DetailsYoutubeService,
@@ -67,6 +68,10 @@ export class NavBarComponent implements OnInit {
       this.isAddedNewPlaylist = false;
     } else if (this.isDeletedPlaylist) {
       this.deletePlaylist();
+    } else if (this.isChangedSortingType) {
+      if (this.playlistInfoYoutube.length == 0) {
+        this.isChangedSortingType = false;
+      }
     } else if (this.isModifiedPlaylist) {
       this.isModifiedPlaylist = false;
       this.detailsService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
@@ -89,6 +94,8 @@ export class NavBarComponent implements OnInit {
       this.isAddedNewPlaylist = false;
     } else if (this.isDeletedPlaylist) {
       this.deletePlaylistYoutube();
+    } else if (this.isChangedSortingType) {
+      this.isChangedSortingType = false;
     } else if (this.isModifiedPlaylist) {
       this.isModifiedPlaylist = false;
       this.detailsYoutubeService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
@@ -143,6 +150,7 @@ export class NavBarComponent implements OnInit {
     this.spotifyService.getPlaylists().subscribe((data: any) => {
       let items: PlaylistInfo[] = data.items;
       if (items) {
+        this.detailsService.sortPlaylist(items);
         this.detailsService.playlistInfo = items;
         this.playlistInfo = items;
       }
@@ -159,6 +167,13 @@ export class NavBarComponent implements OnInit {
     this.detailsService.themeColor = "";
     this.showTracksFromCheckedPlaylistYoutube(item);
     this.changeStyleOfPlaylist(event);
+  }
+
+  onChangeSorting(newSortType: string): void {
+    this.detailsService.sortingType = newSortType;
+    this.refreshPlaylistInfo();
+    this.refreshPlaylistInfoYoutube()
+    this.isChangedSortingType = true;
   }
 
   onCreatePlaylist(): void {
@@ -218,7 +233,7 @@ export class NavBarComponent implements OnInit {
         return oldPlaylistInfo.id === newPlaylistInfo.id;
       });
       this.playlistInfo[indexOfOldPlaylistInfo] = newPlaylistInfo;
-      this.playlistInfo = [...this.playlistInfo];
+      this.refreshPlaylistInfo();
       this.refreshTracksInfoAfterModify(newPlaylistInfo);
       this.detailsService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
         if (playlists.length > 0) {
@@ -240,7 +255,7 @@ export class NavBarComponent implements OnInit {
       return oldPlaylistInfo.id === newPlaylistInfoYoutube.id;
     });
     this.playlistInfoYoutube[indexOfOldPlaylistInfo] = newPlaylistInfoYoutube;
-    this.playlistInfoYoutube = [...this.playlistInfoYoutube];
+    this.refreshPlaylistInfoYoutube();
     this.refreshTracksInfoAfterModify(newPlaylistInfoYoutube);
     this.detailsYoutubeService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
       if (playlists.length > 0) {
@@ -253,6 +268,16 @@ export class NavBarComponent implements OnInit {
       }
     });
     this.isModifiedPlaylist = true;
+  }
+
+  refreshPlaylistInfo(): void {
+    this.detailsService.sortPlaylist(this.playlistInfo);
+    this.playlistInfo = [...this.playlistInfo];
+  }
+
+  refreshPlaylistInfoYoutube(): void {
+    this.detailsService.sortPlaylist(this.playlistInfoYoutube);
+    this.playlistInfoYoutube = [...this.playlistInfoYoutube];
   }
 
   refreshTracksInfoAfterModify(newPlaylistInfo: any): void {
@@ -325,6 +350,8 @@ export class NavBarComponent implements OnInit {
     });
     this.isAddedNewPlaylist = true;
     this.detailsService.playlistInfo.unshift(newPlaylists[0]);
+    this.playlistInfo = this.detailsService.playlistInfo;
+    this.detailsService.sortPlaylist(this.playlistInfo);
   }
 
   addNewPlaylistToListYoutube(items: PlaylistInfoYoutube[]): void {
@@ -337,6 +364,8 @@ export class NavBarComponent implements OnInit {
     this.isAddedNewPlaylist = true;
     if (newPlaylists.length > 0) {
       this.detailsYoutubeService.playlistInfoYoutube.unshift(newPlaylists[0]);
+      this.playlistInfoYoutube = this.detailsYoutubeService.playlistInfoYoutube;
+      this.detailsService.sortPlaylist(this.playlistInfoYoutube);
     } else {
       this.updatePlaylistYoutube(true);
     }
@@ -351,6 +380,8 @@ export class NavBarComponent implements OnInit {
     });
     this.isDeletedPlaylist = true;
     this.deletedPlaylists = this.detailsService.playlistInfo.splice(indexOfPlaylist, 1);
+    this.playlistInfo = this.detailsService.playlistInfo;
+    this.refreshPlaylistInfo();
   }
 
   deletePlaylistFromListYoutube(items: PlaylistInfoYoutube[]): void {
@@ -362,6 +393,8 @@ export class NavBarComponent implements OnInit {
     });
     this.isDeletedPlaylist = true;
     this.deletedPlaylistsYoutube = this.detailsYoutubeService.playlistInfoYoutube.splice(indexOfPlaylist, 1);
+    this.playlistInfoYoutube = this.detailsYoutubeService.playlistInfoYoutube;
+    this.refreshPlaylistInfoYoutube();
   }
 
   changeStyleOfPlaylist(event: any): void {

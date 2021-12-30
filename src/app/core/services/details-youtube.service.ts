@@ -97,6 +97,7 @@ export class DetailsYoutubeService {
         let item = this.convertToPlaylistInfoYoutube(element);
         this.playlistInfoYoutube.push(item);
       });
+      this.detailsService.sortPlaylist(this.playlistInfoYoutube);
     });
   }
 

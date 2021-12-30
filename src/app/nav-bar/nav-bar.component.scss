@@ -4,3 +4,18 @@
 .icon:hover {
   fill: black;
 }
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.left-content {
+  width: 50%;
+  float: left;
+}
+
+.right-content {
+  width: 50%;
+  float: right;
+}

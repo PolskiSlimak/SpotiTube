@@ -25,6 +25,7 @@ export class DetailsService {
   refreshTracksInfo$ = new BehaviorSubject<TrackInfo[]>([]);
   phraseValue: any;
   themeColor: string;
+  sortingType: string = "dsc";
 
   constructor(private spotifyService: SpotifyService) { }
 
@@ -197,5 +198,13 @@ export class DetailsService {
   clearTracksInfo(): void {
     this.tracksInfo.length = 0;
     this.updateLocalStorage();
+  }
+
+  sortPlaylist(playlist: any): void {
+    if (this.sortingType === "dsc") {
+      playlist.sort((a: any, b: any) => a.name.localeCompare(b.name));
+    } else if (this.sortingType === "asc") {
+      playlist.sort((a: any, b: any) => b.name.localeCompare(a.name));
+    }
   }
 }

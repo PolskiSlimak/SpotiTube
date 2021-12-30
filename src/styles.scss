@@ -9,10 +9,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     @apply text-gray-100 bg-transparent
   }
   .hover-btn:hover {
-    @apply text-black bg-gray-300 text-shadow
+    @apply text-black text-shadow
   }
   .clicked-btn {
-    @apply text-black bg-gray-50 text-shadow
+    @apply text-black text-shadow
   }
 @import "tailwindcss/utilities";
   .text-shadow {
