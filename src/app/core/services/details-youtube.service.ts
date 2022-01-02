@@ -128,10 +128,20 @@ export class DetailsYoutubeService {
       this.detailsService.tracksInfo.splice(index, 1);
       this.detailsService.deleteRelatedTracks(trackInfo.items);
       this.detailsService.refreshTracksInfo$.next(this.detailsService.tracksInfo);
+      if (this.detailsService.tracksInfo.length === 0) {
+        this.detailsService.themeColor = "";
+      } else if (!this.isCheckedAnyPlaylistFromYoutube() && this.detailsService.tracksInfo.length > 0) {
+        this.detailsService.themeColor = "spotify";
+      }
     } else {
       this.detailsService.tracksInfo.push(trackInfo);
       this.detailsService.updateShownTracks(trackInfo.items);
       this.detailsService.refreshTracksInfo$.next(this.detailsService.tracksInfo);
+      if (this.detailsService.themeColor === "spotify") {
+        this.detailsService.themeColor = "spotify-youtube";
+      } else if (this.detailsService.themeColor !== "spotify-youtube") {
+        this.detailsService.themeColor = "youtube";
+      }
     }
     this.updateLocalStorage();
   }
@@ -215,5 +225,18 @@ export class DetailsYoutubeService {
   clearTracksInfoYoutube(): void {
     this.detailsService.tracksInfo.length = 0;
     this.updateLocalStorage();
+  }
+
+  isCheckedAnyPlaylistFromYoutube(): boolean {
+     return this.detailsService.tracksInfo.some((trackInfo: TrackInfo) => {
+      return this.isYoutubePlaylist(trackInfo);
+    });
+  }
+
+  isYoutubePlaylist(item: TrackInfo): boolean {
+    let playlistInfoYoutube = this.playlistInfoYoutube;
+    return playlistInfoYoutube.some((playlistInfo: PlaylistInfoYoutube) => {
+      return playlistInfo.id === item.playlistId;
+    });
   }
 }

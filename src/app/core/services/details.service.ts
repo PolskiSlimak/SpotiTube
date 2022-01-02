@@ -59,10 +59,20 @@ export class DetailsService {
       this.tracksInfo = this.tracksInfo.slice();
       this.deleteRelatedTracks(trackInfo.items);
       this.refreshTracksInfo$.next(this.tracksInfo);
+      if (this.tracksInfo.length === 0) {
+        this.themeColor = "";
+      } else if (!this.isCheckedAnyPlaylistFromSpotify() && this.tracksInfo.length > 0) {
+        this.themeColor = "youtube";
+      }
     } else {
       this.tracksInfo = [...this.tracksInfo, trackInfo];
       this.updateShownTracks(trackInfo.items);
       this.refreshTracksInfo$.next(this.tracksInfo);
+      if (this.themeColor === "youtube") {
+        this.themeColor = "spotify-youtube";
+      } else if (this.themeColor !== "spotify-youtube") {
+        this.themeColor = "spotify";
+      }
     }
     this.updateLocalStorage();
   }
@@ -136,7 +146,7 @@ export class DetailsService {
   }
 
   getPlaylistsDOM(): any {
-    return document.getElementById("playlistsHtml")!.children;
+    return document.getElementById("playlistsHtml")!.children[0].children;
   }
 
   setPhraseToLocalStorage(formattedPhrase: PhraseStorage): void {
@@ -206,5 +216,18 @@ export class DetailsService {
     } else if (this.sortingType === "asc") {
       playlist.sort((a: any, b: any) => b.name.localeCompare(a.name));
     }
+  }
+
+  isCheckedAnyPlaylistFromSpotify(): boolean {
+    return this.tracksInfo.some((trackInfo: TrackInfo) => {
+      return this.isSpotifyPlaylist(trackInfo)
+    });
+  }
+
+  isSpotifyPlaylist(item: TrackInfo): boolean {
+    let playlistInfo = this.playlistInfo;
+    return playlistInfo.some((playlistInfo: PlaylistInfo) => {
+      return playlistInfo.id === item.playlistId;
+    });
   }
 }

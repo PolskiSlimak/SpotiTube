@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { ItemTrack } from 'src/app/core/models/item-track.interface';
+import { PlaylistInfo } from 'src/app/core/models/playlist-info.interface';
 import { TrackInfo } from 'src/app/core/models/track-info.interface';
 import { DetailsYoutubeService } from 'src/app/core/services/details-youtube.service';
 import { DetailsService } from 'src/app/core/services/details.service';

@@ -8,7 +8,7 @@
                 (keyup.enter)="onSearchForPhrase()" [(ngModel)]="phraseValue" name="phraseValue">
               </label>
               <label *ngIf="isSearchYoutube == true">
-                <input type='text' placeholder="Search - youtube" class="w-full pr-6 pl-8 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-green-500"
+                <input type='text' placeholder="Search - youtube" class="w-full pr-6 pl-8 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-red-500"
                 (keyup.enter)="onSearchForPhraseYoutube()" [(ngModel)]="phraseValue" name="phraseValue">
               </label>
               <ng-template [ngIf]="isSearchYoutube !== true" [ngIfElse]="elseBlockSearch">

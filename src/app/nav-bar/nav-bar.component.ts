@@ -158,13 +158,11 @@ export class NavBarComponent implements OnInit {
   }
 
   onShowMusic(event: any, item: any): void {
-    this.detailsService.themeColor = "";
     this.showTracksFromCheckedPlaylist(item);
     this.changeStyleOfPlaylist(event);
   }
 
   onShowMusicYoutube(event: any, item: any): void {
-    this.detailsService.themeColor = "";
     this.showTracksFromCheckedPlaylistYoutube(item);
     this.changeStyleOfPlaylist(event);
   }

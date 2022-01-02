@@ -12,6 +12,11 @@
           <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12 youtube-bg">Song title</th>
           <th class="rounded-tr-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-3/12 youtube-bg">Playlists</th>
         </ng-template>
+        <ng-template [ngSwitchCase]="'spotify-youtube'">
+          <th class="rounded-tl-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12 spotify-youtube-bg">Artists</th>
+          <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12 spotify-youtube-bg">Song title</th>
+          <th class="rounded-tr-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-3/12 spotify-youtube-bg">Playlists</th>
+        </ng-template>
         <ng-template [ngSwitchDefault]>
           <th class="rounded-tl-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12">Artists</th>
           <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12">Song title</th>
