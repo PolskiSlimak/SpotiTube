@@ -137,11 +137,14 @@ export class DetailsYoutubeService {
       this.detailsService.tracksInfo.push(trackInfo);
       this.detailsService.updateShownTracks(trackInfo.items);
       this.detailsService.refreshTracksInfo$.next(this.detailsService.tracksInfo);
-      if (this.detailsService.themeColor === "spotify") {
+      if (this.detailsService.themeColor === "spotify" && !this.detailsService.isSearchPhrase) {
         this.detailsService.themeColor = "spotify-youtube";
       } else if (this.detailsService.themeColor !== "spotify-youtube") {
         this.detailsService.themeColor = "youtube";
       }
+    }
+    if (this.detailsService.isSearchPhrase === true) {
+      this.detailsService.isSearchPhrase = false;
     }
     this.updateLocalStorage();
   }

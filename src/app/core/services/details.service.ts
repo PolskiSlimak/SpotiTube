@@ -17,7 +17,7 @@ export class DetailsService {
   activeTrackList: any = [];
   playlistInfo: PlaylistInfo[] = [];
   isSearchPhrase = false;
-  pageSize = 5;
+  pageSize = 10;
   pageIndex = 0;
   paginator: MatPaginator;
   userIdn: string;
@@ -68,11 +68,14 @@ export class DetailsService {
       this.tracksInfo = [...this.tracksInfo, trackInfo];
       this.updateShownTracks(trackInfo.items);
       this.refreshTracksInfo$.next(this.tracksInfo);
-      if (this.themeColor === "youtube") {
+      if (this.themeColor === "youtube" && !this.isSearchPhrase) {
         this.themeColor = "spotify-youtube";
       } else if (this.themeColor !== "spotify-youtube") {
         this.themeColor = "spotify";
       }
+    }
+    if (this.isSearchPhrase === true) {
+      this.isSearchPhrase = false;
     }
     this.updateLocalStorage();
   }
@@ -146,7 +149,7 @@ export class DetailsService {
   }
 
   getPlaylistsDOM(): any {
-    return document.getElementById("playlistsHtml")!.children[0].children;
+    return document.getElementById("playlistsHtml")!.children;
   }
 
   setPhraseToLocalStorage(formattedPhrase: PhraseStorage): void {
@@ -198,9 +201,14 @@ export class DetailsService {
 
   clearHtmlSelected(): void {
     let childrens = this.getPlaylistsDOM();
-    for (let children of childrens) {
-      if (children.childNodes[0]) {
-        children.childNodes[0].className = children.childNodes[0].className.replace("clicked-btn", "hover-btn");
+    for (let childDiv of childrens) {
+      let allDivChildrens = childDiv.children
+      if (childrens.length > 2) {
+        allDivChildrens[0].className = allDivChildrens[0].className.replace("clicked-btn", "hover-btn")
+      } else {
+        for (let children of allDivChildrens) {
+          children.childNodes[0].className = children.childNodes[0].className.replace("clicked-btn", "hover-btn");
+        }
       }
     }
   }

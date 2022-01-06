@@ -464,7 +464,6 @@ export class NavBarComponent implements OnInit {
   }
 
   clearSearch(): void {
-    this.detailsService.isSearchPhrase = false;
     this.detailsService.trackList.length = 0;
     this.detailsService.tracksInfo.length = 0;
     this.detailsService.activeTrackList.length = 0;
