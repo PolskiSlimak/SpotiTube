@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { PlaylistStorage } from '../models/playlist-storage.interface';
 import { PlaylistInfo } from '../models/playlist-info.interface';
 import { PhraseStorage } from '../models/phrase-storage.interface';
+import { SortService } from './sort.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class DetailsService {
   tracksInfo: TrackInfo[] = [];
   trackList: any = [];
   activeTrackList: any = [];
+  refreshActiveTrackList$ = new BehaviorSubject<any>([]);
   playlistInfo: PlaylistInfo[] = [];
   isSearchPhrase = false;
   pageSize = 10;
@@ -25,9 +27,9 @@ export class DetailsService {
   refreshTracksInfo$ = new BehaviorSubject<TrackInfo[]>([]);
   phraseValue: any;
   themeColor: string;
-  sortingType: string = "dsc";
 
-  constructor(private spotifyService: SpotifyService) { }
+  constructor(private spotifyService: SpotifyService,
+              private sortService: SortService) { }
 
   setTracksInfo(item: PlaylistInfo): void {
     let trackInfo = new TrackInfo();
@@ -59,25 +61,34 @@ export class DetailsService {
       this.tracksInfo = this.tracksInfo.slice();
       this.deleteRelatedTracks(trackInfo.items);
       this.refreshTracksInfo$.next(this.tracksInfo);
-      if (this.tracksInfo.length === 0) {
-        this.themeColor = "";
-      } else if (!this.isCheckedAnyPlaylistFromSpotify() && this.tracksInfo.length > 0) {
-        this.themeColor = "youtube";
-      }
+      this.setThemeForDeletingPlaylist();
     } else {
       this.tracksInfo = [...this.tracksInfo, trackInfo];
       this.updateShownTracks(trackInfo.items);
       this.refreshTracksInfo$.next(this.tracksInfo);
-      if (this.themeColor === "youtube" && !this.isSearchPhrase) {
-        this.themeColor = "spotify-youtube";
-      } else if (this.themeColor !== "spotify-youtube") {
-        this.themeColor = "spotify";
-      }
+      this.setThemeForAddingPlaylist()
     }
     if (this.isSearchPhrase === true) {
       this.isSearchPhrase = false;
     }
+    this.refreshActiveTrackList$.next(this.activeTrackList);
     this.updateLocalStorage();
+  }
+
+  setThemeForDeletingPlaylist(): void {
+    if (this.tracksInfo.length === 0) {
+      this.themeColor = "";
+    } else if (!this.isCheckedAnyPlaylistFromSpotify() && this.tracksInfo.length > 0) {
+      this.themeColor = "youtube";
+    }
+  }
+
+  setThemeForAddingPlaylist(): void {
+    if (this.themeColor === "youtube" && !this.isSearchPhrase) {
+      this.themeColor = "spotify-youtube";
+    } else if (this.themeColor !== "spotify-youtube") {
+      this.themeColor = "spotify";
+    }
   }
 
   updateShownTracks(itemTracks: ItemTrack[]): void {
@@ -168,10 +179,12 @@ export class DetailsService {
   searchInSpotify(formattedPhrase: string): void {
     this.spotifyService.searchForPhrase(formattedPhrase, "track").subscribe((data: any) => {
       this.phraseValue = "";
-      this.putTracks(data["tracks"].items);
       this.isSearchPhrase = true;
-      this.setAllPlaylistsActive();
       this.themeColor = "spotify";
+      this.sortService.sortingTypeArtist = "dsc";
+      this.sortService.sortingTypeSongName = "dsc";
+      this.putTracks(data["tracks"].items);
+      this.setAllPlaylistsActive();
       this.setPhraseToLocalStorage({
         phrase: formattedPhrase,
         isYoutubePhrase: false
@@ -188,6 +201,7 @@ export class DetailsService {
         this.activeTrackList.push({track: item})
       }
     });
+    this.refreshActiveTrackList$.next(this.activeTrackList);
   }
 
   setAllPlaylistsActive(): void {
@@ -216,14 +230,6 @@ export class DetailsService {
   clearTracksInfo(): void {
     this.tracksInfo.length = 0;
     this.updateLocalStorage();
-  }
-
-  sortPlaylist(playlist: any): void {
-    if (this.sortingType === "dsc") {
-      playlist.sort((a: any, b: any) => a.name.localeCompare(b.name));
-    } else if (this.sortingType === "asc") {
-      playlist.sort((a: any, b: any) => b.name.localeCompare(a.name));
-    }
   }
 
   isCheckedAnyPlaylistFromSpotify(): boolean {

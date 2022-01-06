@@ -8,6 +8,7 @@ import { PlaylistStorage } from '../models/playlist-storage.interface';
 import { TrackData } from '../models/track-data.interface';
 import { TrackInfo } from '../models/track-info.interface';
 import { DetailsService } from './details.service';
+import { SortService } from './sort.service';
 import { YoutubeService } from './youtube.service';
 
 @Injectable({
@@ -18,7 +19,8 @@ export class DetailsYoutubeService {
   isSearchYoutube: boolean = false;
 
   constructor(private youtubeService: YoutubeService,
-              private detailsService: DetailsService) {
+              private detailsService: DetailsService,
+              private sortService: SortService) {
 
   }
 
@@ -97,7 +99,7 @@ export class DetailsYoutubeService {
         let item = this.convertToPlaylistInfoYoutube(element);
         this.playlistInfoYoutube.push(item);
       });
-      this.detailsService.sortPlaylist(this.playlistInfoYoutube);
+      this.sortService.sortPlaylist(this.playlistInfoYoutube);
     });
   }
 
@@ -146,6 +148,7 @@ export class DetailsYoutubeService {
     if (this.detailsService.isSearchPhrase === true) {
       this.detailsService.isSearchPhrase = false;
     }
+    this.detailsService.refreshActiveTrackList$.next(this.detailsService.activeTrackList);
     this.updateLocalStorage();
   }
 
@@ -179,10 +182,12 @@ export class DetailsYoutubeService {
   searchInYoutube(formattedPhrase: string): void {
     this.youtubeService.searchForPhrase(formattedPhrase).subscribe((data: any) => {
       this.detailsService.phraseValue = "";
-      this.putTracksYoutube(data.items);
       this.detailsService.isSearchPhrase = true;
-      this.setAllPlaylistsActiveYoutube();
       this.detailsService.themeColor = "youtube";
+      this.sortService.sortingTypeArtist = "dsc";
+      this.sortService.sortingTypeSongName = "dsc";
+      this.putTracksYoutube(data.items);
+      this.setAllPlaylistsActiveYoutube();
       this.detailsService.setPhraseToLocalStorage({
         phrase: formattedPhrase,
         isYoutubePhrase: true
@@ -214,6 +219,7 @@ export class DetailsYoutubeService {
         this.detailsService.activeTrackList.push(itemTrack)
       }
     });
+    this.detailsService.refreshActiveTrackList$.next(this.detailsService.activeTrackList);
   }
 
   setAllPlaylistsActiveYoutube(): void {

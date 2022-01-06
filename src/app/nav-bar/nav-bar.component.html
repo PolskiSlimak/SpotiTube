@@ -8,16 +8,16 @@
     </div>
   </div>
   <div class="float-right">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-auto inline-block" viewBox="0 0 20 20" fill="white" (click)="onCreatePlaylist()">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-auto inline-block icon" viewBox="0 0 20 20" (click)="onCreatePlaylist()">
       <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
     </svg>
-    <ng-template [ngIf]="this.detailsService.sortingType === 'dsc'" [ngIfElse]="elseSort">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-auto inline-block" viewBox="0 0 20 20" fill="white" (click)="onChangeSorting('asc')">
+    <ng-template [ngIf]="this.sortService.sortingTypePlaylist === 'dsc'" [ngIfElse]="elseSort">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-auto inline-block icon" viewBox="0 0 20 20" (click)="onChangeSorting('asc')">
         <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z" />
       </svg>
     </ng-template>
     <ng-template #elseSort>
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-auto inline-block" viewBox="0 0 20 20" fill="white" (click)="onChangeSorting('dsc')">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-auto inline-block icon" viewBox="0 0 20 20" (click)="onChangeSorting('dsc')">
         <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z" />
       </svg>
     </ng-template>

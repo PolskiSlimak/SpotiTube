@@ -3,18 +3,90 @@
     <thead>
       <tr [ngSwitch]="this.detailsService.themeColor">
         <ng-template [ngSwitchCase]="'spotify'">
-          <th class="rounded-tl-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12 spotify-bg">Artists</th>
-          <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12 spotify-bg">Song title</th>
+          <th class="rounded-tl-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12 spotify-bg text" (click)="onChangeSortArtist()">
+            Artists
+            <ng-template [ngIf]="this.sortService.sortingTypeArtist === 'dsc'" [ngIfElse]="elseArtist">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block icon" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </ng-template>
+            <ng-template #elseArtist>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block icon" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </ng-template>
+          </th>
+          <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12 spotify-bg text" (click)="onChangeSortSongName()">
+            Song title
+            <ng-template [ngIf]="this.sortService.sortingTypeSongName === 'dsc'" [ngIfElse]="elseArtist">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block icon" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </ng-template>
+            <ng-template #elseArtist>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block icon" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </ng-template>
+          </th>
           <th class="rounded-tr-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-3/12 spotify-bg">Playlists</th>
         </ng-template>
         <ng-template [ngSwitchCase]="'youtube'">
-          <th class="rounded-tl-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12 youtube-bg">Artists</th>
-          <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12 youtube-bg">Song title</th>
+          <th class="rounded-tl-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12 youtube-bg text" (click)="onChangeSortArtist()">
+            Artists
+            <ng-template [ngIf]="this.sortService.sortingTypeArtist === 'dsc'" [ngIfElse]="elseArtist">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block icon" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </ng-template>
+            <ng-template #elseArtist>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block icon" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </ng-template>
+          </th>
+          <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12 youtube-bg text" (click)="onChangeSortSongName()">
+            Song title
+            <ng-template [ngIf]="this.sortService.sortingTypeSongName === 'dsc'" [ngIfElse]="elseArtist">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block icon" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </ng-template>
+            <ng-template #elseArtist>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block icon" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </ng-template>
+          </th>
           <th class="rounded-tr-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-3/12 youtube-bg">Playlists</th>
         </ng-template>
         <ng-template [ngSwitchCase]="'spotify-youtube'">
-          <th class="rounded-tl-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12 spotify-youtube-bg">Artists</th>
-          <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12 spotify-youtube-bg">Song title</th>
+          <th class="rounded-tl-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-5/12 spotify-youtube-bg text" (click)="onChangeSortArtist()">
+            Artists
+            <ng-template [ngIf]="this.sortService.sortingTypeArtist === 'dsc'" [ngIfElse]="elseArtist">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block icon" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </ng-template>
+            <ng-template #elseArtist>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block icon" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </ng-template>
+          </th>
+          <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-4/12 spotify-youtube-bg text" (click)="onChangeSortSongName()">
+            Song title
+            <ng-template [ngIf]="this.sortService.sortingTypeSongName === 'dsc'" [ngIfElse]="elseArtist">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block icon" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </ng-template>
+            <ng-template #elseArtist>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block icon" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </ng-template>
+          </th>
           <th class="rounded-tr-lg px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-3/12 spotify-youtube-bg">Playlists</th>
         </ng-template>
         <ng-template [ngSwitchDefault]>

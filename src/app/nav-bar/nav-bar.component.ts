@@ -12,6 +12,7 @@ import { PlaylistStorage } from '../core/models/playlist-storage.interface';
 import { TrackInfo } from '../core/models/track-info.interface';
 import { DetailsYoutubeService } from '../core/services/details-youtube.service';
 import { DetailsService } from '../core/services/details.service';
+import { SortService } from '../core/services/sort.service';
 import { SpotifyService } from '../core/services/spotify.service';
 import { YoutubeService } from '../core/services/youtube.service';
 @Component({
@@ -40,7 +41,8 @@ export class NavBarComponent implements OnInit {
               private spotifyService: SpotifyService,
               public dialog: MatDialog,
               private detailsYoutubeService: DetailsYoutubeService,
-              private youtubeSerivce: YoutubeService) { }
+              private youtubeSerivce: YoutubeService,
+              public sortService: SortService) { }
 
   ngOnInit(): void {
     this.refreshPlaylists();
@@ -150,7 +152,7 @@ export class NavBarComponent implements OnInit {
     this.spotifyService.getPlaylists().subscribe((data: any) => {
       let items: PlaylistInfo[] = data.items;
       if (items) {
-        this.detailsService.sortPlaylist(items);
+        this.sortService.sortPlaylist(items);
         this.detailsService.playlistInfo = items;
         this.playlistInfo = items;
       }
@@ -168,7 +170,7 @@ export class NavBarComponent implements OnInit {
   }
 
   onChangeSorting(newSortType: string): void {
-    this.detailsService.sortingType = newSortType;
+    this.sortService.sortingTypePlaylist = newSortType;
     this.refreshPlaylistInfo();
     this.refreshPlaylistInfoYoutube()
     this.isChangedSortingType = true;
@@ -269,12 +271,12 @@ export class NavBarComponent implements OnInit {
   }
 
   refreshPlaylistInfo(): void {
-    this.detailsService.sortPlaylist(this.playlistInfo);
+    this.sortService.sortPlaylist(this.playlistInfo);
     this.playlistInfo = [...this.playlistInfo];
   }
 
   refreshPlaylistInfoYoutube(): void {
-    this.detailsService.sortPlaylist(this.playlistInfoYoutube);
+    this.sortService.sortPlaylist(this.playlistInfoYoutube);
     this.playlistInfoYoutube = [...this.playlistInfoYoutube];
   }
 
@@ -349,7 +351,7 @@ export class NavBarComponent implements OnInit {
     this.isAddedNewPlaylist = true;
     this.detailsService.playlistInfo.unshift(newPlaylists[0]);
     this.playlistInfo = this.detailsService.playlistInfo;
-    this.detailsService.sortPlaylist(this.playlistInfo);
+    this.sortService.sortPlaylist(this.playlistInfo);
   }
 
   addNewPlaylistToListYoutube(items: PlaylistInfoYoutube[]): void {
@@ -363,7 +365,7 @@ export class NavBarComponent implements OnInit {
     if (newPlaylists.length > 0) {
       this.detailsYoutubeService.playlistInfoYoutube.unshift(newPlaylists[0]);
       this.playlistInfoYoutube = this.detailsYoutubeService.playlistInfoYoutube;
-      this.detailsService.sortPlaylist(this.playlistInfoYoutube);
+      this.sortService.sortPlaylist(this.playlistInfoYoutube);
     } else {
       this.updatePlaylistYoutube(true);
     }

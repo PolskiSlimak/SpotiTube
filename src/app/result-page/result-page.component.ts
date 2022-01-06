@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DetailsService } from '../core/services/details.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ItemTrack } from '../core/models/item-track.interface';
+import { SortService } from '../core/services/sort.service';
 
 @Component({
   selector: 'app-result-page',
@@ -14,12 +15,21 @@ export class ResultPageComponent implements OnInit {
   pageSize = this.detailsService.pageSize;
   pageIndex = this.detailsService.pageIndex;
   isLastPage: boolean = this.detailsService.isLastPage;
+  isSortBySongName: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(public detailsService: DetailsService) { }
+  constructor(public detailsService: DetailsService,
+              public sortService: SortService) { }
 
   ngOnInit(): void {
+    this.detailsService.refreshActiveTrackList$.subscribe((activeTrackList: ItemTrack[]) => {
+      if (this.isSortBySongName) {
+        this.sortService.sortBySongName(activeTrackList);
+      } else {
+        this.sortService.sortByArist(activeTrackList);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -43,5 +53,18 @@ export class ResultPageComponent implements OnInit {
     this.pageIndex = event.pageIndex;
     this.detailsService.isLastPage = isLastPage;
     this.isLastPage = this.detailsService.isLastPage;
+    this.detailsService.refreshActiveTrackList$.next(this.activeTrackList);
+  }
+
+  onChangeSortArtist(): void {
+    this.isSortBySongName = false;
+    this.sortService.sortingTypeArtist = this.sortService.sortingTypeArtist === "dsc" ? "asc" : "dsc";
+    this.detailsService.refreshActiveTrackList$.next(this.activeTrackList);
+  }
+
+  onChangeSortSongName(): void {
+    this.isSortBySongName = true;
+    this.sortService.sortingTypeSongName = this.sortService.sortingTypeSongName === "dsc" ? "asc" : "dsc";
+    this.detailsService.refreshActiveTrackList$.next(this.activeTrackList);
   }
 }
