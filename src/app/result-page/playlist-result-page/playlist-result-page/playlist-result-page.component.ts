@@ -31,20 +31,12 @@ export class PlaylistResultPageComponent implements OnInit {
     this.detailsService.refreshTracksInfo$.subscribe((tracksInfo : TrackInfo[]) => {
       this.tracksInfo = tracksInfo;
       this.tracksInfo = [...this.tracksInfo];
-      if (this.selectedTracksInfo.length > this.tracksInfo.length) {
-        this.selectedTracksInfo = [];
-      }
+      this.selectedTracksInfo = [];
       for (let trackInfo of this.tracksInfo) {
-        if (this.checkIfExistInPlaylist(this.itemTrack, trackInfo) && !this.isInSelectedTracks(trackInfo)) {
+        if (this.checkIfExistInPlaylist(this.itemTrack, trackInfo)) {
           this.selectedTracksInfo = [...this.selectedTracksInfo, trackInfo];
         }
       }
-    })
-  }
-
-  isInSelectedTracks(trackInfo: TrackInfo): boolean {
-    return this.selectedTracksInfo.some((trackInfo1: TrackInfo) => {
-      return trackInfo1.playlistId === trackInfo.playlistId;
     })
   }
 
