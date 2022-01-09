@@ -1,27 +1,30 @@
-@import 'node_modules/@angular/material/theming';
-
-.container {
-  display: flex;
-  justify-content: center;
-  margin: auto;
-  height: 100vh;
-  width: 100vw;
-  background: #212121;
-
+.container-out {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  display: table;
+  font-size: 1rem;
   .button-wrapper {
-    margin: auto;
-
     .connect-spotify {
-      @include mat-elevation(8);
       background: #1DB954;
       border-radius: 3rem;
-      font-size: 2rem;
+      font-size: 1.5rem;
       padding: 1rem;
       border: 0;
       font-family: Proxima Proxima Nova, sans-serif;
-
     }
-
   }
-
+}
+.cover-heading {
+  color: rgb(132,164,99);
+  margin-top: 20px;
+  margin-bottom: 50px;
+  font-size: 4rem;
+}
+.inner {
+  display: table-cell;
+  vertical-align: middle;
 }

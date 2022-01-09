@@ -52,6 +52,7 @@ export class SearchBarComponent implements OnInit {
     }
     let formattedPhrase = this.phraseValue.replace(" ", "+");
     this.detailsService.searchInSpotify(formattedPhrase);
+    this.phraseValue = "";
   }
 
   onSearchForPhraseYoutube(): void {
@@ -60,6 +61,7 @@ export class SearchBarComponent implements OnInit {
     }
     let formattedPhrase = this.phraseValue.replace(" ", "%20");
     this.detailsYoutubeService.searchInYoutube(formattedPhrase);
+    this.phraseValue = "";
   }
 
   onProfileLoad(): void {

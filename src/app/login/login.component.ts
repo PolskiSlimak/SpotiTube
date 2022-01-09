@@ -18,7 +18,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // TODO zrobic opieranie sie na sessionStorage w przypadku tokenow
     this.checkRefreshToken();
   }
 

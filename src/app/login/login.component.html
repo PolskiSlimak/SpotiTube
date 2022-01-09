@@ -1,10 +1,25 @@
-<div class="container">
-  <div class="button-wrapper">
-    <button class="connect-spotify" [@buttonSize]="isHover ? 'true' : 'false'"
-            mat-ripple
-            (mouseover)="onMouseOver()"
-            (mouseleave)="onMouseLeave()"
-            (click)="spotifyAuth()">Połącz z Spotify
-    </button>
+<div class="container-out">
+  <div class="inner">
+    <h1 class="cover-heading">SpotiTube</h1>
+        <p class="lead">
+          Organize, view and create Spotify and Youtube playlists easily!
+        </p>
+        <p>
+          SpotiTube merges the songs of selected playlists into one view, allowing you to effortlessly add and remove songs from several playlists.
+        </p>
+        <p data-ng-if="!vm.isMobile">
+          Additionaly you can move songs beetwen those two services!
+        </p>
+        <p data-ng-if="!vm.isMobile">
+            Login to Spotify to try it out!
+        </p>
+    <div class="button-wrapper">
+      <button class="connect-spotify" [@buttonSize]="isHover ? 'true' : 'false'"
+              mat-ripple
+              (mouseover)="onMouseOver()"
+              (mouseleave)="onMouseLeave()"
+              (click)="spotifyAuth()">Połącz z Spotify
+      </button>
+    </div>
   </div>
 </div>

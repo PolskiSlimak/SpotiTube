@@ -3,24 +3,12 @@ import {animation, trigger, animateChild, group, state, transition, animate, sty
 export const Animations = {
   buttonSize: trigger('buttonSize', [
     state('true', style({
-        padding: '{{padding}}rem',
-        fontSize: '{{fontSize}}rem',
-      }), {
-        params: {
-          padding: '1.5',
-          fontSize: '1.65',
-        }
-      }
+        color: 'black',
+      })
     ),
     state('false', style({
-        padding: '{{padding}}rem',
-        fontSize: '{{fontSize}}rem',
-      }), {
-        params: {
-          padding: '1.25',
-          fontSize: '1.60',
-        }
-      }
+        color: 'white',
+      })
     ),
     transition('true => false', [
       animate('0.02s')
