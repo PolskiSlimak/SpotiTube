@@ -19,7 +19,7 @@
     "strictPropertyInitialization": false,
     "strictNullChecks": false,
     "lib": [
-      "es2018",
+      "es2020",
       "dom",
       "DOM.Iterable"
     ]

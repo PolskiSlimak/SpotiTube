@@ -148,7 +148,7 @@ export class DetailsYoutubeService {
     if (this.detailsService.isSearchPhrase === true) {
       this.detailsService.isSearchPhrase = false;
     }
-    this.detailsService.refreshActiveTrackList$.next(this.detailsService.activeTrackList);
+    this.detailsService.refreshTrackList$.next(this.detailsService.trackList);
     this.updateLocalStorage();
   }
 
@@ -220,6 +220,22 @@ export class DetailsYoutubeService {
       }
     });
     this.detailsService.refreshActiveTrackList$.next(this.detailsService.activeTrackList);
+  }
+
+  convertItemTrackFromSearched(item: any): ItemTrack {
+    let snippet = item.snippet;
+    let convertedItem = new TrackData();
+    convertedItem.id = item.id.videoId;
+    convertedItem.uri;
+    let album = this.getAlbumImages(snippet);
+    convertedItem.album = album;
+    let artistsInfo = this.getArtistAndName(snippet, convertedItem, true);
+    convertedItem.artists = [];
+    convertedItem.artists.push(artistsInfo);
+    let itemTrack = new ItemTrack();
+    itemTrack.track = convertedItem;
+    itemTrack.isYoutubeResource = true;
+    return itemTrack;
   }
 
   setAllPlaylistsActiveYoutube(): void {

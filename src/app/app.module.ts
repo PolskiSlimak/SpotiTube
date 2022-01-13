@@ -31,6 +31,7 @@ import { CallbackYoutubeComponent } from './login/callback-youtube/callback-yout
 import { NgSelectModule } from '@ng-select/ng-select';
 import { PlaylistResultPageComponent } from './result-page/playlist-result-page/playlist-result-page/playlist-result-page.component';
 import { DialogModifyPlaylistComponent } from './core/dialogs/dialog-modify-playlist/dialog-modify-playlist.component';
+import { DialogChooseTrackComponent } from './core/dialogs/dialog-choose-track/dialog-choose-track.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { DialogModifyPlaylistComponent } from './core/dialogs/dialog-modify-play
     DialogDeletePlaylistComponent,
     CallbackYoutubeComponent,
     PlaylistResultPageComponent,
-    DialogModifyPlaylistComponent
+    DialogModifyPlaylistComponent,
+    DialogChooseTrackComponent
   ],
   imports: [
     BrowserModule,

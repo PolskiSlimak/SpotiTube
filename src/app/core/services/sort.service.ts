@@ -8,8 +8,17 @@ export class SortService {
   sortingTypePlaylist: string = "dsc";
   sortingTypeArtist: string = "dsc";
   sortingTypeSongName: string = "dsc";
+  activeSorting: string = "artist";
 
   constructor() { }
+
+  chooseSortingTypeForSongs(itemTracks: ItemTrack[]): void {
+    if (this.activeSorting === "artist") {
+      this.sortByArist(itemTracks);
+    } else {
+      this.sortBySongName(itemTracks);
+    }
+  }
 
   sortPlaylist(playlist: any): void {
     if (this.sortingTypePlaylist === "dsc") {
@@ -25,6 +34,7 @@ export class SortService {
     } else if (this.sortingTypeArtist === "asc") {
       itemTracks.sort((a: ItemTrack, b: ItemTrack) => b.track.artists[0].name.localeCompare(a.track.artists[0].name));
     }
+    this.activeSorting = "artist";
   }
 
   sortBySongName(itemTracks: ItemTrack[]): void {
@@ -33,5 +43,6 @@ export class SortService {
     } else if (this.sortingTypeSongName === "asc") {
       itemTracks.sort((a: ItemTrack, b: ItemTrack) => b.track.name.localeCompare(a.track.name));
     }
+    this.activeSorting = "songName";
   }
 }

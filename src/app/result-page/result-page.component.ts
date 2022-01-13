@@ -23,12 +23,14 @@ export class ResultPageComponent implements OnInit {
               public sortService: SortService) { }
 
   ngOnInit(): void {
-    this.detailsService.refreshActiveTrackList$.subscribe((activeTrackList: ItemTrack[]) => {
+    this.detailsService.refreshTrackList$.subscribe((trackList: ItemTrack[]) => {
       if (this.isSortBySongName) {
-        this.sortService.sortBySongName(activeTrackList);
+        this.sortService.sortBySongName(trackList);
       } else {
-        this.sortService.sortByArist(activeTrackList);
+        this.sortService.sortByArist(trackList);
       }
+      this.trackList = [...trackList];
+      this.getCurrentActiveTrackList();
     });
   }
 
@@ -59,12 +61,21 @@ export class ResultPageComponent implements OnInit {
   onChangeSortArtist(): void {
     this.isSortBySongName = false;
     this.sortService.sortingTypeArtist = this.sortService.sortingTypeArtist === "dsc" ? "asc" : "dsc";
-    this.detailsService.refreshActiveTrackList$.next(this.activeTrackList);
+    this.sortService.sortByArist(this.trackList);
+    this.getCurrentActiveTrackList();
   }
 
   onChangeSortSongName(): void {
     this.isSortBySongName = true;
     this.sortService.sortingTypeSongName = this.sortService.sortingTypeSongName === "dsc" ? "asc" : "dsc";
+    this.sortService.sortBySongName(this.trackList);
+    this.getCurrentActiveTrackList();
+  }
+
+  getCurrentActiveTrackList(): void {
+    let firstIndex = this.pageSize * this.pageIndex;
+    let lastIndex = firstIndex + this.pageSize;
+    this.activeTrackList = this.trackList.slice(firstIndex, lastIndex);
     this.detailsService.refreshActiveTrackList$.next(this.activeTrackList);
   }
 }

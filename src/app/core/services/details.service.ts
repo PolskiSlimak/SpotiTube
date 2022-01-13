@@ -15,6 +15,7 @@ import { SortService } from './sort.service';
 export class DetailsService {
   tracksInfo: TrackInfo[] = [];
   trackList: any = [];
+  refreshTrackList$ = new BehaviorSubject<any>([]);
   activeTrackList: any = [];
   refreshActiveTrackList$ = new BehaviorSubject<any>([]);
   playlistInfo: PlaylistInfo[] = [];
@@ -71,7 +72,7 @@ export class DetailsService {
     if (this.isSearchPhrase === true) {
       this.isSearchPhrase = false;
     }
-    this.refreshActiveTrackList$.next(this.activeTrackList);
+    this.refreshTrackList$.next(this.trackList);
     this.updateLocalStorage();
   }
 

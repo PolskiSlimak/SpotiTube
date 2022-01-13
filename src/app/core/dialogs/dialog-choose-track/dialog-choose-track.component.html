@@ -1,0 +1,19 @@
+<ng-template [ngIf]="this.trackString !== undefined" [ngIfElse]="elseBlock">
+  <mat-dialog-content>
+    <p>Do you want to add</p>
+    <p><img class="h-10 w-10 inline-block" src={{albumUrl}} alt=""> {{trackString}}</p>
+    <p>to playlist <b>{{this.data.playlistName}}</b></p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button mat-raised-button color="primary" (click)="onYesClick()" tabindex="1">Yes</button>
+    <button mat-raised-button mat-dialog-close tabindex="-1" (click)="onNoClick()">No</button>
+  </mat-dialog-actions>
+</ng-template>
+<ng-template #elseBlock>
+  <mat-dialog-content>
+    <p class="text-center">No results found in another service :(</p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button mat-raised-button color="primary" (click)="onNoClick()" tabindex="1">OK</button>
+  </mat-dialog-actions>
+</ng-template>

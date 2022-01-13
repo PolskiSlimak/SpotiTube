@@ -1,9 +1,12 @@
-import { Component, Input, OnInit, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { DialogChooseTrackComponent } from 'src/app/core/dialogs/dialog-choose-track/dialog-choose-track.component';
 import { ItemTrack } from 'src/app/core/models/item-track.interface';
-import { PlaylistInfo } from 'src/app/core/models/playlist-info.interface';
 import { TrackInfo } from 'src/app/core/models/track-info.interface';
 import { DetailsYoutubeService } from 'src/app/core/services/details-youtube.service';
 import { DetailsService } from 'src/app/core/services/details.service';
+import { SortService } from 'src/app/core/services/sort.service';
 import { SpotifyService } from 'src/app/core/services/spotify.service';
 import { YoutubeService } from 'src/app/core/services/youtube.service';
 
@@ -21,10 +24,14 @@ export class PlaylistResultPageComponent implements OnInit {
   @Input() itemTrack: ItemTrack;
   selectedTracksInfo: TrackInfo[] = [];
   tracksInfo: TrackInfo[];
+  @ViewChild (NgSelectComponent) ngSelectComponent: NgSelectComponent;
+  isClearedItem: boolean;
 
   constructor(private youtubeService: YoutubeService,
               private spotifyService: SpotifyService,
               public detailsService: DetailsService,
+              public dialog: MatDialog,
+              private sortService: SortService,
               private detailsYoutubeService: DetailsYoutubeService) { }
 
   ngOnInit(): void {
@@ -41,40 +48,123 @@ export class PlaylistResultPageComponent implements OnInit {
   }
 
   onAdd(selectedTrack: TrackInfo): void {
-    if (this.itemTrack.isYoutubeResource) {
-      let callbackYoutube = (trackInfo: TrackInfo, data: any): void => {
-        trackInfo.items = this.detailsYoutubeService.convertItemTrack(data.items);
-        let indexOfTrackInfo = this.tracksInfo.findIndex((trackInfoAdded: TrackInfo) => {
-          return trackInfoAdded.playlistId === trackInfo.playlistId;
-        });
-        this.tracksInfo[indexOfTrackInfo] = trackInfo;
-        this.detailsService.tracksInfo = this.tracksInfo;
-      };
+    let isSpotifyPlaylist = this.detailsService.isSpotifyPlaylist(selectedTrack);
+    let trackSpotify: any;
+    let trackYoutube: any;
+    let callbackYoutube = (trackInfo: TrackInfo, data: any): void => {
+      let isAddedNewSongToPlaylist = trackInfo.items.length !== data.items.length;
+      trackInfo.items = this.detailsYoutubeService.convertItemTrack(data.items);
+      let indexOfTrackInfo = this.tracksInfo.findIndex((trackInfoAdded: TrackInfo) => {
+        return trackInfoAdded.playlistId === trackInfo.playlistId;
+      });
+      this.tracksInfo[indexOfTrackInfo] = trackInfo;
+      this.detailsService.tracksInfo = this.tracksInfo;
+      if (isAddedNewSongToPlaylist) {
+        this.addNewTrackToListYoutube(trackInfo, trackYoutube);
+      }
+    };
+    let callbackSpotify = (trackInfo: TrackInfo, data: any): void => {
+      let isAddedNewSongToPlaylist = trackInfo.items.length !== data.items.length;
+      trackInfo.items = data.items;
+      let indexOfTrackInfo = this.tracksInfo.findIndex((trackInfoAdded: TrackInfo) => {
+        return trackInfoAdded.playlistId === trackInfo.playlistId;
+      });
+      this.tracksInfo[indexOfTrackInfo] = trackInfo;
+      this.detailsService.tracksInfo = this.tracksInfo;
+      if (isAddedNewSongToPlaylist) {
+        this.addNewTrackToList(trackInfo, trackSpotify);
+      }
+    };
+    if (this.itemTrack.isYoutubeResource && !isSpotifyPlaylist) {
       this.youtubeService.addTrackToPlaylist(selectedTrack.playlistId, this.itemTrack.track.id).subscribe(() => {
         this.refreshTracksInfo(selectedTrack, true, callbackYoutube);
       });
-    } else {
-      let callbackSpotify = (trackInfo: TrackInfo, data: any): void => {
-        trackInfo.items = data.items;
-        let indexOfTrackInfo = this.tracksInfo.findIndex((trackInfoAdded: TrackInfo) => {
-          return trackInfoAdded.playlistId === trackInfo.playlistId;
-        });
-        this.tracksInfo[indexOfTrackInfo] = trackInfo;
-        this.detailsService.tracksInfo = this.tracksInfo;
-      };
+    } else if (!this.itemTrack.isYoutubeResource && isSpotifyPlaylist) {
       this.spotifyService.addTrackToPlaylist(selectedTrack.playlistId, this.itemTrack.track.uri).subscribe(() => {
         this.refreshTracksInfo(selectedTrack, false, callbackSpotify);
       });
+    } else if (this.itemTrack.isYoutubeResource && isSpotifyPlaylist) {
+      let formattedPhrase = this.getFormattedValueForSearch();
+      this.spotifyService.searchForPhrase(formattedPhrase, "track").subscribe((data: any) => {
+        trackSpotify = data["tracks"].items[0];
+        const dialogRef = this.dialog.open(DialogChooseTrackComponent, {
+          width: '40rem',
+          disableClose: true,
+          data: {
+            track: trackSpotify,
+            playlistName: selectedTrack.playlistName
+          }
+        });
+        dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+          if (confirmed === true) {
+            this.spotifyService.addTrackToPlaylist(selectedTrack.playlistId, trackSpotify.uri).subscribe(() => {
+              this.refreshTracksInfo(selectedTrack, false, callbackSpotify);
+            });
+          }
+        });
+      });
+      this.clearJustAddedTrack(selectedTrack);
+    } else if (!this.itemTrack.isYoutubeResource && !isSpotifyPlaylist) {
+      let formattedPhrase = this.getFormattedValueForSearch();
+      this.youtubeService.searchForPhrase(formattedPhrase).subscribe((data: any) => {
+        trackYoutube = this.detailsYoutubeService.convertItemTrackFromSearched(data.items[0]).track;
+        const dialogRef = this.dialog.open(DialogChooseTrackComponent, {
+          width: '40rem',
+          disableClose: true,
+          data: {
+            track: trackYoutube,
+            playlistName: selectedTrack.playlistName
+          }
+        });
+        dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+          if (confirmed === true) {
+            this.youtubeService.addTrackToPlaylist(selectedTrack.playlistId, trackYoutube.id).subscribe(() => {
+              this.refreshTracksInfo(selectedTrack, true, callbackYoutube);
+            });
+          }
+        });
+      });
+      this.clearJustAddedTrack(selectedTrack);
     }
   }
 
+  getFormattedValueForSearch(): string {
+    let phraseValue: any = this.itemTrack.track.artists[0].name + " " + this.itemTrack.track.name;
+    let phraseValueWithoutBrackets = phraseValue.replaceAll(/\(.*?\)/g, "").replaceAll(/\[.*?\]/g, "");
+    return phraseValueWithoutBrackets.replaceAll(" ", "+").replaceAll(/[^A-Za-z0-9+]/g, "");
+  }
+
+  addNewTrackToList(selectedTrack: TrackInfo, trackSpotify: any): void {
+    let newItemTrack = selectedTrack.items.find((itemTrack: ItemTrack) => {
+      return trackSpotify.uri === itemTrack.track.uri;
+    });
+    this.refreshTrackList(newItemTrack);
+  }
+
+  addNewTrackToListYoutube(selectedTrack: TrackInfo, trackYoutube: any): void {
+    let newItemTrack = selectedTrack.items.find((itemTrack: ItemTrack) => {
+      return trackYoutube.id === itemTrack.track.id;
+    });
+    this.refreshTrackList(newItemTrack);
+  }
+
+  clearJustAddedTrack(selectedTrack: TrackInfo): void {
+    this.isClearedItem = true;
+    this.ngSelectComponent.clearItem(selectedTrack);
+    this.ngSelectComponent.close();
+  }
+
   onRemove(event: any): void {
-    let removedTrackInfo: TrackInfo = event.value;
-    let trackUri = this.reciveTrackUri(removedTrackInfo);
-    if (this.itemTrack.isYoutubeResource) {
-      this.processDeleteTrackInfoAndList(true, removedTrackInfo, trackUri);
+    if (!this.isClearedItem) {
+      let removedTrackInfo: TrackInfo = event.value;
+      let trackUri = this.reciveTrackUri(removedTrackInfo);
+      if (this.itemTrack.isYoutubeResource) {
+        this.processDeleteTrackInfoAndList(true, removedTrackInfo, trackUri);
+      } else {
+        this.processDeleteTrackInfoAndList(false, removedTrackInfo, trackUri);
+      }
     } else {
-      this.processDeleteTrackInfoAndList(false, removedTrackInfo, trackUri);
+      this.isClearedItem = true;
     }
   }
 
@@ -152,6 +242,10 @@ export class PlaylistResultPageComponent implements OnInit {
     if (index != -1) {
       this.trackList.splice(index, 1);
       this.trackListChange.emit(this.trackList);
+    } else {
+      this.trackList.push(track);
+      this.sortService.chooseSortingTypeForSongs(this.trackList);
+      this.trackListChange.emit(this.trackList);
     }
     let indexOFActive = this.activeTrackList.findIndex((alreadyAddedTrack: ItemTrack) => {
       return alreadyAddedTrack.track.id === track.track.id;
@@ -162,6 +256,8 @@ export class PlaylistResultPageComponent implements OnInit {
         this.activeTrackList.push(this.trackList[this.detailsService.pageSize - 1]);
       }
       this.activeTrackListChange.emit(this.activeTrackList);
+    } else {
+      this.detailsService.refreshTrackList$.next(this.trackList);
     }
   }
 
