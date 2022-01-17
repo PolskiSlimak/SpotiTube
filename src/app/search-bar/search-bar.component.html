@@ -4,11 +4,11 @@
           <form>
             <div class="flex items-center">
               <label *ngIf="isSearchYoutube == false">
-                <input type='text' placeholder="Search - spotify" class="w-full pr-6 pl-8 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-green-500"
+                <input type='text' placeholder="Search - spotify" class="input-element focus:border-green-500"
                 (keyup.enter)="onSearchForPhrase()" [(ngModel)]="phraseValue" name="phraseValue">
               </label>
               <label *ngIf="isSearchYoutube == true">
-                <input type='text' placeholder="Search - youtube" class="w-full pr-6 pl-8 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-red-500"
+                <input type='text' placeholder="Search - youtube" class="input-element focus:border-red-500"
                 (keyup.enter)="onSearchForPhraseYoutube()" [(ngModel)]="phraseValue" name="phraseValue">
               </label>
               <ng-template [ngIf]="isSearchYoutube !== true" [ngIfElse]="elseBlockSearch">
@@ -25,7 +25,6 @@
           </form>
       </div>
   </div>
-
   <button (click)="onShowProfile()" class="ml-auto h-8 w-8 rounded-full overflow-hidden shadow focus:outline-none">
       <img class="h-full w-full object-cover" src={{pictureUrl}} alt="Avatar">
   </button>
@@ -34,12 +33,12 @@
   </ng-template>
   <ng-template #elseBlock1>
     <div class="absolute right-0 mt-28 w-48 bg-white rounded-md overflow-hidden shadow-xl">
-      <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white" (click)="onLogout()">Logout from all</a>
+      <a class="text-block-element" (click)="onLogout()">Logout from all</a>
       <ng-template [ngIf]="isLoggedToYoutube === false">
-        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white" (click)="onLoginToYoutube()">Login to youtube</a>
+        <a class="text-block-element" (click)="onLoginToYoutube()">Login to youtube</a>
       </ng-template>
       <ng-template [ngIf]="isLoggedToYoutube === true">
-        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white" (click)="onLogoutFromYoutube()">Logout from youtube</a>
+        <a class="text-block-element" (click)="onLogoutFromYoutube()">Logout from youtube</a>
       </ng-template>
     </div>
   </ng-template>

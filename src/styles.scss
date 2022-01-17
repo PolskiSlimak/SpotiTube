@@ -1,21 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@ng-select/ng-select/themes/default.theme.css";
+@import "/src/colors.scss";
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 @import "tailwindcss/base";
 @import "tailwindcss/components";
-  .hover-btn {
-    @apply text-gray-100 bg-transparent
+  .font-color-spotify {
+    color: $spotify;
   }
-  .hover-btn:hover {
-    @apply text-black bg-gray-300 text-shadow
+  .font-color-youtube {
+    color: $youtube;
   }
-  .clicked-btn {
-    @apply text-black bg-gray-50 text-shadow
+  .background-color-spotify {
+    background-color: $spotify;
+  }
+  .background-color-youtube {
+    background-color: $youtube;
+  }
+  .background-color-spotify-youtube {
+    background-color: $spotify-youtube;
   }
 @import "tailwindcss/utilities";
-  .text-shadow {
-    text-shadow: 0px 0px 1px black;
-  }
 

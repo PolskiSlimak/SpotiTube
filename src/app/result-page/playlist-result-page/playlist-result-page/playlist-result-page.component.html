@@ -21,10 +21,10 @@
   </ng-template>
   <ng-template ng-option-tmp let-item="item">
     <ng-template [ngIf]="this.detailsService.isSpotifyPlaylist(item) === true" [ngIfElse]="elseBlock">
-      <div class="spotify-bg">{{item.playlistName}}</div>
+      <div class="font-color-spotify">{{item.playlistName}}</div>
     </ng-template>
     <ng-template #elseBlock>
-      <div class="youtube-bg">{{item.playlistName}}</div>
+      <div class="font-color-youtube">{{item.playlistName}}</div>
     </ng-template>
   </ng-template>
 </ng-select>

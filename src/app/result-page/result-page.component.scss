@@ -1,25 +1,31 @@
-.spotify-bg {
-  background-color: rgb(30, 215, 96);
-}
-.youtube-bg {
-  background-color: rgb(255, 102, 102);
-}
-.spotify-youtube-bg {
-  background-color: rgb(132,164,99);
-}
 ::ng-deep .mat-paginator {
   border-bottom-right-radius: 0.5rem;
   border-bottom-left-radius: 0.5rem;
 }
-.icon {
-  fill: rgb(107 114 128);
-}
-.icon:hover {
-  fill: black;
-}
-
 .text:hover {
   color: black;
 }
-
-
+.icon-tr {
+  fill: #6b7280;
+}
+.icon-tr:hover {
+  fill: black;
+}
+.tr-style-bg-default {
+  @apply bg-gray-50
+}
+.icon-tr-element {
+  @apply h-3 w-3 inline-block
+}
+.td-element {
+  @apply px-6 py-4
+}
+.td-text {
+  @apply text-sm leading-5 text-gray-900
+}
+.border-gray {
+  @apply border-b border-gray-200
+}
+.tr-style {
+  @apply px-6 py-3 border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider
+}
