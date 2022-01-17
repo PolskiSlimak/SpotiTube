@@ -202,7 +202,7 @@ export class DetailsService {
         this.activeTrackList.push({track: item})
       }
     });
-    this.refreshActiveTrackList$.next(this.activeTrackList);
+    this.refreshTrackList$.next(this.trackList);
   }
 
   setAllPlaylistsActive(): void {

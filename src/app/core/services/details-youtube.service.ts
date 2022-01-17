@@ -85,12 +85,20 @@ export class DetailsYoutubeService {
       } else {
         artistsInfo.name = snippet.videoOwnerChannelTitle.split("-")[0];
       }
-      trackData.name = artistAndName[0];
+      trackData.name = this.parseTrackName(artistAndName[0]);
     } else {
-      artistsInfo.name = artistAndName[0];
-      trackData.name = artistAndName[1];
+      if (isForSearch) {
+        artistsInfo.name = snippet.channelTitle.split("-")[0];
+      } else {
+        artistsInfo.name = snippet.videoOwnerChannelTitle !== undefined ? snippet.videoOwnerChannelTitle.split("-")[0] : artistAndName[0];
+      }
+      trackData.name = this.parseTrackName(artistAndName[1]);
     }
     return artistsInfo;
+  }
+
+  parseTrackName(artistName: any): string {
+    return artistName.replaceAll(/&amp;/g, '&').replaceAll(/&quot;/g, '"').replaceAll(/&#39;/g, "'");
   }
 
   onPlaylistLoadYoutube(): void {
@@ -219,7 +227,7 @@ export class DetailsYoutubeService {
         this.detailsService.activeTrackList.push(itemTrack)
       }
     });
-    this.detailsService.refreshActiveTrackList$.next(this.detailsService.activeTrackList);
+    this.detailsService.refreshTrackList$.next(this.detailsService.trackList);
   }
 
   convertItemTrackFromSearched(item: any): ItemTrack {

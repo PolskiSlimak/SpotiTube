@@ -14,18 +14,24 @@ export class DialogChooseTrackComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: DialogChooseTrack) { }
 
   ngOnInit(): void {
-    let track = this.data.track ;
+    let track = this.data.track;
     if (track !== undefined) {
       let artistsNames = "";
       for (let artist of track.artists) {
+        let artistName = this.convertTextChars(artist.name);
         if (artistsNames === "") {
-          artistsNames = artist.name;
+          artistsNames = artistName;
+        } else {
+          artistsNames = artistsNames + " & " + artistName;
         }
-        artistsNames = artistsNames + " & " + artist.name;
       }
       this.trackString = artistsNames + " - " +  track.name;
       this.albumUrl = track.album.images[2].url;
     }
+  }
+
+  convertTextChars(artistName: any): string {
+    return artistName.replaceAll(/&amp;/g, '&').replaceAll(/&quot;/g, '"').replaceAll(/&#39;/g, "'");
   }
 
   onYesClick(): void {

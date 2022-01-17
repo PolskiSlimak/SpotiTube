@@ -1,4 +1,4 @@
-<div class="flex flex-col mt-8 -my-2 py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 sm:rounded-lg border-b border-gray-200">
+<div class="flex flex-col -my-2 py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 sm:rounded-lg border-b border-gray-200">
   <table class="min-w-full table-fixed">
     <thead>
       <tr [ngSwitch]="this.detailsService.themeColor">
@@ -108,8 +108,10 @@
                   <div class="text-sm leading-5 text-gray-900">
                     <div class="font-medium">{{item.track.artists[0].name}}</div>
                     <ng-template [ngIf]="item.track.artists.length > 1">
-                      <div *ngFor="let artist of item.track.artists.slice(1); let i=index" class="float-left font-light">
-                        <ng-template [ngIf]="i<3">& {{artist.name}}&nbsp;</ng-template>
+                      <div *ngFor="let artist of item.track.artists.slice(1); let i=index" class="font-light">
+                        <ng-template [ngIf]="i < 3">
+                          {{artist.name}}
+                        </ng-template>
                       </div>
                     </ng-template>
                   </div>
