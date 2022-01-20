@@ -134,7 +134,7 @@ export class SpotifyService {
   }
 
   searchForPhrase(phrase: string, type: string): Observable<any> {
-    const url = "https://api.spotify.com/v1/search?q=" + phrase + "&type=" + type;
+    const url = "https://api.spotify.com/v1/search?q=" + phrase + "&type=" + type + "&limit=50";
     return this.http.get(url, this.getHeader());
   }
 

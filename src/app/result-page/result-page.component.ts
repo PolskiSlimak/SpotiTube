@@ -3,6 +3,8 @@ import { DetailsService } from '../core/services/details.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ItemTrack } from '../core/models/item-track.interface';
 import { SortService } from '../core/services/sort.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { ArtistsInfo } from '../core/models/artists-info.interface';
 
 @Component({
   selector: 'app-result-page',
@@ -16,6 +18,7 @@ export class ResultPageComponent implements OnInit {
   pageIndex = this.detailsService.pageIndex;
   isLastPage: boolean = this.detailsService.isLastPage;
   isSortBySongName: boolean = false;
+  trackListFiltered = new MatTableDataSource(this.trackList);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -23,6 +26,14 @@ export class ResultPageComponent implements OnInit {
               public sortService: SortService) { }
 
   ngOnInit(): void {
+    this.trackListFiltered.filterPredicate = (itemTrack: ItemTrack, filter: string) => {
+      let filterConverted = filter.split("-");
+      if (filterConverted.length > 1) {
+        return this.filterByArtistAndSongName(itemTrack, filterConverted);
+      } else {
+        return this.filterByArtistOrSongName(itemTrack, filter);
+      }
+     };
     this.detailsService.refreshTrackList$.subscribe((trackList: ItemTrack[]) => {
       if (this.isSortBySongName) {
         this.sortService.sortBySongName(trackList);
@@ -77,5 +88,30 @@ export class ResultPageComponent implements OnInit {
     let lastIndex = firstIndex + this.pageSize;
     this.activeTrackList = this.trackList.slice(firstIndex, lastIndex);
     this.detailsService.refreshActiveTrackList$.next(this.activeTrackList);
+  }
+
+  onApplyFilter(eventTarget: any): void {
+    let filterText = eventTarget.value;
+    this.trackListFiltered.filter = filterText.trim().toLocaleLowerCase();
+    this.detailsService.refreshTrackList$.next(this.trackListFiltered.filteredData);
+  }
+
+  filterByArtistAndSongName(itemTrack: ItemTrack, filterConverted: any): boolean {
+    let artistPart = filterConverted[0].trim();
+    let songNamePart = filterConverted[1].trim();
+    let artist = itemTrack.track.artists.find((artist: ArtistsInfo) => {
+      return artist.name.toLocaleLowerCase().includes(artistPart);
+    });
+    let trackNameFound = itemTrack.track.name.toLocaleLowerCase().includes(songNamePart);
+    return artist !== undefined && trackNameFound;
+  }
+
+  filterByArtistOrSongName(itemTrack: ItemTrack, filter: string): boolean {
+    let trimmedFilter = filter.trim();
+    let artist = itemTrack.track.artists.find((artist: ArtistsInfo) => {
+      return artist.name.toLocaleLowerCase().includes(trimmedFilter);
+    });
+    let trackNameFound = itemTrack.track.name.toLocaleLowerCase().includes(trimmedFilter);
+    return artist !== undefined || trackNameFound;
   }
 }

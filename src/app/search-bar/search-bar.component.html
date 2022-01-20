@@ -5,11 +5,11 @@
             <div class="flex items-center">
               <label *ngIf="isSearchYoutube == false">
                 <input type='text' placeholder="Search - spotify" class="input-element focus:border-green-500"
-                (keyup.enter)="onSearchForPhrase()" [(ngModel)]="phraseValue" name="phraseValue">
+                (keyup.enter)="onSearchForPhrase()" [(ngModel)]="phraseValue" name="phraseValue" autocomplete="off">
               </label>
               <label *ngIf="isSearchYoutube == true">
                 <input type='text' placeholder="Search - youtube" class="input-element focus:border-red-500"
-                (keyup.enter)="onSearchForPhraseYoutube()" [(ngModel)]="phraseValue" name="phraseValue">
+                (keyup.enter)="onSearchForPhraseYoutube()" [(ngModel)]="phraseValue" name="phraseValue" autocomplete="off">
               </label>
               <ng-template [ngIf]="isSearchYoutube !== true" [ngIfElse]="elseBlockSearch">
                 <svg width="24" class="ml-1" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" (click)="onSwitchSearch()">
