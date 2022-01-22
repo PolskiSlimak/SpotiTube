@@ -256,9 +256,8 @@ export class PlaylistResultPageComponent implements OnInit {
         this.activeTrackList.push(this.trackList[this.detailsService.pageSize - 1]);
       }
       this.activeTrackListChange.emit(this.activeTrackList);
-    } else {
-      this.detailsService.refreshTrackList$.next(this.trackList);
     }
+    this.detailsService.refreshTrackList$.next(this.trackList);
   }
 
   checkIfExistInPlaylist(item: ItemTrack, trackInfo: TrackInfo): boolean {

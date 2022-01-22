@@ -41,7 +41,12 @@ export class ResultPageComponent implements OnInit {
         this.sortService.sortByArist(trackList);
       }
       this.trackList = [...trackList];
+      this.detailsService.trackList = this.trackList;
       this.getCurrentActiveTrackList();
+    });
+    this.detailsService.refreshActiveTrackList$.subscribe((activeTrackList: ItemTrack[]) => {
+      this.detailsService.activeTrackList = activeTrackList;
+      this.activeTrackList = [...activeTrackList];
     });
   }
 
