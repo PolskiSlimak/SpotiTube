@@ -33,7 +33,7 @@ export class NavBarComponent implements OnInit {
   deletedPlaylists: PlaylistInfo[];
 
   playlistInfoYoutube: PlaylistInfoYoutube[] = this.detailsYoutubeService.playlistInfoYoutube;
-  isLoggedToYoutube = this.detailsYoutubeService.getIsLoggedToYoutube();
+  isLoggedToYoutube = this.detailsService.getIsLoggedToYoutube();
   @ViewChildren('playlistHtmlLiYoutube') playlistHtmlYoutube: QueryList<ElementRef>;
   deletedPlaylistsYoutube: PlaylistInfoYoutube[];
 
@@ -59,7 +59,7 @@ export class NavBarComponent implements OnInit {
 
   refreshPlaylists(): void {
     this.onPlaylistLoad();
-    if (this.detailsYoutubeService.getIsLoggedToYoutube()) {
+    if (this.detailsService.getIsLoggedToYoutube()) {
       this.detailsYoutubeService.onPlaylistLoadYoutube();
     }
   }

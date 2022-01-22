@@ -30,6 +30,15 @@
   @apply px-6 py-3 border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider
 }
 
+mat-paginator {
+  background-color: transparent;
+}
+::ng-deep .mat-paginator .mat-icon-button {
+  position: inherit;
+}
+::ng-deep .mat-paginator .mat-icon-button .mat-button-ripple.mat-ripple {
+  position: inherit;
+}
 mat-form-field {
-  width: 150px;
+  width: 8rem;
 }

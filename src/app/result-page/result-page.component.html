@@ -1,8 +1,17 @@
 <div class="flex flex-col sm:rounded-lg border-b border-gray-200">
-  <mat-form-field>
-    <input (keyup)="onApplyFilter($event.target)" matInput placeholder="Filter results" autocomplete="off">
-  </mat-form-field>
-  <table class="min-w-full table-fixed">
+  <div class="flex flex-row ml-auto">
+    <mat-form-field>
+      <input (keyup)="onApplyFilter($event.target)" matInput placeholder="Filter results" autocomplete="off">
+    </mat-form-field>
+    <mat-paginator  #paginator
+                    [length]="this.trackList.length"
+                    [pageSize]="pageSize"
+                    [pageIndex]="pageIndex"
+                    [pageSizeOptions]="[5, 10, 25, 50]"
+                    (page)="onPageChange($event)">
+    </mat-paginator>
+  </div>
+  <table class="min-w-full table-fixed rounded-b-lg border-gray-200">
     <thead>
       <tr [ngSwitch]="this.detailsService.themeColor">
         <ng-template [ngSwitchCase]="'spotify'">
@@ -112,7 +121,7 @@
                     <div class="font-medium">{{item.track.artists[0].name}}</div>
                     <ng-template [ngIf]="item.track.artists.length > 1">
                       <div *ngFor="let artist of item.track.artists.slice(1); let i=index" class="font-light">
-                        <ng-template [ngIf]="i < 3">
+                        <ng-template [ngIf]="i < 1">
                           {{artist.name}}
                         </ng-template>
                       </div>
@@ -168,10 +177,4 @@
       </ng-template>
       </tbody>
   </table>
-  <mat-paginator #paginator   [length]="this.trackList.length"
-                              [pageSize]="pageSize"
-                              [pageIndex]="pageIndex"
-                              [pageSizeOptions]="[5, 10, 25, 50]"
-                              (page)="onPageChange($event)">
-  </mat-paginator>
 </div>

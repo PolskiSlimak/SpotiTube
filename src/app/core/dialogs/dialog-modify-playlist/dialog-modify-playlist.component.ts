@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogDataModifyPlaylist } from '../../models/dialog-data-modify-playlist.interface';
-import { DetailsYoutubeService } from '../../services/details-youtube.service';
+import { DetailsService } from '../../services/details.service';
 
 @Component({
   selector: 'app-dialog-modify-playlist',
@@ -9,11 +9,11 @@ import { DetailsYoutubeService } from '../../services/details-youtube.service';
   styleUrls: ['./dialog-modify-playlist.component.scss']
 })
 export class DialogModifyPlaylistComponent implements OnInit {
-  isLoggedToYoutube = this.detailsYoutubeService.getIsLoggedToYoutube();
+  isLoggedToYoutube = this.detailsService.getIsLoggedToYoutube();
 
   constructor(public dialogRef: MatDialogRef<DialogModifyPlaylistComponent>,
               @Inject(MAT_DIALOG_DATA) public data: DialogDataModifyPlaylist,
-              private detailsYoutubeService: DetailsYoutubeService) { }
+              private detailsService: DetailsService) { }
 
   ngOnInit(): void {
   }

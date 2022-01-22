@@ -216,11 +216,14 @@ export class DetailsService {
 
   clearHtmlSelected(): void {
     let childrens = this.getPlaylistsDOM();
-    for (let childDiv of childrens) {
-      let allDivChildrens = childDiv.children
-      if (childrens.length > 2) {
-        allDivChildrens[0].className = allDivChildrens[0].className.replace("clicked-btn", "hover-btn")
-      } else {
+    let isLoggedToYoutube = this.getIsLoggedToYoutube();
+    if (!isLoggedToYoutube) {
+      for (let childDiv of childrens) {
+        childDiv.childNodes[0].className = childDiv.childNodes[0].className.replace("clicked-btn", "hover-btn");
+      }
+    } else {
+      for (let childDiv of childrens) {
+        let allDivChildrens = childDiv.children
         for (let children of allDivChildrens) {
           children.childNodes[0].className = children.childNodes[0].className.replace("clicked-btn", "hover-btn");
         }
@@ -244,5 +247,11 @@ export class DetailsService {
     return playlistInfo.some((playlistInfo: PlaylistInfo) => {
       return playlistInfo.id === item.playlistId;
     });
+  }
+
+  getIsLoggedToYoutube(): boolean {
+    let isLogged = sessionStorage.getItem("isLoggedToYoutube");
+    let converted = isLogged !== null && isLogged !== '' ? JSON.parse(isLogged) : false;
+    return converted;
   }
 }

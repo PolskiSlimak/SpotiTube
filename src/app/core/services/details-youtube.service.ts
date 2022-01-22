@@ -181,12 +181,6 @@ export class DetailsYoutubeService {
     return of(parsedPlaylists);
   }
 
-  getIsLoggedToYoutube(): boolean {
-    let isLogged = sessionStorage.getItem("isLoggedToYoutube");
-    let converted = isLogged !== null && isLogged !== '' ? JSON.parse(isLogged) : false;
-    return converted;
-  }
-
   searchInYoutube(formattedPhrase: string): void {
     this.youtubeService.searchForPhrase(formattedPhrase).subscribe((data: any) => {
       this.detailsService.phraseValue = "";
