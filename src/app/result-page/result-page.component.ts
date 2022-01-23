@@ -26,7 +26,7 @@ export class ResultPageComponent implements OnInit {
               public sortService: SortService) { }
 
   ngOnInit(): void {
-    this.trackListFiltered.filterPredicate = (itemTrack: ItemTrack, filter: string) => {
+    this.trackListFiltered.filterPredicate = (itemTrack: any, filter: string) => {
       let filterConverted = filter.split("-");
       if (filterConverted.length > 1) {
         return this.filterByArtistAndSongName(itemTrack, filterConverted);
@@ -41,7 +41,6 @@ export class ResultPageComponent implements OnInit {
         this.sortService.sortByArist(trackList);
       }
       this.trackList = [...trackList];
-      this.detailsService.trackList = this.trackList;
       this.getCurrentActiveTrackList();
     });
     this.detailsService.refreshActiveTrackList$.subscribe((activeTrackList: ItemTrack[]) => {

@@ -28,6 +28,7 @@ export class DetailsService {
   refreshTracksInfo$ = new BehaviorSubject<TrackInfo[]>([]);
   phraseValue: any;
   themeColor: string;
+  isMenuOpen: boolean;
 
   constructor(private spotifyService: SpotifyService,
               private sortService: SortService) { }

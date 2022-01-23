@@ -59,7 +59,7 @@ export class PlaylistResultPageComponent implements OnInit {
       });
       this.tracksInfo[indexOfTrackInfo] = trackInfo;
       this.detailsService.tracksInfo = this.tracksInfo;
-      if (isAddedNewSongToPlaylist) {
+      if (isAddedNewSongToPlaylist && trackYoutube !== undefined) {
         this.addNewTrackToListYoutube(trackInfo, trackYoutube);
       }
     };
@@ -71,7 +71,7 @@ export class PlaylistResultPageComponent implements OnInit {
       });
       this.tracksInfo[indexOfTrackInfo] = trackInfo;
       this.detailsService.tracksInfo = this.tracksInfo;
-      if (isAddedNewSongToPlaylist) {
+      if (isAddedNewSongToPlaylist && trackSpotify !== undefined) {
         this.addNewTrackToList(trackInfo, trackSpotify);
       }
     };
@@ -257,6 +257,7 @@ export class PlaylistResultPageComponent implements OnInit {
       }
       this.activeTrackListChange.emit(this.activeTrackList);
     }
+    this.detailsService.trackList = this.trackList;
     this.detailsService.refreshTrackList$.next(this.trackList);
   }
 

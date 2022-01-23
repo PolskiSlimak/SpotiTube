@@ -99,4 +99,8 @@ export class SearchBarComponent implements OnInit {
     localStorage.removeItem("phraseToSearch");
     this.youtubeService.logout();
   }
+
+  onToggleMenu(): void {
+    this.detailsService.isMenuOpen = !this.detailsService.isMenuOpen;
+  }
 }

@@ -1,13 +1,11 @@
-<nav class="bg-purple-900 h-screen px-4 tex-gray-900 border-purple-900 overflow-auto">
+<nav class="{{this.detailsService.isMenuOpen !== true ? 'bg-purple-900 h-screen px-4 tex-gray-900 border-purple-900 overflow-auto nav-bar-element' : this.detailsService.isMenuOpen === true ? 'bg-purple-900 h-screen px-4 tex-gray-900 border-purple-900 overflow-auto' : 'hidden'}}">
   <div class="flex mt-8 items-center justify-center">
     <div class="">
       <img src="/assets/images/icon.jpg" class="mx-auto w-20 h-20 rounded-full"/>
     </div>
-    <div class="">
-      <span class="font-semibold text-white text-xl ml-2">
-        <span class="font-color-spotify">Spoti</span><span class="font-color-youtube">Tube</span>
-      </span>
-    </div>
+    <span class="font-semibold text-white text-xl ml-2">
+      <span class="font-color-spotify">Spoti</span><span class="font-color-youtube">Tube</span>
+    </span>
   </div>
   <div class="float-right">
     <svg xmlns="http://www.w3.org/2000/svg" class="icon-banner" viewBox="0 0 20 20" (click)="onCreatePlaylist()">
@@ -26,7 +24,7 @@
   </div>
   <div class="mt-8">
     <ul id="playlistsHtml">
-      <ng-template [ngIf]="isLoggedToYoutube === true" [ngIfElse]="elseIsLogged">
+      <ng-template [ngIf]="isLoggedToYoutube === true && (this.detailsService.isMenuOpen !== true || this.innerWidth >= 890)" [ngIfElse]="elseIsLogged">
         <div class="left-content">
           <li #playlistHtmlLi class="playlist-li font-color-spotify" *ngFor="let item of playlistInfo">
             <div class="list-element hover-btn" (click)="onShowMusic($event, item)">{{item.name}}</div>
@@ -60,6 +58,17 @@
             <path fill-rule="evenodd" d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
           </svg>
         </li>
+        <ng-template [ngIf]="this.detailsService.isMenuOpen === true">
+          <li #playlistHtmlLiYoutube class="playlist-li font-color-youtube" *ngFor="let item of playlistInfoYoutube">
+            <div class="list-element hover-btn" (click)="onShowMusicYoutube($event, item)">{{item.name}}</div>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon-btn" viewBox="0 0 20 20" (click)="onDeletePlaylist(item)">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon-btn" viewBox="0 0 20 20" (click)="onEditPlaylist(item)">
+              <path fill-rule="evenodd" d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+            </svg>
+          </li>
+        </ng-template>
       </ng-template>
     </ul>
   </div>

@@ -41,3 +41,11 @@
 .playlist-li {
   @apply flex justify-between items-center
 }
+.nav-bar-element {
+  display: none;
+}
+@media (min-width: 890px) {
+  .nav-bar-element {
+    display: block;
+  }
+}

@@ -1,7 +1,6 @@
 label {
   position: relative;
 }
-
 label:before {
   content: "";
   position: absolute;
@@ -14,22 +13,26 @@ label:before {
 ::-webkit-input-placeholder {
   text-align: center;
 }
-
-:-moz-placeholder { /* Firefox 18- */
+:-moz-placeholder {
   text-align: center;
 }
-
-::-moz-placeholder {  /* Firefox 19+ */
+::-moz-placeholder {
   text-align: center;
 }
-
 :-ms-input-placeholder {
   text-align: center;
 }
-
 .input-element {
   @apply w-full pr-6 pl-8 py-2 border rounded-lg text-gray-700 focus:outline-none
 }
 .text-block-element {
   @apply block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white
+}
+.menu {
+  display: block;
+}
+@media (min-width: 890px) {
+  .menu {
+    display: none;
+  }
 }

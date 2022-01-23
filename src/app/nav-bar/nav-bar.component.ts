@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreatePlaylistComponent } from '../core/dialogs/dialog-create-playlist/dialog-create-playlist.component';
 import { DialogDeletePlaylistComponent } from '../core/dialogs/dialog-delete-playlist/dialog-delete-playlist.component';
@@ -31,7 +31,7 @@ export class NavBarComponent implements OnInit {
   isChangedSortingType: boolean;
   isDeletedPlaylist: boolean;
   deletedPlaylists: PlaylistInfo[];
-
+  innerWidth: number;
   playlistInfoYoutube: PlaylistInfoYoutube[] = this.detailsYoutubeService.playlistInfoYoutube;
   isLoggedToYoutube = this.detailsService.getIsLoggedToYoutube();
   @ViewChildren('playlistHtmlLiYoutube') playlistHtmlYoutube: QueryList<ElementRef>;
@@ -55,6 +55,11 @@ export class NavBarComponent implements OnInit {
     this.playlistHtmlYoutube.changes.subscribe(() => {
       this.checkWhatToDoYoutube();
     });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  resizeListener() {
+    this.innerWidth = window.innerWidth;
   }
 
   refreshPlaylists(): void {

@@ -33,6 +33,9 @@
 mat-paginator {
   background-color: transparent;
 }
+::ng-deep .mat-paginator .mat-paginator-container {
+  flex-wrap: nowrap;
+}
 ::ng-deep .mat-paginator .mat-icon-button {
   position: inherit;
 }
