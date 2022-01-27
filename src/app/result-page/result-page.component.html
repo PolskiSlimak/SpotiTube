@@ -11,7 +11,7 @@
                     (page)="onPageChange($event)">
     </mat-paginator>
   </div>
-  <table class="min-w-full table-fixed rounded-b-lg border-gray-200">
+  <table class="rounded-b-lg border-gray-200">
     <thead>
       <tr [ngSwitch]="this.detailsService.themeColor">
         <ng-template [ngSwitchCase]="'spotify'">
@@ -73,7 +73,7 @@
           <th class="rounded-tr-lg w-3/12 background-color-youtube tr-style">Playlists</th>
         </ng-template>
         <ng-template [ngSwitchCase]="'spotify-youtube'">
-          <th class="rounded-tl-lg w-5/12 background-color-spotify-youtube text tr-style" (click)="onChangeSortArtist()">
+          <th class="rounded-tl-lg w-3/12 background-color-spotify-youtube text tr-style" (click)="onChangeSortArtist()">
             Artists
             <ng-template [ngIf]="this.sortService.sortingTypeArtist === 'dsc'" [ngIfElse]="elseArtist">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon-tr-element icon-tr" viewBox="0 0 20 20">
@@ -86,7 +86,7 @@
               </svg>
             </ng-template>
           </th>
-          <th class="w-4/12 background-color-spotify-youtube text tr-style" (click)="onChangeSortSongName()">
+          <th class="w-7/12 background-color-spotify-youtube text tr-style" (click)="onChangeSortSongName()">
             Song title
             <ng-template [ngIf]="this.sortService.sortingTypeSongName === 'dsc'" [ngIfElse]="elseArtist">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon-tr-element icon-tr" viewBox="0 0 20 20">
@@ -99,7 +99,7 @@
               </svg>
             </ng-template>
           </th>
-          <th class="rounded-tr-lg w-3/12 background-color-spotify-youtube tr-style">Playlists</th>
+          <th class="rounded-tr-lg w-2/12 background-color-spotify-youtube tr-style">Playlists</th>
         </ng-template>
         <ng-template [ngSwitchDefault]>
           <th class="rounded-tl-lg tr-style w-5/12 tr-style-bg-default">Artists</th>
@@ -111,7 +111,7 @@
       <tbody class="bg-white">
         <ng-template [ngIf]="activeTrackList.length > 0" [ngIfElse]="elseBlock">
           <tr *ngFor="let item of activeTrackList">
-            <td class="td-element whitespace-no-wrap border-gray">
+            <td class="td-element border-gray">
               <div class="flex items-center">
                 <div class="flex-shrink-0 h-10 w-10">
                   <img class="h-10 w-10 rounded-full" src={{item.track.album.images[2].url}} alt="">
@@ -130,10 +130,15 @@
                 </div>
               </div>
             </td>
-            <td class="td-element whitespace-no-wrap border-gray">
-              <div class="td-text">{{item.track.name}}</div>
+            <td class="td-element border-gray">
+              <ng-template [ngIf]="item.track.name.length > 8 && this.innerWidth < 520" [ngIfElse]="elseTooltipText">
+                <div class="td-text" matTooltip="{{item.track.name}}">{{item.track.name.substring(0, 8)}}...</div>
+              </ng-template>
+              <ng-template #elseTooltipText>
+                <div class="td-text">{{item.track.name}}</div>
+              </ng-template>
             </td>
-            <td class="td-element whitespace-no-wrap border-gray">
+            <td class="td-element border-gray">
               <app-playlist-result-page #playlistResultPageHtml [(trackList)]="trackList" [(activeTrackList)]="activeTrackList" [itemTrack]="item"></app-playlist-result-page>
             </td>
           </tr>
@@ -168,9 +173,9 @@
               </div>
             </td>
             <td class="td-element">
-              <div class="td-text whitespace-no-wrap"></div>
+              <div class="td-text"></div>
             </td>
-            <td class="td-element whitespace-no-wrap">
+            <td class="td-element">
             </td>
           </tr>
           <tr class="border-gray"></tr>

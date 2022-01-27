@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { DetailsService } from '../core/services/details.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ItemTrack } from '../core/models/item-track.interface';
@@ -19,6 +19,7 @@ export class ResultPageComponent implements OnInit {
   isLastPage: boolean = this.detailsService.isLastPage;
   isSortBySongName: boolean = false;
   trackListFiltered = new MatTableDataSource(this.trackList);
+  innerWidth: number
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -51,6 +52,11 @@ export class ResultPageComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.detailsService.paginator = this.paginator;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  resizeListener() {
+    this.innerWidth = window.innerWidth;
   }
 
   onPageChange(event: PageEvent): void {

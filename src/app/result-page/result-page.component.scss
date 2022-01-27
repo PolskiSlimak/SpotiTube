@@ -12,22 +12,32 @@
   fill: black;
 }
 .tr-style-bg-default {
-  @apply bg-gray-50
+  @apply bg-gray-50;
 }
 .icon-tr-element {
-  @apply h-3 w-3 inline-block
+  @apply h-3 w-3 inline-block;
 }
 .td-element {
-  @apply px-6 py-4
+  @apply px-6 py-4;
+}
+@media (max-width: 540px) {
+  .td-element {
+    @apply px-1;
+  }
 }
 .td-text {
-  @apply text-sm leading-5 text-gray-900
+  @apply text-sm leading-5 text-gray-900;
 }
 .border-gray {
-  @apply border-b border-gray-200
+  @apply border-b border-gray-200;
 }
 .tr-style {
-  @apply px-6 py-3 border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider
+  @apply px-6 py-3 border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider;
+}
+@media (max-width: 540px) {
+  .tr-style {
+    @apply px-1;
+  }
 }
 mat-paginator {
   background-color: transparent;
