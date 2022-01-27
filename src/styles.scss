@@ -22,3 +22,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     background-color: $spotify-youtube;
   }
 @import "tailwindcss/utilities";
+.menu {
+  display: block;
+}
+@media (min-width: 890px) {
+  .menu {
+    display: none;
+  }
+}

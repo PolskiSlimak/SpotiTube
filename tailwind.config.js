@@ -8,6 +8,9 @@ module.exports = {
     darkMode: 'class', // or 'media' or 'class'
     theme: {
       extend: {
+        screens: {
+          'xs': '547px',
+        },
       },
     },
     variants: {

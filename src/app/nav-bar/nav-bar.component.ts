@@ -431,7 +431,7 @@ export class NavBarComponent implements OnInit {
     this.detailsService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
       if (playlists.length > 0) {
         playlists.forEach((item: PlaylistStorage) => {
-          if (this.selectActivePlaylistsInDOMAndCheckExist(item, false)) {
+          if (this.selectActivePlaylistsInDOMAndCheckExist(item, false) && this.detailsService.isMenuOpen === undefined) {
             this.showTracksFromCheckedPlaylist(item);
           }
         });
@@ -443,7 +443,7 @@ export class NavBarComponent implements OnInit {
     this.detailsYoutubeService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
       if (playlists.length > 0) {
         playlists.forEach((item: PlaylistStorage) => {
-          if (this.selectActivePlaylistsInDOMAndCheckExist(item, true)) {
+          if (this.selectActivePlaylistsInDOMAndCheckExist(item, true) && this.detailsService.isMenuOpen === undefined) {
             this.showTracksFromCheckedPlaylistYoutube(item);
           }
         });
@@ -475,5 +475,9 @@ export class NavBarComponent implements OnInit {
     this.detailsService.tracksInfo.length = 0;
     this.detailsService.activeTrackList.length = 0;
     this.detailsService.removePhraseFromLocalStorage();
+  }
+
+  onToggleMenu(): void {
+    this.detailsService.isMenuOpen = false;
   }
 }

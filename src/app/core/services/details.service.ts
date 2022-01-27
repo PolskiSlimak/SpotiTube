@@ -243,7 +243,7 @@ export class DetailsService {
     });
   }
 
-  isSpotifyPlaylist(item: TrackInfo): boolean {
+  isSpotifyPlaylist(item: any): boolean {
     let playlistInfo = this.playlistInfo;
     return playlistInfo.some((playlistInfo: PlaylistInfo) => {
       return playlistInfo.id === item.playlistId;

@@ -1,4 +1,9 @@
 <nav class="{{this.detailsService.isMenuOpen !== true ? 'bg-purple-900 h-screen px-4 tex-gray-900 border-purple-900 overflow-auto nav-bar-element' : this.detailsService.isMenuOpen === true ? 'bg-purple-900 h-screen px-4 tex-gray-900 border-purple-900 overflow-auto' : 'hidden'}}">
+  <div class="menu">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-auto mt-4 icon" viewBox="0 0 20 20" fill="white" (click)="onToggleMenu()">
+      <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+    </svg>
+  </div>
   <div class="flex mt-8 items-center justify-center">
     <div class="">
       <img src="/assets/images/icon.jpg" class="mx-auto w-20 h-20 rounded-full"/>

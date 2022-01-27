@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { DialogChooseTrackComponent } from 'src/app/core/dialogs/dialog-choose-track/dialog-choose-track.component';
