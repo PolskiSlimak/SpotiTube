@@ -34,9 +34,10 @@
 .tr-style {
   @apply px-6 py-3 border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider;
 }
-@media (max-width: 540px) {
+@media (max-width: 620px) {
   .tr-style {
-    @apply px-1;
+    line-height: normal;
+    @apply px-1 normal-case tracking-normal text-center;
   }
 }
 mat-paginator {
@@ -47,16 +48,18 @@ mat-paginator {
 }
 @media (max-width: 380px) {
   ::ng-deep .mat-paginator .mat-paginator-container {
+    .mat-paginator-page-size-label {
+      margin: 0px;
+    }
     display: block;
+    padding: 0px;
   }
 }
 ::ng-deep .mat-paginator .mat-paginator-container .mat-paginator-range-actions {
   display: flex;
 }
-@media (max-width: 380px) {
-  ::ng-deep .mat-paginator .mat-paginator-container .mat-paginator-range-actions {
-    display: block;
-  }
+::ng-deep .mat-paginator .mat-paginator-container .mat-paginator-range-label {
+  margin: 0px;
 }
 ::ng-deep .mat-paginator .mat-icon-button {
   position: inherit;

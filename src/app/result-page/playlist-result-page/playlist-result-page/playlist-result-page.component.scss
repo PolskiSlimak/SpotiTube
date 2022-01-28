@@ -1,1 +1,8 @@
-
+:host ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container {
+  flex-wrap: nowrap;
+}
+@media (min-width: 530px) {
+  :host ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container {
+    flex-wrap: wrap;
+  }
+}

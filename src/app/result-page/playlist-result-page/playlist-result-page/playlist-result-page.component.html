@@ -23,7 +23,7 @@
     <ng-template #elseWidth>
       <div class="ng-value" *ngFor="let item of items | slice:0:1">
         <span class="{{this.detailsService.isSpotifyPlaylist(item) === true ? 'ng-value-label font-color-spotify' :'ng-value-label font-color-youtube'}}">
-          {{items.length}} selected
+          {{items.length}} items
         </span>
         <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
       </div>
@@ -31,10 +31,10 @@
   </ng-template>
   <ng-template ng-option-tmp let-item="item">
     <ng-template [ngIf]="this.detailsService.isSpotifyPlaylist(item) === true" [ngIfElse]="elseBlock">
-      <div class="font-color-spotify">{{item.playlistName}}</div>
+      <div class="font-color-spotify">{{item.playlistName.length > 15 && this.innerWidth < 520  ? item.playlistName.substring(0, 15) + "..." : item.playlistName}}</div>
     </ng-template>
     <ng-template #elseBlock>
-      <div class="font-color-youtube">{{item.playlistName}}</div>
+      <div class="font-color-youtube">{{item.playlistName.length > 15 && this.innerWidth < 520  ? item.playlistName.substring(0, 15) + "..." : item.playlistName}}</div>
     </ng-template>
   </ng-template>
 </ng-select>

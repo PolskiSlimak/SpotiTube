@@ -46,6 +46,7 @@ export class NavBarComponent implements OnInit {
 
   ngOnInit(): void {
     this.refreshPlaylists();
+    this.resizeListener();
   }
 
   ngAfterViewInit() {

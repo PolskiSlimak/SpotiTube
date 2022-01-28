@@ -46,6 +46,7 @@ export class PlaylistResultPageComponent implements OnInit {
         }
       }
     });
+    this.resizeListener();
   }
 
   @HostListener('window:resize', ['$event'])

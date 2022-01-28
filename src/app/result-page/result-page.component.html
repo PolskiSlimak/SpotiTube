@@ -73,7 +73,7 @@
           <th class="rounded-tr-lg w-3/12 background-color-youtube tr-style">Playlists</th>
         </ng-template>
         <ng-template [ngSwitchCase]="'spotify-youtube'">
-          <th class="rounded-tl-lg w-3/12 background-color-spotify-youtube text tr-style" (click)="onChangeSortArtist()">
+          <th class="rounded-tl-lg w-5/12 background-color-spotify-youtube text tr-style" (click)="onChangeSortArtist()">
             Artists
             <ng-template [ngIf]="this.sortService.sortingTypeArtist === 'dsc'" [ngIfElse]="elseArtist">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon-tr-element icon-tr" viewBox="0 0 20 20">
@@ -86,7 +86,7 @@
               </svg>
             </ng-template>
           </th>
-          <th class="w-7/12 background-color-spotify-youtube text tr-style" (click)="onChangeSortSongName()">
+          <th class="w-4/12 background-color-spotify-youtube text tr-style" (click)="onChangeSortSongName()">
             Song title
             <ng-template [ngIf]="this.sortService.sortingTypeSongName === 'dsc'" [ngIfElse]="elseArtist">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon-tr-element icon-tr" viewBox="0 0 20 20">
@@ -99,7 +99,7 @@
               </svg>
             </ng-template>
           </th>
-          <th class="rounded-tr-lg w-2/12 background-color-spotify-youtube tr-style">Playlists</th>
+          <th class="rounded-tr-lg w-3/12 background-color-spotify-youtube tr-style">Playlists</th>
         </ng-template>
         <ng-template [ngSwitchDefault]>
           <th class="rounded-tl-lg tr-style w-5/12 tr-style-bg-default">Artists</th>

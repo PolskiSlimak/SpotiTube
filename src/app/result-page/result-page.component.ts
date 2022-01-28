@@ -48,6 +48,7 @@ export class ResultPageComponent implements OnInit {
       this.detailsService.activeTrackList = activeTrackList;
       this.activeTrackList = [...activeTrackList];
     });
+    this.resizeListener();
   }
 
   ngAfterViewInit(): void {
