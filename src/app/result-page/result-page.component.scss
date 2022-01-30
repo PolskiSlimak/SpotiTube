@@ -37,7 +37,7 @@
 @media (max-width: 620px) {
   .tr-style {
     line-height: normal;
-    @apply px-1 normal-case tracking-normal text-center;
+    @apply px-0 normal-case tracking-normal text-center;
   }
 }
 mat-paginator {
