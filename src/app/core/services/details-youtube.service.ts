@@ -80,25 +80,23 @@ export class DetailsYoutubeService {
     let artistAndName = snippet.title.split("-");
     let artistsInfo = new ArtistsInfo();
     if (artistAndName.length == 1) {
+      let artistName;
       if (isForSearch) {
-        artistsInfo.name = snippet.channelTitle.split("-")[0];
+        artistName = snippet.channelTitle.split("-")[0];
       } else {
-        artistsInfo.name = snippet.videoOwnerChannelTitle.split("-")[0];
+        artistName = snippet.videoOwnerChannelTitle.split("-")[0];
       }
-      trackData.name = this.parseTrackName(artistAndName[0]);
+      artistsInfo.name = this.parsePhrase(artistName);
+      trackData.name = this.parsePhrase(artistAndName[0]);
     } else {
-      if (isForSearch) {
-        artistsInfo.name = snippet.channelTitle.split("-")[0];
-      } else {
-        artistsInfo.name = snippet.videoOwnerChannelTitle !== undefined ? snippet.videoOwnerChannelTitle.split("-")[0] : artistAndName[0];
-      }
-      trackData.name = this.parseTrackName(artistAndName[1]);
+      artistsInfo.name = this.parsePhrase(artistAndName[0]);
+      trackData.name = this.parsePhrase(artistAndName[1]);
     }
     return artistsInfo;
   }
 
-  parseTrackName(artistName: any): string {
-    return artistName.replaceAll(/&amp;/g, '&').replaceAll(/&quot;/g, '"').replaceAll(/&#39;/g, "'");
+  parsePhrase(phrase: any): string {
+    return phrase.replaceAll(/&amp;/g, '&').replaceAll(/&quot;/g, '"').replaceAll(/&#39;/g, "'");
   }
 
   onPlaylistLoadYoutube(): void {

@@ -36,10 +36,12 @@ export class ResultPageComponent implements OnInit {
       }
      };
     this.detailsService.refreshTrackList$.subscribe((trackList: ItemTrack[]) => {
-      if (this.isSortBySongName) {
-        this.sortService.sortBySongName(trackList);
-      } else {
-        this.sortService.sortByArist(trackList);
+      if (!this.detailsService.isSearchPhrase) {
+        if (this.isSortBySongName) {
+          this.sortService.sortBySongName(trackList);
+        } else {
+          this.sortService.sortByArist(trackList);
+        }
       }
       this.trackList = [...trackList];
       this.getCurrentActiveTrackList();

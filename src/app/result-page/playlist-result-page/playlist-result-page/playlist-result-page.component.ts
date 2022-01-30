@@ -91,9 +91,13 @@ export class PlaylistResultPageComponent implements OnInit {
         this.refreshTracksInfo(selectedTrack, false, callbackSpotify);
       });
     } else if (this.itemTrack.isYoutubeResource && isSpotifyPlaylist) {
-      let formattedPhrase = this.getFormattedValueForSearch();
+      let formattedPhrase = this.getFormattedValueForSearch().toLowerCase();
       this.spotifyService.searchForPhrase(formattedPhrase, "track").subscribe((data: any) => {
-        trackSpotify = data["tracks"].items[0];
+        let trackNameConverted = this.formatTrackNameForFit(this.itemTrack.track.name).toLowerCase();
+        let foundIndex = data["tracks"].items.findIndex((item:any) => {
+          return item.name.toLowerCase().includes(trackNameConverted);
+        });
+        trackSpotify = foundIndex !== -1 ? data["tracks"].items[foundIndex] : data["tracks"].items[0];
         const dialogRef = this.dialog.open(DialogChooseTrackComponent, {
           width: '40rem',
           disableClose: true,
@@ -136,9 +140,14 @@ export class PlaylistResultPageComponent implements OnInit {
   }
 
   getFormattedValueForSearch(): string {
-    let phraseValue: any = this.itemTrack.track.artists[0].name + " " + this.itemTrack.track.name;
+    let phraseValue: any = this.itemTrack.track.artists[0].name.trim() + " " + this.itemTrack.track.name.trim();
     let phraseValueWithoutBrackets = phraseValue.replaceAll(/\(.*?\)/g, "").replaceAll(/\[.*?\]/g, "");
-    return phraseValueWithoutBrackets.replaceAll(" ", "+").replaceAll(/[^A-Za-z0-9+]/g, "");
+    return phraseValueWithoutBrackets.trim().replaceAll(/[^A-Za-z0-9\s]/g, "");
+  }
+
+  formatTrackNameForFit(name: any): string {
+    let phraseValueWithoutBrackets = name.replaceAll(/\(.*?\)/g, "").replaceAll(/\[.*?\]/g, "");
+    return phraseValueWithoutBrackets.trim().replaceAll(/[^A-Za-z0-9\s]/g, "");
   }
 
   addNewTrackToList(selectedTrack: TrackInfo, trackSpotify: any): void {
