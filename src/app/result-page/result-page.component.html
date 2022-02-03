@@ -16,7 +16,7 @@
       <tr [ngSwitch]="this.detailsService.themeColor">
         <ng-template [ngSwitchCase]="'spotify'">
           <th class="rounded-tl-lg tr-style w-5/12 background-color-spotify text" (click)="onChangeSortArtist()">
-            Artists
+            Artyści
             <ng-template [ngIf]="this.sortService.sortingTypeArtist === 'dsc'" [ngIfElse]="elseArtist">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon-tr-element icon-tr" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -29,7 +29,7 @@
             </ng-template>
           </th>
           <th class="tr-style w-4/12 background-color-spotify text" (click)="onChangeSortSongName()">
-            Song title
+            Tytuł utworu
             <ng-template [ngIf]="this.sortService.sortingTypeSongName === 'dsc'" [ngIfElse]="elseArtist">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon-tr-element icon-tr" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -41,11 +41,11 @@
               </svg>
             </ng-template>
           </th>
-          <th class="rounded-tr-lg tr-style w-3/12 background-color-spotify">Playlists</th>
+          <th class="rounded-tr-lg tr-style w-3/12 background-color-spotify">Listy odtwarzania</th>
         </ng-template>
         <ng-template [ngSwitchCase]="'youtube'">
           <th class="rounded-tl-lg tr-style w-5/12 background-color-youtube text" (click)="onChangeSortArtist()">
-            Artists
+            Artyści
             <ng-template [ngIf]="this.sortService.sortingTypeArtist === 'dsc'" [ngIfElse]="elseArtist">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon-tr-element icon-tr" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -58,7 +58,7 @@
             </ng-template>
           </th>
           <th class="w-4/12 background-color-youtube text tr-style" (click)="onChangeSortSongName()">
-            Song title
+            Tytuł utworu
             <ng-template [ngIf]="this.sortService.sortingTypeSongName === 'dsc'" [ngIfElse]="elseArtist">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon-tr-element icon-tr" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -70,11 +70,11 @@
               </svg>
             </ng-template>
           </th>
-          <th class="rounded-tr-lg w-3/12 background-color-youtube tr-style">Playlists</th>
+          <th class="rounded-tr-lg w-3/12 background-color-youtube tr-style">Listy odtwarzania</th>
         </ng-template>
         <ng-template [ngSwitchCase]="'spotify-youtube'">
           <th class="rounded-tl-lg w-5/12 background-color-spotify-youtube text tr-style" (click)="onChangeSortArtist()">
-            Artists
+            Artyści
             <ng-template [ngIf]="this.sortService.sortingTypeArtist === 'dsc'" [ngIfElse]="elseArtist">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon-tr-element icon-tr" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -87,7 +87,7 @@
             </ng-template>
           </th>
           <th class="w-4/12 background-color-spotify-youtube text tr-style" (click)="onChangeSortSongName()">
-            Song title
+            Tytuł utworu
             <ng-template [ngIf]="this.sortService.sortingTypeSongName === 'dsc'" [ngIfElse]="elseArtist">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon-tr-element icon-tr" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -99,12 +99,12 @@
               </svg>
             </ng-template>
           </th>
-          <th class="rounded-tr-lg w-3/12 background-color-spotify-youtube tr-style">Playlists</th>
+          <th class="rounded-tr-lg w-3/12 background-color-spotify-youtube tr-style">Listy odtwarzania</th>
         </ng-template>
         <ng-template [ngSwitchDefault]>
-          <th class="rounded-tl-lg tr-style w-5/12 tr-style-bg-default">Artists</th>
-          <th class="tr-style w-4/12 tr-style-bg-default">Song title</th>
-          <th class="rounded-tr-lg tr-style w-3/12 tr-style-bg-default">Playlists</th>
+          <th class="rounded-tl-lg tr-style w-5/12 tr-style-bg-default">Artyści</th>
+          <th class="tr-style w-4/12 tr-style-bg-default">Tytuł utworu</th>
+          <th class="rounded-tr-lg tr-style w-3/12 tr-style-bg-default">Listy odtwarzania</th>
         </ng-template>
       </tr>
     </thead>
@@ -147,14 +147,14 @@
           <ng-template [ngIf]="this.detailsService.isSearchPhrase === true" [ngIfElse]="elseBlock1">
             <tr>
               <td></td>
-              <td class="h-16">No results found</td>
+              <td class="h-16">Nie znaleziono wyników wyszukiwania</td>
               <td></td>
             </tr>
           </ng-template>
           <ng-template #elseBlock1>
             <tr>
               <td></td>
-              <td class="h-16">No content to show</td>
+              <td class="h-16">Brak treści do pokazania</td>
               <td></td>
             </tr>
           </ng-template>

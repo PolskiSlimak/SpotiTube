@@ -1,10 +1,10 @@
 <ng-select class="auto-grow"
   [items]="this.tracksInfo"
   bindLabel="playlistName"
-  placeholder="Select playlists"
+  placeholder="Wybierz playlisty"
   [multiple]="true"
   [minTermLength]="2"
-  typeToSearchText="Please enter 2 or more characters"
+  typeToSearchText="Wpisz dwa lub więcej znaków"
   [(ngModel)]="selectedTracksInfo"
   (remove)="onRemove($event)"
   (add)="onAdd($event)"
@@ -16,13 +16,13 @@
         <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
       </div>
       <div class="ng-value" *ngIf="items.length > 1">
-        <span class="ng-value-label">{{items.length - 1}} more...</span>
+        <span class="ng-value-label">{{items.length - 1}} więcej...</span>
       </div>
     </ng-template>
     <ng-template #elseWidth>
       <div class="ng-value" *ngFor="let item of items | slice:0:1">
         <span class="{{this.detailsService.isSpotifyPlaylist(item) === true ? 'ng-value-label font-color-spotify' :'ng-value-label font-color-youtube'}}">
-          {{items.length}} items
+          {{items.length}} pozycja
         </span>
         <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
       </div>

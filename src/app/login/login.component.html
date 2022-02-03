@@ -2,16 +2,15 @@
   <div class="inner">
     <h1 class="cover-heading">SpotiTube</h1>
         <p class="lead">
-          Organize, view and create Spotify and Youtube playlists easily!
+          Łatwo organizuj, przeglądaj i twórz listy odtwarzania Spotify i Youtube!
         </p>
         <p>
-          SpotiTube merges the songs of selected playlists into one view, allowing you to effortlessly add and remove songs from several playlists.
+          SpotiTube łączy utwory z wybranych list odtwarzania w jeden widok, umożliwiając bezproblemowe dodawanie i usuwanie utworów z kilku list odtwarzania.        </p>
+        <p data-ng-if="!vm.isMobile">
+          Dodatkowo możesz przenosić utwory między tymi dwoma usługami!
         </p>
         <p data-ng-if="!vm.isMobile">
-          Additionaly you can move songs beetwen those two services!
-        </p>
-        <p data-ng-if="!vm.isMobile">
-            Login to Spotify to try it out!
+          Zaloguj się do Spotify, aby wypróbować!
         </p>
     <div class="button-wrapper">
       <button class="connect-spotify" [@buttonSize]="isHover ? 'true' : 'false'"
