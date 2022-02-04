@@ -476,6 +476,7 @@ export class NavBarComponent implements OnInit {
     this.detailsService.tracksInfo.length = 0;
     this.detailsService.activeTrackList.length = 0;
     this.detailsService.removePhraseFromLocalStorage();
+    this.detailsService.filterInput.nativeElement.value = "";
   }
 
   onToggleMenu(): void {

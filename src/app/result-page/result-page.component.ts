@@ -1,10 +1,16 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { DetailsService } from '../core/services/details.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ItemTrack } from '../core/models/item-track.interface';
 import { SortService } from '../core/services/sort.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { ArtistsInfo } from '../core/models/artists-info.interface';
+import { DetailsYoutubeService } from '../core/services/details-youtube.service';
+import { PlaylistInfo } from '../core/models/playlist-info.interface';
+import { PlaylistInfoYoutube } from '../core/models/playlist-info-youtube.interface';
+import { BehaviorSubject } from 'rxjs';
+import { SpotifyService } from '../core/services/spotify.service';
+import { YoutubeService } from '../core/services/youtube.service';
 
 @Component({
   selector: 'app-result-page',
@@ -18,13 +24,19 @@ export class ResultPageComponent implements OnInit {
   pageIndex = this.detailsService.pageIndex;
   isLastPage: boolean = this.detailsService.isLastPage;
   isSortBySongName: boolean = false;
-  trackListFiltered = new MatTableDataSource(this.trackList);
+  trackListFiltered: MatTableDataSource<any> = new MatTableDataSource();
   innerWidth: number
+  allTrackList: ItemTrack[];
+  isTracksListInitialized$ = new BehaviorSubject<boolean>(false);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('filterInput') filterInput: Input;
 
   constructor(public detailsService: DetailsService,
-              public sortService: SortService) { }
+              public sortService: SortService,
+              private detailsYoutubeService: DetailsYoutubeService,
+              private spotifyService: SpotifyService,
+              private youtubeService: YoutubeService) { }
 
   ngOnInit(): void {
     this.trackListFiltered.filterPredicate = (itemTrack: any, filter: string) => {
@@ -55,6 +67,8 @@ export class ResultPageComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.detailsService.paginator = this.paginator;
+    this.detailsService.filterInput = this.filterInput;
+    this.translatePaginator();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -96,6 +110,38 @@ export class ResultPageComponent implements OnInit {
     this.getCurrentActiveTrackList();
   }
 
+  initAllTrackListForFilter() {
+    this.allTrackList = [];
+    this.detailsService.playlistInfo.forEach((playlistInfo: PlaylistInfo) => {
+      this.spotifyService.getTracks(playlistInfo.id).subscribe((data: any) => {
+        let itemTracks: ItemTrack[] = data.items;
+        itemTracks.forEach((newItemTrack: ItemTrack) => {
+          let isAlreadyExist = this.allTrackList.some((alreadyAddedTrack: ItemTrack) => {
+            return alreadyAddedTrack.track.id === newItemTrack.track.id;
+          });
+          if (!isAlreadyExist) {
+            this.allTrackList.push(newItemTrack);
+          }
+        });
+        this.isTracksListInitialized$.next(true);
+      });
+    });
+    this.detailsYoutubeService.playlistInfoYoutube.forEach((playlistInfoYoutube: PlaylistInfoYoutube) => {
+      this.youtubeService.getTracks(playlistInfoYoutube.id).subscribe((data: any) => {
+        let itemTracks: ItemTrack[] = this.detailsYoutubeService.convertItemTrack(data.items);
+        itemTracks.forEach((newItemTrack: ItemTrack) => {
+          let isAlreadyExist = this.allTrackList.some((alreadyAddedTrack: ItemTrack) => {
+            return alreadyAddedTrack.track.id === newItemTrack.track.id;
+          });
+          if (!isAlreadyExist) {
+            this.allTrackList.push(newItemTrack);
+          }
+        });
+        this.isTracksListInitialized$.next(true);
+      });
+    });
+  }
+
   getCurrentActiveTrackList(): void {
     let firstIndex = this.pageSize * this.pageIndex;
     let lastIndex = firstIndex + this.pageSize;
@@ -105,8 +151,21 @@ export class ResultPageComponent implements OnInit {
 
   onApplyFilter(eventTarget: any): void {
     let filterText = eventTarget.value;
-    this.trackListFiltered.filter = filterText.trim().toLocaleLowerCase();
-    this.detailsService.refreshTrackList$.next(this.trackListFiltered.filteredData);
+    if (filterText != "") {
+      this.detailsService.setAllPlaylistsActive();
+      this.detailsYoutubeService.setAllPlaylistsActiveYoutube();
+      this.initAllTrackListForFilter();
+      this.isTracksListInitialized$.subscribe((value: boolean) => {
+        if (value) {
+          this.trackListFiltered.data = this.allTrackList;
+          this.detailsService.isSearchPhrase = true;
+          this.trackListFiltered.filter = filterText.trim().toLocaleLowerCase();
+          this.detailsService.refreshTrackList$.next(this.trackListFiltered.filteredData);
+        }
+      });
+    } else if (filterText == "") {
+      this.detailsService.refreshTrackList$.next([]);
+    }
   }
 
   filterByArtistAndSongName(itemTrack: ItemTrack, filterConverted: any): boolean {
@@ -126,5 +185,24 @@ export class ResultPageComponent implements OnInit {
     });
     let trackNameFound = itemTrack.track.name.toLocaleLowerCase().includes(trimmedFilter);
     return artist !== undefined || trackNameFound;
+  }
+
+  translatePaginator(): void {
+    this.paginator._intl.itemsPerPageLabel = 'Wyniki na stronę';
+    this.paginator._intl.firstPageLabel = 'Pierwsza strona';
+    this.paginator._intl.lastPageLabel = 'Ostatnia strona';
+    this.paginator._intl.nextPageLabel = 'Następna strona';
+    this.paginator._intl.previousPageLabel = 'Poprzednia strona';
+    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+      if (length == 0 || pageSize == 0) {
+          return `0 z ${length}`;
+      }
+      length = Math.max(length, 0);
+      const startIndex = page * pageSize;
+      const endIndex = startIndex < length ?
+          Math.min(startIndex + pageSize, length) :
+          startIndex + pageSize;
+      return `${startIndex + 1} – ${endIndex} z ${length}`;
+    };
   }
 }

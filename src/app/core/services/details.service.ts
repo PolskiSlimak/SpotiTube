@@ -29,6 +29,7 @@ export class DetailsService {
   phraseValue: any;
   themeColor: string;
   isMenuOpen: boolean;
+  filterInput: any;
 
   constructor(private spotifyService: SpotifyService,
               private sortService: SortService) { }
