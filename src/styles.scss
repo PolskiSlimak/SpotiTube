@@ -12,14 +12,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .font-color-youtube {
     color: $youtube;
   }
-  .background-color-spotify {
-    background-color: $spotify;
-  }
-  .background-color-youtube {
-    background-color: $youtube;
-  }
-  .background-color-spotify-youtube {
-    background-color: $spotify-youtube;
+  .font-color-default {
+    color: $default;
   }
 @import "tailwindcss/utilities";
 .menu {

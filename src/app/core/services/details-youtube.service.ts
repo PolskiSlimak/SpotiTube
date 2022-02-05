@@ -135,26 +135,34 @@ export class DetailsYoutubeService {
       this.detailsService.tracksInfo.splice(index, 1);
       this.detailsService.deleteRelatedTracks(trackInfo.items);
       this.detailsService.refreshTracksInfo$.next(this.detailsService.tracksInfo);
-      if (this.detailsService.tracksInfo.length === 0) {
-        this.detailsService.themeColor = "";
-      } else if (!this.isCheckedAnyPlaylistFromYoutube() && this.detailsService.tracksInfo.length > 0) {
-        this.detailsService.themeColor = "spotify";
-      }
+      this.setThemeForDeletingPlaylist();
     } else {
       this.detailsService.tracksInfo.push(trackInfo);
       this.detailsService.updateShownTracks(trackInfo.items);
       this.detailsService.refreshTracksInfo$.next(this.detailsService.tracksInfo);
-      if (this.detailsService.themeColor === "spotify" && !this.detailsService.isSearchPhrase) {
-        this.detailsService.themeColor = "spotify-youtube";
-      } else if (this.detailsService.themeColor !== "spotify-youtube") {
-        this.detailsService.themeColor = "youtube";
-      }
+      this.setThemeForAddingPlaylist()
     }
     if (this.detailsService.isSearchPhrase === true) {
       this.detailsService.isSearchPhrase = false;
     }
     this.detailsService.refreshTrackList$.next(this.detailsService.trackList);
     this.updateLocalStorage();
+  }
+
+  setThemeForDeletingPlaylist(): void {
+    if (this.detailsService.tracksInfo.length === 0) {
+      this.detailsService.themeColor = "";
+    } else if (!this.isCheckedAnyPlaylistFromYoutube() && this.detailsService.tracksInfo.length > 0) {
+      this.detailsService.themeColor = "spotify";
+    }
+  }
+
+  setThemeForAddingPlaylist(): void {
+    if (this.detailsService.themeColor === "spotify" && !this.detailsService.isSearchPhrase) {
+      this.detailsService.themeColor = "spotify-youtube";
+    } else if (this.detailsService.themeColor !== "spotify-youtube" || (this.detailsService.isSearchPhrase && this.detailsService.themeColor === "spotify-youtube")) {
+      this.detailsService.themeColor = "youtube";
+    }
   }
 
   updateLocalStorage(): void {

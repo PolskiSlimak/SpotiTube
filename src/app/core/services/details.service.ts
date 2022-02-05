@@ -89,7 +89,7 @@ export class DetailsService {
   setThemeForAddingPlaylist(): void {
     if (this.themeColor === "youtube" && !this.isSearchPhrase) {
       this.themeColor = "spotify-youtube";
-    } else if (this.themeColor !== "spotify-youtube") {
+    } else if (this.themeColor !== "spotify-youtube" || (this.isSearchPhrase && this.themeColor === "spotify-youtube")) {
       this.themeColor = "spotify";
     }
   }

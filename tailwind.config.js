@@ -11,6 +11,12 @@ module.exports = {
         screens: {
           'xs': '547px',
         },
+        colors: {
+          // #FF9D22 #FF8B60 #FFDB74
+          'default-color': '#FFAD4D',
+          'spotify': '#00782a',
+          'youtube': '#b31800'
+        },
       },
     },
     variants: {

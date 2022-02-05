@@ -37,6 +37,7 @@
 @media (max-width: 620px) {
   .tr-style {
     line-height: normal;
+    font-size: 0.65rem;
     @apply px-0 normal-case tracking-normal text-center;
   }
 }

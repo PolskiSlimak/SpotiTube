@@ -16,7 +16,7 @@ export class SearchBarComponent implements OnInit {
   isLoggedToYoutube: boolean;
 
   constructor(private spotifyService: SpotifyService,
-              private detailsService: DetailsService,
+              public detailsService: DetailsService,
               private youtubeService: YoutubeService,
               private detailsYoutubeService: DetailsYoutubeService,
               private elementRef: ElementRef) { }
