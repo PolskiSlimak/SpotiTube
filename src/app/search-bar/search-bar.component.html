@@ -8,14 +8,10 @@
       <div class="relative mx-4 lg:mx-0">
           <form>
             <div class="flex items-center">
-              <label *ngIf="isSearchYoutube == false">
-                <input type='text' placeholder="Szukaj utworów" class="input-element focus:border-green-500"
+              <label>
+                <input type='text' placeholder="Szukaj utworów" class="input-element focus:border-yellow-500"
                 (keyup.enter)="onSearchForPhrase()" [(ngModel)]="phraseValue" name="phraseValue" autocomplete="off">
               </label>
-              <!-- <label *ngIf="isSearchYoutube == true">
-                <input type='text' placeholder="Search - youtube" class="input-element focus:border-red-500"
-                (keyup.enter)="onSearchForPhraseYoutube()" [(ngModel)]="phraseValue" name="phraseValue" autocomplete="off">
-              </label> -->
             </div>
           </form>
       </div>

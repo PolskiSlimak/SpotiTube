@@ -11,7 +11,6 @@ import { YoutubeService } from '../core/services/youtube.service';
 })
 export class SearchBarComponent implements OnInit {
   phraseValue: any;
-  isSearchYoutube: boolean = this.detailsYoutubeService.isSearchYoutube;
   showProfile = false;
   pictureUrl = "https://i1.wp.com/similarpng.com/wp-content/plugins/userswp/assets/images/no_profile.png?ssl=1";
   isLoggedToYoutube: boolean;
@@ -39,28 +38,17 @@ export class SearchBarComponent implements OnInit {
     this.youtubeService.youtubeAuth();
   }
 
-  onSwitchSearch(): void {
-    if (this.isLoggedToYoutube) {
-      this.detailsYoutubeService.isSearchYoutube = !this.detailsYoutubeService.isSearchYoutube;
-      this.isSearchYoutube = !this.isSearchYoutube;
-    }
-  }
-
   onSearchForPhrase(): void {
     if (!this.phraseValue) {
       return
     }
+    this.detailsService.filterInput.nativeElement.value = "";
     let formattedPhrase = this.phraseValue.replace(" ", "+");
     this.detailsService.searchInSpotify(formattedPhrase);
-    this.phraseValue = "";
-  }
-
-  onSearchForPhraseYoutube(): void {
-    if (!this.phraseValue) {
-      return
+    if (this.isLoggedToYoutube) {
+      formattedPhrase = this.phraseValue.replace(" ", "%20");
+      this.detailsYoutubeService.searchInYoutube(formattedPhrase);
     }
-    let formattedPhrase = this.phraseValue.replace(" ", "%20");
-    this.detailsYoutubeService.searchInYoutube(formattedPhrase);
     this.phraseValue = "";
   }
 

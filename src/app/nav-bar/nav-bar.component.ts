@@ -89,7 +89,7 @@ export class NavBarComponent implements OnInit {
           });
         }
       });
-    } else if (phraseStorage !== null && !phraseStorage.isYoutubePhrase) {
+    } else if (phraseStorage !== null) {
       this.searchAgain(phraseStorage.phrase);
     } else {
       this.checkActivePlaylists();
@@ -113,7 +113,7 @@ export class NavBarComponent implements OnInit {
           });
         }
       });
-    } else if (phraseStorage !== null && phraseStorage.isYoutubePhrase) {
+    } else if (phraseStorage !== null && this.isLoggedToYoutube) {
       this.searchAgainYoutube(phraseStorage.phrase);
     } else {
       this.checkActivePlaylistsYoutube();
@@ -126,8 +126,11 @@ export class NavBarComponent implements OnInit {
     let foundItemTrack = itemTracks.find((itemTrack: TrackInfo) => {
       return itemTrack.playlistId === deletedPlaylist.id;
     });
-    if (foundItemTrack) {
+    if (foundItemTrack && this.detailsService.isSearchPhrase !== true) {
       this.detailsService.manageTracks(foundItemTrack);
+    } else if (foundItemTrack && this.detailsService.isSearchPhrase === true) {
+      this.detailsService.tracksInfo.splice(itemTracks.indexOf(foundItemTrack), 1);
+      this.detailsService.refreshTracksInfo$.next(this.detailsService.tracksInfo);
     }
     this.isDeletedPlaylist = false;
   }
@@ -138,8 +141,11 @@ export class NavBarComponent implements OnInit {
     let foundItemTrack = itemTracks.find((itemTrack: TrackInfo) => {
       return itemTrack.playlistId === deletedPlaylist.id;
     });
-    if (foundItemTrack) {
+    if (foundItemTrack && this.detailsService.isSearchPhrase !== true) {
       this.detailsYoutubeService.manageTracks(foundItemTrack);
+    } else if (foundItemTrack && this.detailsService.isSearchPhrase === true) {
+      this.detailsService.tracksInfo.splice(itemTracks.indexOf(foundItemTrack), 1);
+      this.detailsService.refreshTracksInfo$.next(this.detailsService.tracksInfo);
     }
     this.isDeletedPlaylist = false;
   }
@@ -358,6 +364,7 @@ export class NavBarComponent implements OnInit {
     this.detailsService.playlistInfo.unshift(newPlaylists[0]);
     this.playlistInfo = this.detailsService.playlistInfo;
     this.sortService.sortPlaylist(this.playlistInfo);
+    this.detailsService.setTracksInfo(newPlaylists[0]);
   }
 
   addNewPlaylistToListYoutube(items: PlaylistInfoYoutube[]): void {
@@ -372,6 +379,7 @@ export class NavBarComponent implements OnInit {
       this.detailsYoutubeService.playlistInfoYoutube.unshift(newPlaylists[0]);
       this.playlistInfoYoutube = this.detailsYoutubeService.playlistInfoYoutube;
       this.sortService.sortPlaylist(this.playlistInfoYoutube);
+      this.detailsYoutubeService.setTracksInfo(newPlaylists[0]);
     } else {
       this.updatePlaylistYoutube(true);
     }

@@ -112,7 +112,10 @@ export class ResultPageComponent implements OnInit {
 
   initAllTrackListForFilter() {
     this.allTrackList = [];
+    let numberOfPlaylists = 0;
+    let numberOfPlaylistsYoutube = 0;
     this.detailsService.playlistInfo.forEach((playlistInfo: PlaylistInfo) => {
+      numberOfPlaylists++;
       this.spotifyService.getTracks(playlistInfo.id).subscribe((data: any) => {
         let itemTracks: ItemTrack[] = data.items;
         itemTracks.forEach((newItemTrack: ItemTrack) => {
@@ -123,10 +126,14 @@ export class ResultPageComponent implements OnInit {
             this.allTrackList.push(newItemTrack);
           }
         });
-        this.isTracksListInitialized$.next(true);
+        numberOfPlaylists--;
+        if (numberOfPlaylists == 0) {
+          this.isTracksListInitialized$.next(true);
+        }
       });
     });
     this.detailsYoutubeService.playlistInfoYoutube.forEach((playlistInfoYoutube: PlaylistInfoYoutube) => {
+      numberOfPlaylistsYoutube++;
       this.youtubeService.getTracks(playlistInfoYoutube.id).subscribe((data: any) => {
         let itemTracks: ItemTrack[] = this.detailsYoutubeService.convertItemTrack(data.items);
         itemTracks.forEach((newItemTrack: ItemTrack) => {
@@ -137,7 +144,10 @@ export class ResultPageComponent implements OnInit {
             this.allTrackList.push(newItemTrack);
           }
         });
-        this.isTracksListInitialized$.next(true);
+        numberOfPlaylistsYoutube--;
+        if (numberOfPlaylistsYoutube == 0) {
+          this.isTracksListInitialized$.next(true);
+        }
       });
     });
   }

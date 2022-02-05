@@ -16,7 +16,6 @@ import { YoutubeService } from './youtube.service';
 })
 export class DetailsYoutubeService {
   playlistInfoYoutube: PlaylistInfoYoutube[] = [];
-  isSearchYoutube: boolean = false;
 
   constructor(private youtubeService: YoutubeService,
               private detailsService: DetailsService,
@@ -183,21 +182,18 @@ export class DetailsYoutubeService {
     this.youtubeService.searchForPhrase(formattedPhrase).subscribe((data: any) => {
       this.detailsService.phraseValue = "";
       this.detailsService.isSearchPhrase = true;
-      this.detailsService.themeColor = "youtube";
+      this.detailsService.themeColor = "spotify-youtube";
       this.sortService.sortingTypeArtist = "dsc";
       this.sortService.sortingTypeSongName = "dsc";
       this.putTracksYoutube(data.items);
       this.setAllPlaylistsActiveYoutube();
       this.detailsService.setPhraseToLocalStorage({
-        phrase: formattedPhrase,
-        isYoutubePhrase: true
+        phrase: formattedPhrase
       });
     });
   }
 
   putTracksYoutube(items: any): void {
-    this.detailsService.trackList.length = 0;
-    this.detailsService.activeTrackList.length = 0;
     items.forEach((item: any) => {
       let snippet = item.snippet;
       let convertedItem = new TrackData();
@@ -240,16 +236,10 @@ export class DetailsYoutubeService {
 
   setAllPlaylistsActiveYoutube(): void {
     this.detailsService.clearHtmlSelected();
-    this.clearTracksInfoYoutube();
     let playlists = this.playlistInfoYoutube;
     playlists.forEach((element: PlaylistInfoYoutube) => {
       this.setTracksInfo(element);
     });
-  }
-
-  clearTracksInfoYoutube(): void {
-    this.detailsService.tracksInfo.length = 0;
-    this.updateLocalStorage();
   }
 
   isCheckedAnyPlaylistFromYoutube(): boolean {

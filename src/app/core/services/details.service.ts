@@ -117,11 +117,13 @@ export class DetailsService {
         this.trackList.splice(index, 1);
       }
     });
-    this.activeTrackList.length = 0;
-    this.paginator.pageIndex = 0;
-    this.trackList.slice(0, this.pageSize).forEach((element: ItemTrack) => {
-      this.activeTrackList.push(element);
-    });
+    if (this.isSearchPhrase != true) {
+      this.activeTrackList.length = 0;
+      this.paginator.pageIndex = 0;
+      this.trackList.slice(0, this.pageSize).forEach((element: ItemTrack) => {
+        this.activeTrackList.push(element);
+      });
+    }
   }
 
   checkIfExistInDiffrentPlaylist(track: ItemTrack): boolean {
@@ -190,7 +192,6 @@ export class DetailsService {
       this.setAllPlaylistsActive();
       this.setPhraseToLocalStorage({
         phrase: formattedPhrase,
-        isYoutubePhrase: false
       });
     });
   }
