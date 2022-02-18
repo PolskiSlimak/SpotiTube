@@ -1,16 +1,16 @@
 <ng-template [ngIf]="this.trackString !== undefined" [ngIfElse]="elseBlock">
   <mat-dialog-content align="center">
-    <p>Do you want to add the following song to playlist <b>{{this.data.playlistName}}</b>:</p>
+    <p>Czy dodać poniższą piosenkę do listy <b>{{this.data.playlistName}}</b>:</p>
     <p><img class="h-10 w-10 inline-block rounded-full" src={{albumUrl}} alt=""> {{trackString}}</p>
   </mat-dialog-content>
   <mat-dialog-actions align="center">
-    <button mat-raised-button color="primary" (click)="onYesClick()" tabindex="1">Yes</button>
-    <button mat-raised-button mat-dialog-close tabindex="-1" (click)="onNoClick()">No</button>
+    <button mat-raised-button color="primary" (click)="onYesClick()" tabindex="1">Tak</button>
+    <button mat-raised-button mat-dialog-close tabindex="-1" (click)="onNoClick()">Nie</button>
   </mat-dialog-actions>
 </ng-template>
 <ng-template #elseBlock>
   <mat-dialog-content>
-    <p class="text-center">No results found in another service :(</p>
+    <p class="text-center">Nie znaleziono wyników w drugim serwisie</p>
   </mat-dialog-content>
   <mat-dialog-actions align="center">
     <button mat-raised-button color="primary" (click)="onNoClick()" tabindex="1">OK</button>

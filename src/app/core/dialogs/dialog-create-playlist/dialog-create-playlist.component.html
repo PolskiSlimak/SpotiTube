@@ -1,21 +1,21 @@
 <div id="test" class="h-full flex flex-col">
-  <h1 class="text-center">Create your playlist</h1>
+  <h1 class="text-center">Stwórz listę utworów</h1>
   <div>
     <mat-form-field appearance="fill" class="w-full">
-      <mat-label>Playlist name</mat-label>
+      <mat-label>Nazwa listy</mat-label>
       <input matInput [(ngModel)]="data.playlistName" />
     </mat-form-field>
     <mat-form-field appearance="fill" class="w-full">
-      <mat-label>Description</mat-label>
+      <mat-label>Opis listy</mat-label>
       <textarea matInput [(ngModel)]="data.description"></textarea>
     </mat-form-field>
-    <mat-checkbox [(ngModel)]="data.isPublic">Set to public playlist?</mat-checkbox>
+    <mat-checkbox [(ngModel)]="data.isPublic">Ustawić jako publiczną?</mat-checkbox>
     <ng-template [ngIf]="isLoggedToYoutube === true">
-      <mat-checkbox [(ngModel)]="data.isYoutube">Create playlist for Youtube?</mat-checkbox>
+      <mat-checkbox [(ngModel)]="data.isYoutube">Czy lista ma być utworzona dla Youtube?</mat-checkbox>
     </ng-template>
   </div>
   <div mat-dialog-actions class="justify-end">
-    <button mat-button (click)="onNoClick()">Close</button>
-    <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Submit</button>
+    <button mat-button [mat-dialog-close]="data">Zatwierdź</button>
+    <button mat-button (click)="onNoClick()">Zamknij</button>
   </div>
 </div>

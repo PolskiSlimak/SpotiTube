@@ -222,13 +222,15 @@ export class DetailsService {
     let isLoggedToYoutube = this.getIsLoggedToYoutube();
     if (!isLoggedToYoutube) {
       for (let childDiv of childrens) {
-        childDiv.childNodes[0].className = childDiv.childNodes[0].className.replace("clicked-btn", "hover-btn");
+        if (childDiv.childNodes[0].className)
+          childDiv.childNodes[0].className = childDiv.childNodes[0].className.replace("clicked-btn", "hover-btn");
       }
     } else {
       for (let childDiv of childrens) {
         let allDivChildrens = childDiv.children
         for (let children of allDivChildrens) {
-          children.childNodes[0].className = children.childNodes[0].className.replace("clicked-btn", "hover-btn");
+          if (children.childNodes[0].className)
+            children.childNodes[0].className = children.childNodes[0].className.replace("clicked-btn", "hover-btn");
         }
       }
     }

@@ -190,7 +190,8 @@ export class NavBarComponent implements OnInit {
 
   onCreatePlaylist(): void {
     const dialogRef = this.dialog.open(DialogCreatePlaylistComponent, {
-      width: '20rem',
+      width: '21rem',
+      maxWidth: 'none',
       data: {
         playlistName: this.playlistName,
         description: this.description,
@@ -215,6 +216,7 @@ export class NavBarComponent implements OnInit {
   onEditPlaylist(item: any): void {
     const dialogRef = this.dialog.open(DialogModifyPlaylistComponent, {
       width: '20rem',
+      maxWidth: 'none',
       data: {
         playlistName: this.playlistName,
         description: this.description,

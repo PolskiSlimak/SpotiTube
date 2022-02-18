@@ -7,9 +7,9 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./dialog-delete-playlist.component.scss']
 })
 export class DialogDeletePlaylistComponent implements OnInit {
-  message: string = "Are you sure want to delete?";
-  confirmButtonText: string = "Yes";
-  cancelButtonText: string = "No";
+  message: string = "Czy na pewno usunąć wybraną listę utworów?";
+  confirmButtonText: string = "Tak";
+  cancelButtonText: string = "Nie";
 
   constructor(public dialogRef: MatDialogRef<DialogDeletePlaylistComponent>) { }
 
