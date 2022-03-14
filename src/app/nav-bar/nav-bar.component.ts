@@ -106,13 +106,7 @@ export class NavBarComponent implements OnInit {
       this.isChangedSortingType = false;
     } else if (this.isModifiedPlaylist) {
       this.isModifiedPlaylist = false;
-      this.detailsYoutubeService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
-        if (playlists.length > 0) {
-          playlists.forEach((item: PlaylistStorage) => {
-            this.selectActivePlaylistsInDOMAndCheckExist(item, true);
-          });
-        }
-      });
+      this.selectActivePlaylists();
     } else if (phraseStorage !== null && this.isLoggedToYoutube) {
       this.searchAgainYoutube(phraseStorage.phrase);
     } else {
@@ -491,5 +485,15 @@ export class NavBarComponent implements OnInit {
 
   onToggleMenu(): void {
     this.detailsService.isMenuOpen = false;
+  }
+
+  selectActivePlaylists(): void {
+    this.detailsYoutubeService.getPlaylistsFromLocalStorage().subscribe((playlists: PlaylistStorage[]) => {
+      if (playlists.length > 0) {
+        playlists.forEach((item: PlaylistStorage) => {
+          this.selectActivePlaylistsInDOMAndCheckExist(item, true);
+        });
+      }
+    });
   }
 }
